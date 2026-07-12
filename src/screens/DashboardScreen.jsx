@@ -1,14 +1,38 @@
 import { useState } from 'react'
 import { dashboardTrip } from '../data/mockData.js'
+import { PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 
-export default function DashboardScreen({ onOpenItinerary, onOpenAssistant }) {
+export default function DashboardScreen({ confirmedTrip, onOpenItinerary, onOpenAssistant, onOpenNewTrip }) {
   const [checklist, setChecklist] = useState(dashboardTrip.checklist)
   const done = checklist.filter((c) => c.done).length
   const toggle = (i) => setChecklist((c) => c.map((item, idx) => (idx === i ? { ...item, done: !item.done } : item)))
 
+  const trip = confirmedTrip || null
   const reserved = 1180
-  const total = dashboardTrip.destination.budgetEstimate
+  const total = trip ? trip.budgetEstimate : dashboardTrip.destination.budgetEstimate
+
+  if (!trip) {
+    return (
+      <div className="h-full w-full bg-paper flex flex-col">
+        <div className="px-6 pt-3 pb-4 shrink-0">
+          <p className="text-[12px] uppercase tracking-wide text-stone mb-1">Votre voyage</p>
+          <h1 className="font-serif text-[22px] text-ink leading-tight">Rien de prévu pour l’instant</h1>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center px-8 pb-28 text-center">
+          <div className="w-14 h-14 rounded-full bg-pine-100 flex items-center justify-center mb-4">
+            <Icon name="suitcase" className="w-6 h-6 text-pine" />
+          </div>
+          <p className="text-[13.5px] text-stone leading-relaxed mb-6 max-w-[240px]">
+            Choisissez vos critères dans Voyager et validez un voyage pour le retrouver ici.
+          </p>
+          <PrimaryButton onClick={onOpenNewTrip} icon="compass" className="max-w-[220px]">
+            Aller dans Voyager
+          </PrimaryButton>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="h-full w-full bg-paper flex flex-col">
@@ -20,15 +44,15 @@ export default function DashboardScreen({ onOpenItinerary, onOpenAssistant }) {
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-28 space-y-6">
         <div
           className="relative rounded-3xl overflow-hidden grain shadow-card"
-          style={{ background: `url(${dashboardTrip.destination.image}) center/cover no-repeat, ${dashboardTrip.destination.gradient}` }}
+          style={{ background: `url(${trip.image}) center/cover no-repeat, ${trip.gradient}` }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
           <div className="relative z-10 p-5 text-paper">
             <span className="inline-block text-[11px] font-medium bg-black/40 backdrop-blur px-2.5 py-1 rounded-full mb-8">
-              J-{dashboardTrip.daysLeft}
+              J-{trip.daysLeft}
             </span>
-            <h2 className="font-serif text-[24px] mb-1">{dashboardTrip.destination.city}</h2>
-            <p className="text-[13px] text-paper/75">Départ le {dashboardTrip.departureDate}</p>
+            <h2 className="font-serif text-[24px] mb-1">{trip.city}</h2>
+            <p className="text-[13px] text-paper/75">{trip.departureDate === 'Dates à définir' ? trip.departureDate : `Départ le ${trip.departureDate}`}</p>
           </div>
         </div>
 

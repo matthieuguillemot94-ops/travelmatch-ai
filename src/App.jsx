@@ -47,7 +47,17 @@ export default function App() {
     const days = quiz.startDate
       ? Math.max(1, Math.round((new Date(quiz.startDate) - new Date()) / 86400000))
       : 30
-    setConfirmedTrip({ city: d.city, image: d.image, gradient: d.gradient, daysLeft: days })
+    const departureDate = quiz.startDate
+      ? new Date(quiz.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+      : 'Dates à définir'
+    setConfirmedTrip({
+      city: d.city,
+      image: d.image,
+      gradient: d.gradient,
+      budgetEstimate: quiz.budget || d.budgetEstimate,
+      daysLeft: days,
+      departureDate,
+    })
   }
 
   const showNav = NAV_SCREENS.includes(screen)
@@ -137,7 +147,12 @@ export default function App() {
         {screen === 'assistant' && <AssistantScreen />}
 
         {screen === 'dashboard' && (
-          <DashboardScreen onOpenItinerary={() => setScreen('itinerary')} onOpenAssistant={() => setScreen('assistant')} />
+          <DashboardScreen
+            confirmedTrip={confirmedTrip}
+            onOpenItinerary={() => setScreen('itinerary')}
+            onOpenAssistant={() => setScreen('assistant')}
+            onOpenNewTrip={() => setScreen('newTrip')}
+          />
         )}
 
         {screen === 'profile' && <UserProfileScreen />}
