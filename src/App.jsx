@@ -16,6 +16,7 @@ import UserProfileScreen from './screens/UserProfileScreen.jsx'
 
 const NAV_SCREENS = ['results', 'destination', 'activity', 'itinerary', 'assistant', 'dashboard', 'profile']
 const NAV_TABS = ['results', 'itinerary', 'assistant', 'dashboard', 'profile']
+const HOME_GRADIENT = 'linear-gradient(180deg, #143C61 0%, #3E76A0 42%, #7CADCE 72%, #B7D9EA 100%)'
 
 export default function App() {
   const [screen, setScreen] = useState('home')
@@ -43,7 +44,7 @@ export default function App() {
         <h1 className="font-serif text-paper text-[22px] mt-1">TravelMatch AI</h1>
       </div>
 
-      <PhoneShell statusTone={screen === 'home' ? 'dark' : 'light'}>
+      <PhoneShell statusTone={screen === 'home' ? 'dark' : 'light'} background={screen === 'home' ? HOME_GRADIENT : undefined}>
         {screen === 'home' && (
           <HomeScreen onSignUp={() => setScreen('signup')} onSignIn={() => setScreen('newTrip')} />
         )}

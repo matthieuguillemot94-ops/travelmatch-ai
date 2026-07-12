@@ -1,10 +1,13 @@
-export default function PhoneShell({ children, statusTone = 'light' }) {
+export default function PhoneShell({ children, statusTone = 'light', background }) {
   const textTone = statusTone === 'dark' ? 'text-paper' : 'text-ink'
 
   return (
     <div className="relative mx-auto" style={{ width: 390, height: 844 }}>
       <div className="absolute inset-0 rounded-[2.75rem] bg-ink-800 shadow-lift" />
-      <div className="absolute inset-[10px] rounded-[2.25rem] overflow-hidden bg-paper flex flex-col">
+      <div
+        className="absolute inset-[10px] rounded-[2.25rem] overflow-hidden bg-paper flex flex-col"
+        style={background ? { background } : undefined}
+      >
         <div className={`relative z-20 flex items-center justify-between px-8 pt-3.5 pb-1 shrink-0 ${textTone}`}>
           <span className="font-mono text-[13px] font-medium tabular">9:41</span>
           <div className="absolute left-1/2 top-2 -translate-x-1/2 h-[26px] w-[100px] rounded-full bg-black" />

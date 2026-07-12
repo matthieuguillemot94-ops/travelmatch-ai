@@ -3,10 +3,7 @@ import Icon from '../components/Icon.jsx'
 
 export default function HomeScreen({ onSignUp, onSignIn }) {
   return (
-    <div
-      className="relative h-full w-full overflow-hidden flex flex-col"
-      style={{ background: 'linear-gradient(180deg, #143C61 0%, #3E76A0 42%, #7CADCE 72%, #B7D9EA 100%)' }}
-    >
+    <div className="relative h-full w-full overflow-hidden flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-8">
         <div
           className="w-20 h-20 rounded-[26px] flex items-center justify-center mb-5 shadow-lift"
