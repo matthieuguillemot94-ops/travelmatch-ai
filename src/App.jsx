@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { destinations } from './data/mockData.js'
 import PhoneShell from './components/PhoneShell.jsx'
 import BottomNav from './components/BottomNav.jsx'
 import HomeScreen from './screens/HomeScreen.jsx'
@@ -21,7 +22,7 @@ const HOME_GRADIENT = 'linear-gradient(180deg, #143C61 0%, #3E76A0 42%, #7CADCE 
 
 export default function App() {
   const [screen, setScreen] = useState('home')
-  const [profile, setProfile] = useState({ name: '', avatar: 0, travelerType: null })
+  const [profile, setProfile] = useState({ name: '', avatar: 0, travelerType: null, visitedCountries: [] })
   const [quiz, setQuiz] = useState({
     interests: [],
     budget: 1200,
@@ -33,10 +34,21 @@ export default function App() {
     comfort: 'confort',
     mood: [],
     nights: 7,
-    when: 'Dans 1 à 3 mois',
+    startDate: null,
+    endDate: null,
   })
   const [destinationId, setDestinationId] = useState('kyoto')
   const [activityId, setActivityId] = useState('fushimi-dawn')
+  const [confirmedTrip, setConfirmedTrip] = useState(null)
+
+  const validateTrip = () => {
+    const d = destinations.find((x) => x.id === destinationId)
+    if (!d) return
+    const days = quiz.startDate
+      ? Math.max(1, Math.round((new Date(quiz.startDate) - new Date()) / 86400000))
+      : 30
+    setConfirmedTrip({ city: d.city, image: d.image, gradient: d.gradient, daysLeft: days })
+  }
 
   const showNav = NAV_SCREENS.includes(screen)
   const activeTab = NAV_TABS.includes(screen) ? screen : VOYAGER_SCREENS.includes(screen) ? 'newTrip' : null
@@ -65,6 +77,7 @@ export default function App() {
           <NewTripScreen
             quiz={quiz}
             setQuiz={setQuiz}
+            confirmedTrip={confirmedTrip}
             onOpenProfile={() => setScreen('profile')}
             onOpenDashboard={() => setScreen('dashboard')}
             onFinish={() => setScreen('results')}
@@ -103,6 +116,7 @@ export default function App() {
         {screen === 'destination' && (
           <DestinationScreen
             destinationId={destinationId}
+            quiz={quiz}
             onBack={() => setScreen('results')}
             onOpenActivity={(id) => {
               setActivityId(id)
@@ -116,7 +130,9 @@ export default function App() {
           <ActivityScreen activityId={activityId} onBack={() => setScreen('destination')} />
         )}
 
-        {screen === 'itinerary' && <ItineraryScreen />}
+        {screen === 'itinerary' && (
+          <ItineraryScreen confirmedTrip={confirmedTrip} onValidateTrip={validateTrip} />
+        )}
 
         {screen === 'assistant' && <AssistantScreen />}
 

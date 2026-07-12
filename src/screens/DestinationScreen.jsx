@@ -1,14 +1,40 @@
+import { useState } from 'react'
 import { destinations, activities, getTransportOptions, getStayOptions, flightsFromCity } from '../data/mockData.js'
 import ScoreRing from '../components/ScoreRing.jsx'
 import { PrimaryButton, Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const SOURCE_TONE = { Airbnb: 'berry', 'Booking.com': 'pine', Vrbo: 'mint' }
+const BADGE_TONE_CLASSES = {
+  pine: 'bg-pine-100 text-pine-700',
+  gold: 'bg-gold-400/20 text-gold-600',
+  berry: 'bg-berry-100 text-berry',
+  mint: 'bg-mint-100 text-mint',
+}
+const TRANSPORT_MODES = [
+  { key: 'flights', label: 'Avion', icon: 'send', prefix: 'Vols' },
+  { key: 'trains', label: 'Train', icon: 'train', prefix: 'Trajets en train' },
+  { key: 'buses', label: 'Bus', icon: 'bus', prefix: 'Trajets en bus' },
+  { key: 'cars', label: 'Covoiturage', icon: 'car', prefix: 'Covoiturages' },
+]
 
-export default function DestinationScreen({ destinationId, onBack, onOpenActivity, onGenerateItinerary }) {
+function CarrierBadge({ code, tone }) {
+  return (
+    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold tracking-tight ${BADGE_TONE_CLASSES[tone]}`}>
+      {code}
+    </div>
+  )
+}
+
+export default function DestinationScreen({ destinationId, quiz, onBack, onOpenActivity, onGenerateItinerary }) {
   const d = destinations.find((x) => x.id === destinationId) ?? destinations[0]
   const localActivities = activities.filter((a) => a.destinationId === d.id)
-  const transportOptions = [...getTransportOptions(d)].sort((a, b) => a.price - b.price)
+  const transportByMode = getTransportOptions(d, { startDate: quiz?.startDate })
+  const availableModes = TRANSPORT_MODES.filter((m) => transportByMode[m.key]?.length)
+  const [activeMode, setActiveMode] = useState('flights')
+  const safeActiveMode = availableModes.some((m) => m.key === activeMode) ? activeMode : availableModes[0]?.key
+  const activeModeInfo = availableModes.find((m) => m.key === safeActiveMode) || availableModes[0]
+  const transportOptions = [...(transportByMode[safeActiveMode] || [])].sort((a, b) => a.price - b.price)
   const stayOptions = getStayOptions(d)
 
   return (
@@ -71,20 +97,39 @@ export default function DestinationScreen({ destinationId, onBack, onOpenActivit
           </div>
 
           <h2 className="font-serif text-[17px] text-ink mb-1">Comment y aller</h2>
-          <p className="text-[12px] text-stone mb-3">Vols depuis {flightsFromCity}</p>
+          <p className="text-[12px] text-stone mb-3">
+            {activeModeInfo?.prefix} depuis {flightsFromCity}
+            {quiz?.startDate && ` · ${new Date(quiz.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}`}
+          </p>
+
+          {availableModes.length > 1 && (
+            <div className="flex gap-2 mb-3.5 overflow-x-auto no-scrollbar">
+              {availableModes.map((m) => (
+                <button
+                  key={m.key}
+                  onClick={() => setActiveMode(m.key)}
+                  className={`flex items-center gap-1.5 shrink-0 rounded-full border px-3.5 py-2 text-[12.5px] font-medium transition-colors ${
+                    safeActiveMode === m.key ? 'bg-ink border-ink text-paper' : 'bg-white border-ink/10 text-ink/70'
+                  }`}
+                >
+                  <Icon name={m.icon} className="w-3.5 h-3.5" />
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="space-y-2.5 mb-8">
             {transportOptions.map((t, i) => (
               <div key={i} className="flex items-center gap-3 rounded-2xl bg-white border border-ink/[0.06] p-3.5">
-                <div className="w-10 h-10 rounded-full bg-pine-100 flex items-center justify-center shrink-0">
-                  <Icon name="send" className="w-4.5 h-4.5 text-pine" />
-                </div>
+                <CarrierBadge code={t.code} tone={t.tone} />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <p className="text-[13.5px] font-medium text-ink truncate">{t.airline}</p>
+                  <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                    <p className="text-[13.5px] font-medium text-ink truncate">{t.name}</p>
                     {i === 0 && <Tag tone="gold">Meilleur prix</Tag>}
                   </div>
                   <p className="text-[11.5px] text-stone">
-                    {t.stops === 0 ? 'Vol direct' : `1 escale · ${t.stopCity}`} · {t.duration}
+                    {t.stops === 0 ? 'Direct' : `1 escale · ${t.stopCity}`} · {t.duration}
                   </p>
                 </div>
                 <span className="font-mono tabular text-[15px] font-semibold text-ink shrink-0">{t.price} €</span>

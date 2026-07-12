@@ -1,6 +1,7 @@
-import { moods, whenOptions, groupOptions, comfortLevels, dashboardTrip, userProfile } from '../data/mockData.js'
+import { moods, groupOptions, comfortLevels, userProfile } from '../data/mockData.js'
 import { Chip, PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
+import Calendar from '../components/Calendar.jsx'
 
 function IconTile({ label, icon, selected, onClick }) {
   return (
@@ -39,7 +40,7 @@ function BudgetRow({ label, icon, value, min, max, step, onChange }) {
   )
 }
 
-export default function NewTripScreen({ quiz, setQuiz, onOpenProfile, onOpenDashboard, onFinish }) {
+export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProfile, onOpenDashboard, onFinish }) {
   const update = (patch) => setQuiz((q) => ({ ...q, ...patch }))
   const toggleMood = (m) => update({ mood: quiz.mood.includes(m) ? quiz.mood.filter((i) => i !== m) : [...quiz.mood, m] })
 
@@ -48,6 +49,16 @@ export default function NewTripScreen({ quiz, setQuiz, onOpenProfile, onOpenDash
     setQuiz((q) => {
       const next = { ...q, [key]: value }
       next.budget = next.budgetTransport + next.budgetStay + next.budgetDaily
+      return next
+    })
+  }
+
+  const updateDates = (patch) => {
+    setQuiz((q) => {
+      const next = { ...q, ...patch }
+      if (next.startDate && next.endDate) {
+        next.nights = Math.max(1, Math.round((new Date(next.endDate) - new Date(next.startDate)) / 86400000))
+      }
       return next
     })
   }
@@ -66,20 +77,22 @@ export default function NewTripScreen({ quiz, setQuiz, onOpenProfile, onOpenDash
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-28 space-y-7">
-        <button
-          onClick={onOpenDashboard}
-          className="w-full flex items-center gap-3 rounded-2xl bg-ink text-paper p-3.5 text-left active:scale-[0.99] transition-transform"
-        >
-          <div
-            className="w-12 h-12 rounded-xl shrink-0 grain relative overflow-hidden"
-            style={{ background: `url(${dashboardTrip.destination.image}) center/cover no-repeat, ${dashboardTrip.destination.gradient}` }}
-          />
-          <div className="flex-1 min-w-0">
-            <p className="text-[11.5px] text-paper/60">Votre voyage à venir</p>
-            <p className="text-[13.5px] font-medium truncate">{dashboardTrip.destination.city} · dans {dashboardTrip.daysLeft} jours</p>
-          </div>
-          <Icon name="chevronRight" className="w-4 h-4 text-paper/60 shrink-0" />
-        </button>
+        {confirmedTrip && (
+          <button
+            onClick={onOpenDashboard}
+            className="w-full flex items-center gap-3 rounded-2xl bg-ink text-paper p-3.5 text-left active:scale-[0.99] transition-transform"
+          >
+            <div
+              className="w-12 h-12 rounded-xl shrink-0 grain relative overflow-hidden"
+              style={{ background: `url(${confirmedTrip.image}) center/cover no-repeat, ${confirmedTrip.gradient}` }}
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-[11.5px] text-paper/60">Votre voyage à venir</p>
+              <p className="text-[13.5px] font-medium truncate">{confirmedTrip.city} · dans {confirmedTrip.daysLeft} jours</p>
+            </div>
+            <Icon name="chevronRight" className="w-4 h-4 text-paper/60 shrink-0" />
+          </button>
+        )}
 
         <div>
           <h2 className="font-serif text-[19px] text-ink mb-1">Une nouvelle envie de voyage ?</h2>
@@ -114,12 +127,11 @@ export default function NewTripScreen({ quiz, setQuiz, onOpenProfile, onOpenDash
         </div>
 
         <div>
-          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Quand souhaitez-vous partir ?</label>
-          <div className="flex flex-wrap gap-2">
-            {whenOptions.map((w) => (
-              <Chip key={w} label={w} selected={quiz.when === w} onClick={() => update({ when: w })} />
-            ))}
-          </div>
+          <label className="flex items-center gap-1.5 text-[12px] font-medium text-ink/70 mb-2.5 uppercase tracking-wide">
+            <Icon name="calendar" className="w-3.5 h-3.5" />
+            Quand souhaitez-vous partir ?
+          </label>
+          <Calendar startDate={quiz.startDate} endDate={quiz.endDate} onChange={updateDates} />
         </div>
 
         <div>

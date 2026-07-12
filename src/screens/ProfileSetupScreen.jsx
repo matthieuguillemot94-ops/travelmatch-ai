@@ -1,5 +1,7 @@
-import { travelerTypes } from '../data/mockData.js'
+import { useState } from 'react'
+import { travelerTypes, COUNTRIES } from '../data/mockData.js'
 import { PrimaryButton, ScreenHeader } from '../components/ui.jsx'
+import Icon from '../components/Icon.jsx'
 
 const avatarTones = [
   'linear-gradient(135deg,#2F5D50,#4FA98A)',
@@ -12,6 +14,16 @@ const avatarTones = [
 
 export default function ProfileSetupScreen({ profile, setProfile, onBack, onContinue }) {
   const update = (patch) => setProfile((p) => ({ ...p, ...patch }))
+  const [countryQuery, setCountryQuery] = useState('')
+
+  const toggleCountry = (code) => {
+    const visited = profile.visitedCountries || []
+    update({ visitedCountries: visited.includes(code) ? visited.filter((c) => c !== code) : [...visited, code] })
+  }
+
+  const filteredCountries = countryQuery.trim()
+    ? COUNTRIES.filter((c) => c.name.toLowerCase().includes(countryQuery.trim().toLowerCase()))
+    : COUNTRIES
 
   return (
     <div className="h-full w-full bg-paper flex flex-col">
@@ -71,6 +83,62 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
               </button>
             )
           })}
+        </div>
+
+        <div className="mt-7">
+          <div className="flex items-baseline justify-between mb-2">
+            <label className="text-[12px] font-medium text-ink/70 uppercase tracking-wide">Pays déjà visités</label>
+            {profile.visitedCountries?.length > 0 && (
+              <span className="text-[12px] text-stone">{profile.visitedCountries.length} sélectionné{profile.visitedCountries.length > 1 ? 's' : ''}</span>
+            )}
+          </div>
+          <div className="relative mb-3">
+            <Icon name="pin" className="w-4 h-4 text-stone absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              value={countryQuery}
+              onChange={(e) => setCountryQuery(e.target.value)}
+              placeholder="Rechercher un pays…"
+              className="w-full rounded-2xl border border-ink/10 bg-white pl-10 pr-4 py-3 text-[14px] text-ink placeholder:text-stone/60 focus:outline-none focus:border-ink/30"
+            />
+          </div>
+          {profile.visitedCountries?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {profile.visitedCountries.map((code) => {
+                const c = COUNTRIES.find((x) => x.code === code)
+                if (!c) return null
+                return (
+                  <button
+                    key={code}
+                    onClick={() => toggleCountry(code)}
+                    className="flex items-center gap-1.5 rounded-full bg-ink text-paper text-[12.5px] font-medium px-3 py-1.5"
+                  >
+                    <span>{c.flag}</span>
+                    {c.name}
+                    <Icon name="minus" className="w-2.5 h-2.5" strokeWidth={2.4} />
+                  </button>
+                )
+              })}
+            </div>
+          )}
+          <div className="rounded-2xl border border-ink/10 bg-white max-h-52 overflow-y-auto no-scrollbar divide-y divide-ink/[0.05]">
+            {filteredCountries.slice(0, 40).map((c) => {
+              const selected = profile.visitedCountries?.includes(c.code)
+              return (
+                <button
+                  key={c.code}
+                  onClick={() => toggleCountry(c.code)}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left"
+                >
+                  <span className="text-[17px] leading-none">{c.flag}</span>
+                  <span className="flex-1 text-[13.5px] text-ink">{c.name}</span>
+                  {selected && <Icon name="check" className="w-4 h-4 text-pine" strokeWidth={2.2} />}
+                </button>
+              )
+            })}
+            {filteredCountries.length === 0 && (
+              <p className="px-4 py-4 text-[13px] text-stone text-center">Aucun pays trouvé</p>
+            )}
+          </div>
         </div>
       </div>
 

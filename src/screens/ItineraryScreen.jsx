@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { itinerary, destinations } from '../data/mockData.js'
+import { PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const typeIcon = { stay: 'suitcase', walk: 'peak', food: 'fork', activity: 'sparkle', rest: 'drop' }
 const colorMap = { pine: '#2F5D50', gold: '#D9A55C', berry: '#B5495B', mint: '#4FA98A' }
 
-export default function ItineraryScreen() {
+export default function ItineraryScreen({ confirmedTrip, onValidateTrip }) {
   const [activeDay, setActiveDay] = useState(1)
   const d = destinations.find((x) => x.id === itinerary.destinationId)
   const day = itinerary.days.find((x) => x.day === activeDay)
@@ -17,7 +18,7 @@ export default function ItineraryScreen() {
         <h1 className="font-serif text-[22px] text-ink leading-tight">{d.city}, {d.duration}</h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-28">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-40">
         <div className="rounded-2xl bg-white border border-ink/[0.06] p-4 mb-5">
           <div className="flex items-baseline justify-between mb-3">
             <span className="text-[12px] uppercase tracking-wide text-stone">Budget total estimé</span>
@@ -78,6 +79,12 @@ export default function ItineraryScreen() {
             ))}
           </div>
         </div>
+      </div>
+
+      <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
+        <PrimaryButton onClick={onValidateTrip} disabled={!!confirmedTrip} icon={confirmedTrip ? 'check' : 'shield'} className={confirmedTrip ? 'bg-pine' : ''}>
+          {confirmedTrip ? 'Voyage validé' : 'Valider mon voyage'}
+        </PrimaryButton>
       </div>
     </div>
   )

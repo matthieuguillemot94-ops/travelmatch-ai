@@ -1,6 +1,7 @@
-import { userProfile } from '../data/mockData.js'
+import { userProfile, COUNTRIES } from '../data/mockData.js'
 import { Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
+import WorldMap from '../components/WorldMap.jsx'
 
 const settingsItems = [
   { icon: 'bell', label: 'Notifications' },
@@ -39,6 +40,27 @@ export default function UserProfileScreen() {
               <p className="text-[13px] text-paper/60">Profil voyageur</p>
               <p className="text-[14.5px] font-medium">{userProfile.travelerType}</p>
             </div>
+          </div>
+        </div>
+
+        <div className="px-6 mb-6">
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="font-serif text-[16px] text-ink">Carte du monde</h2>
+            <span className="text-[12px] text-stone">{userProfile.visitedCountries.length} pays visités</span>
+          </div>
+          <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
+            <WorldMap visitedCountries={userProfile.visitedCountries} className="w-full [&_svg]:w-full [&_svg]:h-auto" />
+          </div>
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {userProfile.visitedCountries.map((code) => {
+              const c = COUNTRIES.find((x) => x.code === code)
+              if (!c) return null
+              return (
+                <span key={code} className="flex items-center gap-1 text-[11.5px] text-ink/70 bg-mint-100 px-2.5 py-1 rounded-full">
+                  <span>{c.flag}</span>{c.name}
+                </span>
+              )
+            })}
           </div>
         </div>
 
