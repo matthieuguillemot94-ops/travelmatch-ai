@@ -1395,6 +1395,7 @@ function carrier(name) {
 const TRAIN_COMPANIES = ['SNCF Connect', 'Eurostar', 'Trenitalia', 'Renfe', 'Deutsche Bahn']
 const BUS_COMPANIES = ['FlixBus', 'BlaBlaBus', 'Eurolines']
 const CARPOOL_COMPANIES = ['BlaBlaCar']
+const GROUND_STOPOVER_CITIES = ['Bruxelles', 'Lyon', 'Milan', 'Amsterdam', 'Barcelone']
 
 export function getTransportOptions(destination, dates = {}) {
   const seed = hashString(destination.id)
@@ -1403,6 +1404,7 @@ export function getTransportOptions(destination, dates = {}) {
   const baseDirectPrice = Math.round(Math.max(120, Math.round((destination.budgetEstimate * 0.26) / 10) * 10) * seasonMult)
   const stop1 = STOPOVER_CITIES[seed % STOPOVER_CITIES.length]
   const stop2 = STOPOVER_CITIES[(seed + 2) % STOPOVER_CITIES.length]
+  const groundStop = GROUND_STOPOVER_CITIES[seed % GROUND_STOPOVER_CITIES.length]
 
   const flights = [
     { ...carrier(AIRLINES[seed % AIRLINES.length]), price: baseDirectPrice, stops: 0, stopCity: null, duration: formatDuration(baseHours) },
@@ -1414,7 +1416,7 @@ export function getTransportOptions(destination, dates = {}) {
   const trainBase = Math.round((baseDirectPrice * 0.5) / 5) * 5
   const trains = !isEurope ? [] : [
     { ...carrier(TRAIN_COMPANIES[seed % TRAIN_COMPANIES.length]), price: trainBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 3.4) },
-    { ...carrier(TRAIN_COMPANIES[(seed + 1) % TRAIN_COMPANIES.length]), price: Math.round((trainBase * 0.78) / 5) * 5, stops: 1, stopCity: stop1, duration: formatDuration(baseHours * 4.6) },
+    { ...carrier(TRAIN_COMPANIES[(seed + 1) % TRAIN_COMPANIES.length]), price: Math.round((trainBase * 0.78) / 5) * 5, stops: 1, stopCity: groundStop, duration: formatDuration(baseHours * 4.6) },
   ]
 
   const busBase = Math.round((baseDirectPrice * 0.28) / 5) * 5

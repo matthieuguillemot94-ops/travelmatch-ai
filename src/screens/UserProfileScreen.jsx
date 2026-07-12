@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { userProfile, COUNTRIES } from '../data/mockData.js'
 import { Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
@@ -11,6 +12,11 @@ const settingsItems = [
 ]
 
 export default function UserProfileScreen() {
+  const [visitedCountries, setVisitedCountries] = useState(userProfile.visitedCountries)
+  const toggleCountry = (code) => {
+    setVisitedCountries((v) => (v.includes(code) ? v.filter((c) => c !== code) : [...v, code]))
+  }
+
   return (
     <div className="h-full w-full bg-paper flex flex-col">
       <div className="flex-1 overflow-y-auto no-scrollbar pb-28">
@@ -46,19 +52,25 @@ export default function UserProfileScreen() {
         <div className="px-6 mb-6">
           <div className="flex items-baseline justify-between mb-3">
             <h2 className="font-serif text-[16px] text-ink">Carte du monde</h2>
-            <span className="text-[12px] text-stone">{userProfile.visitedCountries.length} pays visités</span>
+            <span className="text-[12px] text-stone">{visitedCountries.length} pays visités</span>
           </div>
-          <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
-            <WorldMap visitedCountries={userProfile.visitedCountries} className="w-full [&_svg]:w-full [&_svg]:h-auto" />
+          <div className="rounded-2xl bg-white border border-ink/[0.06] p-3 mb-3">
+            <WorldMap visitedCountries={visitedCountries} className="w-full [&_svg]:w-full [&_svg]:h-auto" />
           </div>
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {userProfile.visitedCountries.map((code) => {
-              const c = COUNTRIES.find((x) => x.code === code)
-              if (!c) return null
+          <p className="text-[11.5px] text-stone mb-2.5">Touchez un pays pour l’ajouter ou le retirer de vos voyages.</p>
+          <div className="flex flex-wrap gap-1.5">
+            {COUNTRIES.map((c) => {
+              const selected = visitedCountries.includes(c.code)
               return (
-                <span key={code} className="flex items-center gap-1 text-[11.5px] text-ink/70 bg-mint-100 px-2.5 py-1 rounded-full">
+                <button
+                  key={c.code}
+                  onClick={() => toggleCountry(c.code)}
+                  className={`flex items-center gap-1 text-[11.5px] px-2.5 py-1 rounded-full transition-colors ${
+                    selected ? 'bg-mint-100 text-ink' : 'bg-white border border-ink/10 text-ink/60'
+                  }`}
+                >
                   <span>{c.flag}</span>{c.name}
-                </span>
+                </button>
               )
             })}
           </div>
