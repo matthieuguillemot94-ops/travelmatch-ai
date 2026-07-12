@@ -25,10 +25,11 @@ export default function App() {
   const [profile, setProfile] = useState({ name: '', avatar: 0, travelerType: null, visitedCountries: [] })
   const [quiz, setQuiz] = useState({
     interests: [],
-    budget: 1200,
+    budget: 1180,
     budgetTransport: 450,
     budgetStay: 450,
-    budgetDaily: 300,
+    budgetDaily: 40,
+    departureCity: 'Paris',
     duration: '1 semaine',
     group: 'solo',
     comfort: 'confort',

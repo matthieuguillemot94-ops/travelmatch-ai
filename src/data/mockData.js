@@ -32,6 +32,16 @@ export const groupOptions = [
   { id: 'amis', label: 'Entre amis', icon: 'users' },
 ]
 
+export const departureCities = [
+  { id: 'Paris', label: 'Paris', priceMult: 1, hoursAdd: 0 },
+  { id: 'Lyon', label: 'Lyon', priceMult: 1.08, hoursAdd: 1.5 },
+  { id: 'Marseille', label: 'Marseille', priceMult: 1.1, hoursAdd: 1.5 },
+  { id: 'Toulouse', label: 'Toulouse', priceMult: 1.1, hoursAdd: 1.5 },
+  { id: 'Nantes', label: 'Nantes', priceMult: 1.08, hoursAdd: 1.5 },
+  { id: 'Bordeaux', label: 'Bordeaux', priceMult: 1.1, hoursAdd: 1.5 },
+  { id: 'Nice', label: 'Nice', priceMult: 1.05, hoursAdd: 1 },
+]
+
 export const comfortLevels = [
   { id: 'simple', label: 'Simple & authentique', icon: 'leaf' },
   { id: 'confort', label: 'Confort', icon: 'compass' },
@@ -1299,7 +1309,23 @@ const INTEREST_TAGS = {
  * (mood chips, interest chips, budget). Returns the whole list sorted by
  * relevance so the results screen visibly reacts to what was just answered.
  */
-export function matchDestinations({ mood = [], interests = [], budget = 3000 } = {}) {
+// Rough "worth the flight" floor: how many nights make sense given how far
+// the destination is, so a 5-night trip doesn't get recommended for a
+// long-haul continent that eats 2 of those days in transit alone.
+const MIN_NIGHTS_BY_CONTINENT = {
+  Europe: 2,
+  'Moyen-Orient': 4,
+  Afrique: 5,
+  Asie: 6,
+  'Amérique du Nord': 6,
+  'Amérique du Sud': 8,
+  Océanie: 9,
+}
+export function minNightsFor(destination) {
+  return MIN_NIGHTS_BY_CONTINENT[destination.continent] || 4
+}
+
+export function matchDestinations({ mood = [], interests = [], budget = 3000, nights = 7 } = {}) {
   const wantedTags = new Set()
   mood.forEach((m) => (MOOD_TAGS[m] || []).forEach((t) => wantedTags.add(t)))
   interests.forEach((i) => (INTEREST_TAGS[i] || []).forEach((t) => wantedTags.add(t)))
@@ -1308,10 +1334,114 @@ export function matchDestinations({ mood = [], interests = [], budget = 3000 } =
     .map((d) => {
       const overlap = d.tags.filter((t) => wantedTags.has(t)).length
       const budgetFit = d.budgetEstimate <= budget ? 1 : d.budgetEstimate <= budget * 1.4 ? 0.4 : 0
-      const matchScore = overlap * 16 + budgetFit * 12 + d.score * 0.25
-      return { ...d, matchScore }
+      const minNights = minNightsFor(d)
+      const nightsFit = nights >= minNights ? 1 : nights >= minNights - 2 ? 0.5 : 0.15
+      const matchScore = overlap * 16 + budgetFit * 12 + d.score * 0.25 + nightsFit * 10
+      return { ...d, matchScore, minNights }
     })
     .sort((a, b) => b.matchScore - a.matchScore)
+}
+
+// ---- Weather that actually follows the travel dates ----
+
+const MONTHS_FR = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+
+function parseBestMonths(bestMonths) {
+  const parts = (bestMonths || '').split('–').map((s) => s.trim().toLowerCase())
+  const idx = parts.map((p) => MONTHS_FR.findIndex((m) => p.includes(m)))
+  if (idx.length < 2 || idx.some((i) => i < 0)) return { months: new Set([5, 6, 7]), anchor: 6 }
+  let [a, b] = idx
+  const months = new Set()
+  let cursor = a
+  months.add(cursor)
+  while (cursor !== b) {
+    cursor = (cursor + 1) % 12
+    months.add(cursor)
+  }
+  const span = b >= a ? b - a : b + 12 - a
+  const anchor = (a + Math.round(span / 2)) % 12
+  return { months, anchor }
+}
+
+function seasonLabel(monthIdx, hemisphere) {
+  const m = hemisphere === 1 ? monthIdx : (monthIdx + 6) % 12
+  if (m === 11 || m <= 1) return 'Hiver'
+  if (m <= 4) return 'Printemps'
+  if (m <= 7) return 'Été'
+  return 'Automne'
+}
+
+// hemisphere: 1 = peak heat in July (north), -1 = peak heat in January (south)
+// amplitude: typical swing in °C between the coldest and hottest month
+const CLIMATE_PROFILE = {
+  kyoto: { hemisphere: 1, amplitude: 13 },
+  lisbonne: { hemisphere: 1, amplitude: 9 },
+  oaxaca: { hemisphere: 1, amplitude: 5 },
+  douro: { hemisphere: 1, amplitude: 11 },
+  chiangmai: { hemisphere: 1, amplitude: 4 },
+  paris: { hemisphere: 1, amplitude: 11 },
+  rome: { hemisphere: 1, amplitude: 11 },
+  santorin: { hemisphere: 1, amplitude: 10 },
+  reykjavik: { hemisphere: 1, amplitude: 10 },
+  marrakech: { hemisphere: 1, amplitude: 14 },
+  capetown: { hemisphere: -1, amplitude: 8 },
+  newyork: { hemisphere: 1, amplitude: 17 },
+  rio: { hemisphere: -1, amplitude: 6 },
+  machupicchu: { hemisphere: -1, amplitude: 4 },
+  bali: { hemisphere: -1, amplitude: 3 },
+  dubai: { hemisphere: 1, amplitude: 15 },
+  petra: { hemisphere: 1, amplitude: 15 },
+  sydney: { hemisphere: -1, amplitude: 8 },
+  queenstown: { hemisphere: -1, amplitude: 9 },
+  borabora: { hemisphere: -1, amplitude: 2 },
+  barcelona: { hemisphere: 1, amplitude: 11 },
+  amsterdam: { hemisphere: 1, amplitude: 10 },
+  prague: { hemisphere: 1, amplitude: 13 },
+  vienna: { hemisphere: 1, amplitude: 12 },
+  venice: { hemisphere: 1, amplitude: 12 },
+  edinburgh: { hemisphere: 1, amplitude: 8 },
+  porto: { hemisphere: 1, amplitude: 9 },
+  budapest: { hemisphere: 1, amplitude: 13 },
+  copenhagen: { hemisphere: 1, amplitude: 10 },
+  zanzibar: { hemisphere: -1, amplitude: 3 },
+  cairo: { hemisphere: 1, amplitude: 12 },
+  serengeti: { hemisphere: -1, amplitude: 4 },
+  victoriafalls: { hemisphere: -1, amplitude: 8 },
+  bangkok: { hemisphere: 1, amplitude: 4 },
+  singapore: { hemisphere: 1, amplitude: 1 },
+  halongbay: { hemisphere: 1, amplitude: 9 },
+  seoul: { hemisphere: 1, amplitude: 15 },
+  hongkong: { hemisphere: 1, amplitude: 9 },
+  maldives: { hemisphere: 1, amplitude: 1 },
+  jaipur: { hemisphere: 1, amplitude: 12 },
+  kathmandu: { hemisphere: 1, amplitude: 8 },
+  istanbul: { hemisphere: 1, amplitude: 12 },
+  jerusalem: { hemisphere: 1, amplitude: 10 },
+  banff: { hemisphere: 1, amplitude: 17 },
+  grandcanyon: { hemisphere: 1, amplitude: 15 },
+  mexicocity: { hemisphere: 1, amplitude: 5 },
+  havana: { hemisphere: 1, amplitude: 5 },
+  buenosaires: { hemisphere: -1, amplitude: 9 },
+  cartagena: { hemisphere: 1, amplitude: 2 },
+  torresdelpaine: { hemisphere: -1, amplitude: 8 },
+}
+
+export function weatherForDate(destination, dateISO) {
+  if (!dateISO) return destination.weather
+  const monthIdx = new Date(dateISO).getMonth()
+  const profile = CLIMATE_PROFILE[destination.id] || { hemisphere: 1, amplitude: 10 }
+  const { months: bestMonthSet, anchor } = parseBestMonths(destination.bestMonths)
+  const baseTemp = parseInt(destination.weather.temp, 10) || 20
+  const hottestMonth = profile.hemisphere === 1 ? 6 : 0
+  const angle = (m) => (2 * Math.PI * (m - hottestMonth)) / 12
+  const mean = baseTemp - profile.amplitude * Math.cos(angle(anchor))
+  const temp = Math.round(mean + profile.amplitude * Math.cos(angle(monthIdx)))
+  const season = seasonLabel(monthIdx, profile.hemisphere)
+  return {
+    temp: `${temp}°C`,
+    season,
+    note: bestMonthSet.has(monthIdx) ? destination.weather.note : undefined,
+  }
 }
 
 // Deterministic mock "search results" for transport & lodging, scaled to each
@@ -1399,9 +1529,12 @@ const GROUND_STOPOVER_CITIES = ['Bruxelles', 'Lyon', 'Milan', 'Amsterdam', 'Barc
 
 export function getTransportOptions(destination, dates = {}) {
   const seed = hashString(destination.id)
-  const baseHours = CONTINENT_FLIGHT_HOURS[destination.continent] || 8
+  const departure = departureCities.find((c) => c.id === dates.departureCity) || departureCities[0]
+  const baseHours = (CONTINENT_FLIGHT_HOURS[destination.continent] || 8) + departure.hoursAdd
   const seasonMult = seasonMultiplier(dates.startDate)
-  const baseDirectPrice = Math.round(Math.max(120, Math.round((destination.budgetEstimate * 0.26) / 10) * 10) * seasonMult)
+  const baseDirectPrice = Math.round(
+    Math.max(120, Math.round((destination.budgetEstimate * 0.26) / 10) * 10) * seasonMult * departure.priceMult
+  )
   const stop1 = STOPOVER_CITIES[seed % STOPOVER_CITIES.length]
   const stop2 = STOPOVER_CITIES[(seed + 2) % STOPOVER_CITIES.length]
   const groundStop = GROUND_STOPOVER_CITIES[seed % GROUND_STOPOVER_CITIES.length]

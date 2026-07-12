@@ -1,4 +1,4 @@
-import { moods, groupOptions, comfortLevels, userProfile } from '../data/mockData.js'
+import { moods, groupOptions, comfortLevels, departureCities, userProfile } from '../data/mockData.js'
 import { Chip, PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 import Calendar from '../components/Calendar.jsx'
@@ -40,6 +40,10 @@ function BudgetRow({ label, icon, value, min, max, step, onChange }) {
   )
 }
 
+function recomputeBudget(q) {
+  return q.budgetTransport + q.budgetStay + q.budgetDaily * q.nights
+}
+
 export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProfile, onOpenDashboard, onFinish }) {
   const update = (patch) => setQuiz((q) => ({ ...q, ...patch }))
   const toggleMood = (m) => update({ mood: quiz.mood.includes(m) ? quiz.mood.filter((i) => i !== m) : [...quiz.mood, m] })
@@ -48,7 +52,15 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
     const value = Number(e.target.value)
     setQuiz((q) => {
       const next = { ...q, [key]: value }
-      next.budget = next.budgetTransport + next.budgetStay + next.budgetDaily
+      next.budget = recomputeBudget(next)
+      return next
+    })
+  }
+
+  const updateNights = (nights) => {
+    setQuiz((q) => {
+      const next = { ...q, nights }
+      next.budget = recomputeBudget(next)
       return next
     })
   }
@@ -59,6 +71,7 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
       if (next.startDate && next.endDate) {
         next.nights = Math.max(1, Math.round((new Date(next.endDate) - new Date(next.startDate)) / 86400000))
       }
+      next.budget = recomputeBudget(next)
       return next
     })
   }
@@ -127,6 +140,15 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
         </div>
 
         <div>
+          <label className="block text-[12px] font-medium text-ink/70 mb-2.5 uppercase tracking-wide">Ville de départ</label>
+          <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-6 px-6">
+            {departureCities.map((c) => (
+              <IconTile key={c.id} label={c.label} icon="pin" selected={quiz.departureCity === c.id} onClick={() => update({ departureCity: c.id })} />
+            ))}
+          </div>
+        </div>
+
+        <div>
           <label className="flex items-center gap-1.5 text-[12px] font-medium text-ink/70 mb-2.5 uppercase tracking-wide">
             <Icon name="calendar" className="w-3.5 h-3.5" />
             Quand souhaitez-vous partir ?
@@ -140,14 +162,14 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
             <span className="text-[13.5px] text-ink">Durée du séjour</span>
             <div className="flex items-center gap-4">
               <button
-                onClick={() => update({ nights: Math.max(1, quiz.nights - 1) })}
+                onClick={() => updateNights(Math.max(1, quiz.nights - 1))}
                 className="w-8 h-8 rounded-full bg-ink/5 flex items-center justify-center text-ink"
               >
                 <Icon name="minus" className="w-3.5 h-3.5" strokeWidth={2} />
               </button>
               <span className="w-14 text-center font-mono tabular text-[15px] font-semibold text-ink">{quiz.nights} nuits</span>
               <button
-                onClick={() => update({ nights: Math.min(30, quiz.nights + 1) })}
+                onClick={() => updateNights(Math.min(30, quiz.nights + 1))}
                 className="w-8 h-8 rounded-full bg-ink text-paper flex items-center justify-center"
               >
                 <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2} />
@@ -180,15 +202,20 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
               step={50}
               onChange={updateBudgetPart('budgetStay')}
             />
-            <BudgetRow
-              label="Frais quotidiens (repas, activités…)"
-              icon="fork"
-              value={quiz.budgetDaily}
-              min={50}
-              max={3000}
-              step={50}
-              onChange={updateBudgetPart('budgetDaily')}
-            />
+            <div>
+              <BudgetRow
+                label="Frais quotidiens / jour (repas, activités…)"
+                icon="fork"
+                value={quiz.budgetDaily}
+                min={15}
+                max={300}
+                step={5}
+                onChange={updateBudgetPart('budgetDaily')}
+              />
+              <p className="text-[11.5px] text-stone mt-1.5">
+                {quiz.budgetDaily.toLocaleString('fr-FR')} € × {quiz.nights} nuits = {(quiz.budgetDaily * quiz.nights).toLocaleString('fr-FR')} €
+              </p>
+            </div>
           </div>
         </div>
       </div>

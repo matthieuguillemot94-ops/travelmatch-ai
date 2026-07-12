@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { destinations, activities, getTransportOptions, getStayOptions, flightsFromCity } from '../data/mockData.js'
+import { destinations, activities, getTransportOptions, getStayOptions, flightsFromCity, weatherForDate, minNightsFor } from '../data/mockData.js'
 import ScoreRing from '../components/ScoreRing.jsx'
 import { PrimaryButton, Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
@@ -29,7 +29,11 @@ function CarrierBadge({ code, tone }) {
 export default function DestinationScreen({ destinationId, quiz, onBack, onOpenActivity, onGenerateItinerary }) {
   const d = destinations.find((x) => x.id === destinationId) ?? destinations[0]
   const localActivities = activities.filter((a) => a.destinationId === d.id)
-  const transportByMode = getTransportOptions(d, { startDate: quiz?.startDate })
+  const departureCity = quiz?.departureCity || flightsFromCity
+  const weather = weatherForDate(d, quiz?.startDate)
+  const minNights = minNightsFor(d)
+  const nightsTooShort = quiz?.nights && quiz.nights < minNights
+  const transportByMode = getTransportOptions(d, { startDate: quiz?.startDate, departureCity })
   const availableModes = TRANSPORT_MODES.filter((m) => transportByMode[m.key]?.length)
   const [activeMode, setActiveMode] = useState('flights')
   const safeActiveMode = availableModes.some((m) => m.key === activeMode) ? activeMode : availableModes[0]?.key
@@ -76,10 +80,23 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
             </div>
             <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
               <Icon name="pin" className="w-4 h-4 text-pine mb-1.5" />
-              <p className="text-[13px] font-medium text-ink">{d.weather.temp}</p>
-              <p className="text-[11px] text-stone">{d.weather.season}</p>
+              <p className="text-[13px] font-medium text-ink">{weather.temp}</p>
+              <p className="text-[11px] text-stone">{weather.season}{!quiz?.startDate && ' · type'}</p>
             </div>
           </div>
+          {weather.note && (
+            <p className="text-[12px] text-stone mb-7">{weather.note}</p>
+          )}
+
+          {nightsTooShort && (
+            <div className="flex items-start gap-2.5 rounded-2xl bg-gold-400/15 border border-gold-400/40 p-3.5 mb-7">
+              <Icon name="clock" className="w-4 h-4 text-gold-600 shrink-0 mt-0.5" />
+              <p className="text-[12.5px] text-ink/80 leading-relaxed">
+                Avec {quiz.nights} nuit{quiz.nights > 1 ? 's' : ''}, le trajet depuis {departureCity} laisse peu de temps sur place.
+                On recommande au moins {minNights} nuits pour {d.country}.
+              </p>
+            </div>
+          )}
 
           <h2 className="font-serif text-[17px] text-ink mb-3">Pourquoi cette destination</h2>
           <div className="space-y-2.5 mb-8">
@@ -98,7 +115,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
 
           <h2 className="font-serif text-[17px] text-ink mb-1">Comment y aller</h2>
           <p className="text-[12px] text-stone mb-3">
-            {activeModeInfo?.prefix} depuis {flightsFromCity}
+            {activeModeInfo?.prefix} depuis {departureCity}
             {quiz?.startDate && ` · ${new Date(quiz.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}`}
           </p>
 
