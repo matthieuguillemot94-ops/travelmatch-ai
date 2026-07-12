@@ -1435,29 +1435,30 @@ export function getTransportOptions(destination, dates = {}) {
 // ---- Visited-countries picker + world map ----
 
 export const COUNTRY_CODES = [
-  'ad', 'ae', 'af', 'ag', 'al', 'am', 'ao', 'ar', 'at', 'au', 'az',
-  'ba', 'bb', 'bd', 'be', 'bf', 'bg', 'bh', 'bi', 'bj', 'bn', 'bo', 'br', 'bs', 'bt', 'bw', 'by', 'bz',
-  'ca', 'cd', 'cf', 'cg', 'ch', 'ci', 'cl', 'cm', 'cn', 'co', 'cr', 'cu', 'cv', 'cy', 'cz',
+  'ad', 'ae', 'af', 'ag', 'ai', 'al', 'am', 'ao', 'ar', 'as', 'at', 'au', 'aw', 'az',
+  'ba', 'bb', 'bd', 'be', 'bf', 'bg', 'bh', 'bi', 'bj', 'bl', 'bm', 'bn', 'bo', 'bq', 'br', 'bs', 'bt', 'bw', 'by', 'bz',
+  'ca', 'cd', 'cf', 'cg', 'ch', 'ci', 'ck', 'cl', 'cm', 'cn', 'co', 'cr', 'cu', 'cv', 'cw', 'cy', 'cz',
   'de', 'dj', 'dk', 'dm', 'do', 'dz',
-  'ec', 'ee', 'eg', 'er', 'es', 'et',
-  'fi', 'fj', 'fr',
-  'ga', 'gb', 'gd', 'ge', 'gh', 'gm', 'gn', 'gp', 'gq', 'gr', 'gt', 'gw', 'gy',
+  'ec', 'ee', 'eg', 'eh', 'er', 'es', 'et',
+  'fi', 'fj', 'fk', 'fm', 'fo', 'fr',
+  'ga', 'gb', 'gd', 'ge', 'gf', 'gg', 'gh', 'gi', 'gl', 'gm', 'gn', 'gp', 'gq', 'gr', 'gs', 'gt', 'gu', 'gw', 'gy',
   'hk', 'hn', 'hr', 'ht', 'hu',
-  'id', 'ie', 'il', 'in', 'iq', 'ir', 'is', 'it',
-  'jm', 'jo', 'jp',
-  'ke', 'kg', 'kh', 'ki', 'km', 'kn', 'kp', 'kr', 'kw', 'kz',
+  'id', 'ie', 'il', 'im', 'in', 'iq', 'ir', 'is', 'it',
+  'je', 'jm', 'jo', 'jp',
+  'ke', 'kg', 'kh', 'ki', 'km', 'kn', 'kp', 'kr', 'kw', 'ky', 'kz',
   'la', 'lb', 'lc', 'li', 'lk', 'lr', 'ls', 'lt', 'lu', 'lv', 'ly',
-  'ma', 'mc', 'md', 'me', 'mg', 'mh', 'mk', 'ml', 'mm', 'mn', 'mo', 'mq', 'mr', 'mt', 'mu', 'mv', 'mw', 'mx', 'my', 'mz',
-  'na', 'nc', 'ne', 'ng', 'ni', 'nl', 'no', 'np', 'nr', 'nz',
+  'ma', 'mc', 'md', 'me', 'mf', 'mg', 'mh', 'mk', 'ml', 'mm', 'mn', 'mo', 'mp', 'mq', 'mr', 'ms', 'mt', 'mu', 'mv', 'mw', 'mx', 'my', 'mz',
+  'na', 'nc', 'ne', 'nf', 'ng', 'ni', 'nl', 'no', 'np', 'nr', 'nu', 'nz',
   'om',
-  'pa', 'pe', 'pf', 'pg', 'ph', 'pk', 'pl', 'pt', 'pw', 'py',
+  'pa', 'pe', 'pf', 'pg', 'ph', 'pk', 'pl', 'pm', 'pn', 'pr', 'pt', 'pw', 'py',
   'qa',
   're', 'ro', 'rs', 'ru', 'rw',
-  'sa', 'sb', 'sc', 'sd', 'se', 'sg', 'si', 'sk', 'sl', 'sm', 'sn', 'so', 'sr', 'ss', 'st', 'sv', 'sy', 'sz',
-  'td', 'tg', 'th', 'tj', 'tl', 'tm', 'tn', 'to', 'tr', 'tt', 'tv', 'tw', 'tz',
+  'sa', 'sb', 'sc', 'sd', 'se', 'sg', 'sh', 'si', 'sk', 'sl', 'sm', 'sn', 'so', 'sr', 'ss', 'st', 'sv', 'sx', 'sy', 'sz',
+  'tc', 'td', 'tf', 'tg', 'th', 'tj', 'tk', 'tl', 'tm', 'tn', 'to', 'tr', 'tt', 'tv', 'tw', 'tz',
   'ua', 'ug', 'us', 'uy', 'uz',
-  'va', 'vc', 've', 'vn', 'vu',
+  'va', 'vc', 've', 'vg', 'vi', 'vn', 'vu',
   'wf', 'ws',
+  'xk',
   'ye', 'yt',
   'za', 'zm', 'zw',
 ]
@@ -1468,9 +1469,17 @@ export function flagEmoji(code) {
 
 const countryDisplayNames = typeof Intl !== 'undefined' && Intl.DisplayNames ? new Intl.DisplayNames(['fr'], { type: 'region' }) : null
 
+function countryName(code) {
+  try {
+    return (countryDisplayNames && countryDisplayNames.of(code.toUpperCase())) || code.toUpperCase()
+  } catch {
+    return code.toUpperCase()
+  }
+}
+
 export const COUNTRIES = COUNTRY_CODES.map((code) => ({
   code,
-  name: countryDisplayNames ? countryDisplayNames.of(code.toUpperCase()) : code.toUpperCase(),
+  name: countryName(code),
   flag: flagEmoji(code),
 })).sort((a, b) => a.name.localeCompare(b.name, 'fr'))
 
