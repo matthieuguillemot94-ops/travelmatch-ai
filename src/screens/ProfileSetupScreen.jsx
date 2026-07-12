@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { travelerTypes, COUNTRIES } from '../data/mockData.js'
 import { PrimaryButton, ScreenHeader } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
+import WorldMap from '../components/WorldMap.jsx'
 
 const avatarTones = [
   'linear-gradient(135deg,#2F5D50,#4FA98A)',
@@ -91,6 +92,12 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
             {profile.visitedCountries?.length > 0 && (
               <span className="text-[12px] text-stone">{profile.visitedCountries.length} sélectionné{profile.visitedCountries.length > 1 ? 's' : ''}</span>
             )}
+          </div>
+          <p className="text-[12.5px] text-stone leading-relaxed mb-3">
+            Composez votre carte : chaque pays coché s’allume en vert ci-dessous.
+          </p>
+          <div className="rounded-2xl bg-white border border-ink/10 p-3 mb-3">
+            <WorldMap visitedCountries={profile.visitedCountries || []} className="w-full [&_svg]:w-full [&_svg]:h-auto" />
           </div>
           <div className="relative mb-3">
             <Icon name="pin" className="w-4 h-4 text-stone absolute left-3.5 top-1/2 -translate-y-1/2" />
