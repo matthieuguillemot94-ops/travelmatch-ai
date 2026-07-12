@@ -1,10 +1,57 @@
-import { moods, whenOptions, groupOptions, dashboardTrip, userProfile } from '../data/mockData.js'
+import { moods, whenOptions, groupOptions, comfortLevels, dashboardTrip, userProfile } from '../data/mockData.js'
 import { Chip, PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
+
+function IconTile({ label, icon, selected, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-center gap-2 shrink-0 w-[78px] rounded-2xl border py-3 px-2 transition-colors ${
+        selected ? 'bg-ink border-ink' : 'bg-white border-ink/10'
+      }`}
+    >
+      <Icon name={icon} className={`w-5 h-5 ${selected ? 'text-gold-400' : 'text-pine'}`} />
+      <span className={`text-[10.5px] leading-tight text-center ${selected ? 'text-paper' : 'text-ink'}`}>{label}</span>
+    </button>
+  )
+}
+
+function BudgetRow({ label, icon, value, min, max, step, onChange }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1.5">
+        <span className="flex items-center gap-1.5 text-[12.5px] text-ink">
+          <Icon name={icon} className="w-4 h-4 text-pine" />
+          {label}
+        </span>
+        <span className="font-mono tabular text-[13px] font-medium text-ink">{value.toLocaleString('fr-FR')} €</span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={onChange}
+        className="w-full accent-pine"
+      />
+    </div>
+  )
+}
 
 export default function NewTripScreen({ quiz, setQuiz, onOpenProfile, onOpenDashboard, onFinish }) {
   const update = (patch) => setQuiz((q) => ({ ...q, ...patch }))
   const toggleMood = (m) => update({ mood: quiz.mood.includes(m) ? quiz.mood.filter((i) => i !== m) : [...quiz.mood, m] })
+
+  const updateBudgetPart = (key) => (e) => {
+    const value = Number(e.target.value)
+    setQuiz((q) => {
+      const next = { ...q, [key]: value }
+      next.budget = next.budgetTransport + next.budgetStay + next.budgetDaily
+      return next
+    })
+  }
+
   const firstName = userProfile.name.split(' ')[0]
   const canContinue = quiz.mood.length >= 1
 
@@ -40,10 +87,28 @@ export default function NewTripScreen({ quiz, setQuiz, onOpenProfile, onOpenDash
         </div>
 
         <div>
-          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Envie du moment</label>
-          <div className="flex flex-wrap gap-2">
+          <label className="block text-[12px] font-medium text-ink/70 mb-2.5 uppercase tracking-wide">Envie du moment</label>
+          <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-6 px-6">
             {moods.map((m) => (
-              <Chip key={m} label={m} selected={quiz.mood.includes(m)} onClick={() => toggleMood(m)} />
+              <IconTile key={m.label} label={m.label} icon={m.icon} selected={quiz.mood.includes(m.label)} onClick={() => toggleMood(m.label)} />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[12px] font-medium text-ink/70 mb-2.5 uppercase tracking-wide">Avec qui</label>
+          <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-6 px-6">
+            {groupOptions.map((g) => (
+              <IconTile key={g.id} label={g.label} icon={g.icon} selected={quiz.group === g.id} onClick={() => update({ group: g.id })} />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Niveau de confort</label>
+          <div className="flex flex-wrap gap-2">
+            {comfortLevels.map((c) => (
+              <Chip key={c.id} label={c.label} icon={c.icon} selected={quiz.comfort === c.id} onClick={() => update({ comfort: c.id })} />
             ))}
           </div>
         </div>
@@ -54,26 +119,6 @@ export default function NewTripScreen({ quiz, setQuiz, onOpenProfile, onOpenDash
             {whenOptions.map((w) => (
               <Chip key={w} label={w} selected={quiz.when === w} onClick={() => update({ when: w })} />
             ))}
-          </div>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-[12px] font-medium text-ink/70 uppercase tracking-wide">Budget</label>
-            <span className="font-mono tabular text-[15px] font-semibold text-ink">{quiz.budget.toLocaleString('fr-FR')} €</span>
-          </div>
-          <input
-            type="range"
-            min="300"
-            max="15000"
-            step="100"
-            value={quiz.budget}
-            onChange={(e) => update({ budget: Number(e.target.value) })}
-            className="w-full accent-ink mb-1"
-          />
-          <div className="flex justify-between text-[11px] text-stone">
-            <span>300 €</span>
-            <span>15 000 €</span>
           </div>
         </div>
 
@@ -100,16 +145,43 @@ export default function NewTripScreen({ quiz, setQuiz, onOpenProfile, onOpenDash
         </div>
 
         <div>
-          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Avec qui</label>
-          <div className="flex flex-wrap gap-2">
-            {groupOptions.map((g) => (
-              <Chip key={g.id} label={g.label} selected={quiz.group === g.id} onClick={() => update({ group: g.id })} />
-            ))}
+          <div className="flex items-baseline justify-between mb-3">
+            <label className="text-[12px] font-medium text-ink/70 uppercase tracking-wide">Budget du voyage</label>
+            <span className="font-mono tabular text-[18px] font-semibold text-ink">{quiz.budget.toLocaleString('fr-FR')} €</span>
+          </div>
+          <div className="rounded-2xl border border-ink/10 bg-white p-4 space-y-4">
+            <BudgetRow
+              label="Transport"
+              icon="send"
+              value={quiz.budgetTransport}
+              min={100}
+              max={4000}
+              step={50}
+              onChange={updateBudgetPart('budgetTransport')}
+            />
+            <BudgetRow
+              label="Hébergement"
+              icon="bed"
+              value={quiz.budgetStay}
+              min={100}
+              max={6000}
+              step={50}
+              onChange={updateBudgetPart('budgetStay')}
+            />
+            <BudgetRow
+              label="Frais quotidiens (repas, activités…)"
+              icon="fork"
+              value={quiz.budgetDaily}
+              min={50}
+              max={3000}
+              step={50}
+              onChange={updateBudgetPart('budgetDaily')}
+            />
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
+      <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
         <PrimaryButton onClick={onFinish} disabled={!canContinue} icon="sparkle">
           Voir mes recommandations
         </PrimaryButton>

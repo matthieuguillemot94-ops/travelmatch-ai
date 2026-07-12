@@ -14,8 +14,9 @@ import AssistantScreen from './screens/AssistantScreen.jsx'
 import DashboardScreen from './screens/DashboardScreen.jsx'
 import UserProfileScreen from './screens/UserProfileScreen.jsx'
 
-const NAV_SCREENS = ['results', 'destination', 'activity', 'itinerary', 'assistant', 'dashboard', 'profile']
-const NAV_TABS = ['results', 'itinerary', 'assistant', 'dashboard', 'profile']
+const NAV_SCREENS = ['newTrip', 'results', 'destination', 'activity', 'itinerary', 'assistant', 'dashboard', 'profile']
+const NAV_TABS = ['newTrip', 'itinerary', 'assistant', 'dashboard', 'profile']
+const VOYAGER_SCREENS = ['newTrip', 'results', 'destination', 'activity']
 const HOME_GRADIENT = 'linear-gradient(180deg, #143C61 0%, #3E76A0 42%, #7CADCE 72%, #B7D9EA 100%)'
 
 export default function App() {
@@ -24,6 +25,9 @@ export default function App() {
   const [quiz, setQuiz] = useState({
     interests: [],
     budget: 1200,
+    budgetTransport: 450,
+    budgetStay: 450,
+    budgetDaily: 300,
     duration: '1 semaine',
     group: 'solo',
     comfort: 'confort',
@@ -35,7 +39,7 @@ export default function App() {
   const [activityId, setActivityId] = useState('fushimi-dawn')
 
   const showNav = NAV_SCREENS.includes(screen)
-  const activeTab = NAV_TABS.includes(screen) ? screen : screen === 'destination' || screen === 'activity' ? 'results' : null
+  const activeTab = NAV_TABS.includes(screen) ? screen : VOYAGER_SCREENS.includes(screen) ? 'newTrip' : null
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center gap-6 py-10" style={{ background: '#0B1512' }}>

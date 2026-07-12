@@ -94,14 +94,14 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
             <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Avec qui</label>
             <div className="flex flex-wrap gap-2 mb-6">
               {groupOptions.map((g) => (
-                <Chip key={g.id} label={g.label} selected={quiz.group === g.id} onClick={() => update({ group: g.id })} />
+                <Chip key={g.id} label={g.label} icon={g.icon} selected={quiz.group === g.id} onClick={() => update({ group: g.id })} />
               ))}
             </div>
 
             <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Niveau de confort</label>
             <div className="flex flex-wrap gap-2">
               {comfortLevels.map((c) => (
-                <Chip key={c.id} label={c.label} selected={quiz.comfort === c.id} onClick={() => update({ comfort: c.id })} />
+                <Chip key={c.id} label={c.label} icon={c.icon} selected={quiz.comfort === c.id} onClick={() => update({ comfort: c.id })} />
               ))}
             </div>
           </div>
@@ -113,7 +113,7 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
             <p className="text-[13.5px] text-stone mb-6">Votre envie du moment affine le classement final.</p>
             <div className="flex flex-wrap gap-2">
               {moods.map((m) => (
-                <Chip key={m} label={m} selected={quiz.mood.includes(m)} onClick={() => toggleMood(m)} />
+                <Chip key={m.label} label={m.label} icon={m.icon} selected={quiz.mood.includes(m.label)} onClick={() => toggleMood(m.label)} />
               ))}
             </div>
           </div>

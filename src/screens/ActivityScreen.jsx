@@ -56,7 +56,7 @@ export default function ActivityScreen({ activityId, onBack }) {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
+      <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
         <PrimaryButton onClick={() => setAdded(true)} icon={added ? 'check' : 'plus'} className={added ? 'bg-pine' : ''}>
           {added ? 'Ajouté à l’itinéraire' : 'Ajouter à mon itinéraire'}
         </PrimaryButton>

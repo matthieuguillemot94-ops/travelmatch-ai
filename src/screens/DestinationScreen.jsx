@@ -1,11 +1,15 @@
-import { destinations, activities } from '../data/mockData.js'
+import { destinations, activities, getTransportOptions, getStayOptions, flightsFromCity } from '../data/mockData.js'
 import ScoreRing from '../components/ScoreRing.jsx'
 import { PrimaryButton, Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 
+const SOURCE_TONE = { Airbnb: 'berry', 'Booking.com': 'pine', Vrbo: 'mint' }
+
 export default function DestinationScreen({ destinationId, onBack, onOpenActivity, onGenerateItinerary }) {
   const d = destinations.find((x) => x.id === destinationId) ?? destinations[0]
   const localActivities = activities.filter((a) => a.destinationId === d.id)
+  const transportOptions = [...getTransportOptions(d)].sort((a, b) => a.price - b.price)
+  const stayOptions = getStayOptions(d)
 
   return (
     <div className="h-full w-full bg-paper flex flex-col">
@@ -66,6 +70,51 @@ export default function DestinationScreen({ destinationId, onBack, onOpenActivit
             ))}
           </div>
 
+          <h2 className="font-serif text-[17px] text-ink mb-1">Comment y aller</h2>
+          <p className="text-[12px] text-stone mb-3">Vols depuis {flightsFromCity}</p>
+          <div className="space-y-2.5 mb-8">
+            {transportOptions.map((t, i) => (
+              <div key={i} className="flex items-center gap-3 rounded-2xl bg-white border border-ink/[0.06] p-3.5">
+                <div className="w-10 h-10 rounded-full bg-pine-100 flex items-center justify-center shrink-0">
+                  <Icon name="send" className="w-4.5 h-4.5 text-pine" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <p className="text-[13.5px] font-medium text-ink truncate">{t.airline}</p>
+                    {i === 0 && <Tag tone="gold">Meilleur prix</Tag>}
+                  </div>
+                  <p className="text-[11.5px] text-stone">
+                    {t.stops === 0 ? 'Vol direct' : `1 escale · ${t.stopCity}`} · {t.duration}
+                  </p>
+                </div>
+                <span className="font-mono tabular text-[15px] font-semibold text-ink shrink-0">{t.price} €</span>
+              </div>
+            ))}
+          </div>
+
+          <h2 className="font-serif text-[17px] text-ink mb-3">Où loger</h2>
+        </div>
+
+        <div className="flex gap-3.5 overflow-x-auto no-scrollbar px-6 pb-2 mb-8">
+          {stayOptions.map((s, i) => (
+            <div key={i} className="w-[190px] shrink-0 rounded-2xl bg-white border border-ink/[0.06] p-3.5 shadow-card">
+              <Tag tone={SOURCE_TONE[s.source] || 'pine'}>{s.source}</Tag>
+              <p className="text-[13px] font-medium text-ink leading-snug mt-2 mb-1">{s.title}</p>
+              <p className="text-[11px] text-stone mb-2.5">{s.type}</p>
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1 text-[11.5px] text-ink/70">
+                  <Icon name="star" className="w-3 h-3 text-gold-600" />
+                  {s.rating}
+                </span>
+                <span className="font-mono tabular text-[13px] font-semibold text-ink">
+                  {s.pricePerNight} € <span className="text-[10px] text-stone font-sans font-normal">/nuit</span>
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="px-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-serif text-[17px] text-ink">Expériences locales</h2>
             <span className="text-[12px] text-stone">{localActivities.length} suggestions</span>
@@ -95,7 +144,7 @@ export default function DestinationScreen({ destinationId, onBack, onOpenActivit
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
+      <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
         <PrimaryButton onClick={onGenerateItinerary} icon="route">Générer mon itinéraire</PrimaryButton>
       </div>
     </div>

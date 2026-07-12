@@ -26,27 +26,27 @@ export const interestCategories = [
 ]
 
 export const groupOptions = [
-  { id: 'solo', label: 'Solo' },
-  { id: 'couple', label: 'En couple' },
-  { id: 'famille', label: 'En famille' },
-  { id: 'amis', label: 'Entre amis' },
+  { id: 'solo', label: 'Solo', icon: 'user' },
+  { id: 'couple', label: 'En couple', icon: 'heart' },
+  { id: 'famille', label: 'En famille', icon: 'home' },
+  { id: 'amis', label: 'Entre amis', icon: 'users' },
 ]
 
 export const comfortLevels = [
-  { id: 'simple', label: 'Simple & authentique' },
-  { id: 'confort', label: 'Confort' },
-  { id: 'premium', label: 'Premium' },
+  { id: 'simple', label: 'Simple & authentique', icon: 'leaf' },
+  { id: 'confort', label: 'Confort', icon: 'compass' },
+  { id: 'premium', label: 'Premium', icon: 'star' },
 ]
 
 export const durations = ['Week-end', '1 semaine', '2 semaines', '1 mois']
 
 export const moods = [
-  'Me ressourcer',
-  'Vivre l’aventure',
-  'Découvrir une culture',
-  'Faire de belles photos',
-  'Rencontrer des locaux',
-  'Ne rien faire',
+  { label: 'Me ressourcer', icon: 'drop' },
+  { label: 'Vivre l’aventure', icon: 'peak' },
+  { label: 'Découvrir une culture', icon: 'column' },
+  { label: 'Faire de belles photos', icon: 'aperture' },
+  { label: 'Rencontrer des locaux', icon: 'thread' },
+  { label: 'Ne rien faire', icon: 'wave' },
 ]
 
 export const whenOptions = ['Dès que possible', 'Dans 1 à 3 mois', 'Je suis flexible']
@@ -1312,4 +1312,92 @@ export function matchDestinations({ mood = [], interests = [], budget = 3000 } =
       return { ...d, matchScore }
     })
     .sort((a, b) => b.matchScore - a.matchScore)
+}
+
+// Deterministic mock "search results" for transport & lodging, scaled to each
+// destination's budget level. Not a real API — illustrates what a booking
+// integration would surface once real flight/stay providers are wired in.
+function hashString(s) {
+  let h = 0
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0
+  return h
+}
+
+function formatDuration(hours) {
+  const h = Math.floor(hours)
+  const m = Math.round((hours - h) * 60)
+  return m > 0 ? `${h}h${String(m).padStart(2, '0')}` : `${h}h`
+}
+
+const AIRLINES = ['Air France', 'KLM', 'Lufthansa', 'Turkish Airlines', 'Emirates', 'Qatar Airways', 'British Airways', 'Iberia']
+const STOPOVER_CITIES = ['Istanbul', 'Doha', 'Amsterdam', 'Dubaï', 'Francfort', 'Londres', 'Madrid']
+const CONTINENT_FLIGHT_HOURS = {
+  Europe: 2.5,
+  Afrique: 7,
+  Asie: 10,
+  'Moyen-Orient': 6,
+  'Amérique du Nord': 9,
+  'Amérique du Sud': 11,
+  Océanie: 21,
+}
+
+export const flightsFromCity = 'Paris'
+
+export function getTransportOptions(destination) {
+  const seed = hashString(destination.id)
+  const baseHours = CONTINENT_FLIGHT_HOURS[destination.continent] || 8
+  const baseDirectPrice = Math.max(120, Math.round((destination.budgetEstimate * 0.26) / 10) * 10)
+  const stop1 = STOPOVER_CITIES[seed % STOPOVER_CITIES.length]
+  const stop2 = STOPOVER_CITIES[(seed + 2) % STOPOVER_CITIES.length]
+
+  return [
+    {
+      airline: AIRLINES[seed % AIRLINES.length],
+      price: baseDirectPrice,
+      stops: 0,
+      stopCity: null,
+      duration: formatDuration(baseHours),
+    },
+    {
+      airline: AIRLINES[(seed + 3) % AIRLINES.length],
+      price: Math.round((baseDirectPrice * 0.82) / 5) * 5,
+      stops: 1,
+      stopCity: stop1,
+      duration: formatDuration(baseHours + 3.5),
+    },
+    {
+      airline: AIRLINES[(seed + 5) % AIRLINES.length],
+      price: Math.round((baseDirectPrice * 0.66) / 5) * 5,
+      stops: 1,
+      stopCity: stop2,
+      duration: formatDuration(baseHours + 5.5),
+    },
+  ]
+}
+
+export function getStayOptions(destination) {
+  const basePerNight = Math.max(25, Math.round((destination.budgetEstimate * 0.085) / 5) * 5)
+  return [
+    {
+      source: 'Airbnb',
+      title: 'Appartement cosy en centre-ville',
+      type: 'Appartement entier',
+      pricePerNight: basePerNight + 6,
+      rating: 4.8,
+    },
+    {
+      source: 'Booking.com',
+      title: 'Hôtel bien noté, proche des sites',
+      type: 'Hôtel 3★',
+      pricePerNight: Math.max(20, basePerNight - 8),
+      rating: 4.5,
+    },
+    {
+      source: 'Vrbo',
+      title: 'Maison avec espace extérieur',
+      type: 'Maison entière',
+      pricePerNight: basePerNight + 18,
+      rating: 4.9,
+    },
+  ]
 }
