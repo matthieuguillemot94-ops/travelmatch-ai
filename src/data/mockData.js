@@ -1373,74 +1373,102 @@ function seasonLabel(monthIdx, hemisphere) {
 
 // hemisphere: 1 = peak heat in July (north), -1 = peak heat in January (south)
 // amplitude: typical swing in °C between the coldest and hottest month
+// rain: 'dry' (desert, rain stays low year-round), 'monsoon' (sharp wet/dry
+// contrast) or 'temperate' (moderate seasonal swing) — drives precipitation
+// level and the day/night temperature spread
 const CLIMATE_PROFILE = {
-  kyoto: { hemisphere: 1, amplitude: 13 },
-  lisbonne: { hemisphere: 1, amplitude: 9 },
-  oaxaca: { hemisphere: 1, amplitude: 5 },
-  douro: { hemisphere: 1, amplitude: 11 },
-  chiangmai: { hemisphere: 1, amplitude: 4 },
-  paris: { hemisphere: 1, amplitude: 11 },
-  rome: { hemisphere: 1, amplitude: 11 },
-  santorin: { hemisphere: 1, amplitude: 10 },
-  reykjavik: { hemisphere: 1, amplitude: 10 },
-  marrakech: { hemisphere: 1, amplitude: 14 },
-  capetown: { hemisphere: -1, amplitude: 8 },
-  newyork: { hemisphere: 1, amplitude: 17 },
-  rio: { hemisphere: -1, amplitude: 6 },
-  machupicchu: { hemisphere: -1, amplitude: 4 },
-  bali: { hemisphere: -1, amplitude: 3 },
-  dubai: { hemisphere: 1, amplitude: 15 },
-  petra: { hemisphere: 1, amplitude: 15 },
-  sydney: { hemisphere: -1, amplitude: 8 },
-  queenstown: { hemisphere: -1, amplitude: 9 },
-  borabora: { hemisphere: -1, amplitude: 2 },
-  barcelona: { hemisphere: 1, amplitude: 11 },
-  amsterdam: { hemisphere: 1, amplitude: 10 },
-  prague: { hemisphere: 1, amplitude: 13 },
-  vienna: { hemisphere: 1, amplitude: 12 },
-  venice: { hemisphere: 1, amplitude: 12 },
-  edinburgh: { hemisphere: 1, amplitude: 8 },
-  porto: { hemisphere: 1, amplitude: 9 },
-  budapest: { hemisphere: 1, amplitude: 13 },
-  copenhagen: { hemisphere: 1, amplitude: 10 },
-  zanzibar: { hemisphere: -1, amplitude: 3 },
-  cairo: { hemisphere: 1, amplitude: 12 },
-  serengeti: { hemisphere: -1, amplitude: 4 },
-  victoriafalls: { hemisphere: -1, amplitude: 8 },
-  bangkok: { hemisphere: 1, amplitude: 4 },
-  singapore: { hemisphere: 1, amplitude: 1 },
-  halongbay: { hemisphere: 1, amplitude: 9 },
-  seoul: { hemisphere: 1, amplitude: 15 },
-  hongkong: { hemisphere: 1, amplitude: 9 },
-  maldives: { hemisphere: 1, amplitude: 1 },
-  jaipur: { hemisphere: 1, amplitude: 12 },
-  kathmandu: { hemisphere: 1, amplitude: 8 },
-  istanbul: { hemisphere: 1, amplitude: 12 },
-  jerusalem: { hemisphere: 1, amplitude: 10 },
-  banff: { hemisphere: 1, amplitude: 17 },
-  grandcanyon: { hemisphere: 1, amplitude: 15 },
-  mexicocity: { hemisphere: 1, amplitude: 5 },
-  havana: { hemisphere: 1, amplitude: 5 },
-  buenosaires: { hemisphere: -1, amplitude: 9 },
-  cartagena: { hemisphere: 1, amplitude: 2 },
-  torresdelpaine: { hemisphere: -1, amplitude: 8 },
+  kyoto: { hemisphere: 1, amplitude: 13, rain: 'monsoon' },
+  lisbonne: { hemisphere: 1, amplitude: 9, rain: 'temperate' },
+  oaxaca: { hemisphere: 1, amplitude: 5, rain: 'monsoon' },
+  douro: { hemisphere: 1, amplitude: 11, rain: 'temperate' },
+  chiangmai: { hemisphere: 1, amplitude: 4, rain: 'monsoon' },
+  paris: { hemisphere: 1, amplitude: 11, rain: 'temperate' },
+  rome: { hemisphere: 1, amplitude: 11, rain: 'temperate' },
+  santorin: { hemisphere: 1, amplitude: 10, rain: 'temperate' },
+  reykjavik: { hemisphere: 1, amplitude: 10, rain: 'temperate' },
+  marrakech: { hemisphere: 1, amplitude: 14, rain: 'dry' },
+  capetown: { hemisphere: -1, amplitude: 8, rain: 'temperate' },
+  newyork: { hemisphere: 1, amplitude: 17, rain: 'temperate' },
+  rio: { hemisphere: -1, amplitude: 6, rain: 'monsoon' },
+  machupicchu: { hemisphere: -1, amplitude: 4, rain: 'monsoon' },
+  bali: { hemisphere: -1, amplitude: 3, rain: 'monsoon' },
+  dubai: { hemisphere: 1, amplitude: 15, rain: 'dry' },
+  petra: { hemisphere: 1, amplitude: 15, rain: 'dry' },
+  sydney: { hemisphere: -1, amplitude: 8, rain: 'temperate' },
+  queenstown: { hemisphere: -1, amplitude: 9, rain: 'temperate' },
+  borabora: { hemisphere: -1, amplitude: 2, rain: 'monsoon' },
+  barcelona: { hemisphere: 1, amplitude: 11, rain: 'temperate' },
+  amsterdam: { hemisphere: 1, amplitude: 10, rain: 'temperate' },
+  prague: { hemisphere: 1, amplitude: 13, rain: 'temperate' },
+  vienna: { hemisphere: 1, amplitude: 12, rain: 'temperate' },
+  venice: { hemisphere: 1, amplitude: 12, rain: 'temperate' },
+  edinburgh: { hemisphere: 1, amplitude: 8, rain: 'temperate' },
+  porto: { hemisphere: 1, amplitude: 9, rain: 'temperate' },
+  budapest: { hemisphere: 1, amplitude: 13, rain: 'temperate' },
+  copenhagen: { hemisphere: 1, amplitude: 10, rain: 'temperate' },
+  zanzibar: { hemisphere: -1, amplitude: 3, rain: 'monsoon' },
+  cairo: { hemisphere: 1, amplitude: 12, rain: 'dry' },
+  serengeti: { hemisphere: -1, amplitude: 4, rain: 'monsoon' },
+  victoriafalls: { hemisphere: -1, amplitude: 8, rain: 'monsoon' },
+  bangkok: { hemisphere: 1, amplitude: 4, rain: 'monsoon' },
+  singapore: { hemisphere: 1, amplitude: 1, rain: 'monsoon' },
+  halongbay: { hemisphere: 1, amplitude: 9, rain: 'monsoon' },
+  seoul: { hemisphere: 1, amplitude: 15, rain: 'monsoon' },
+  hongkong: { hemisphere: 1, amplitude: 9, rain: 'monsoon' },
+  maldives: { hemisphere: 1, amplitude: 1, rain: 'monsoon' },
+  jaipur: { hemisphere: 1, amplitude: 12, rain: 'monsoon' },
+  kathmandu: { hemisphere: 1, amplitude: 8, rain: 'monsoon' },
+  istanbul: { hemisphere: 1, amplitude: 12, rain: 'temperate' },
+  jerusalem: { hemisphere: 1, amplitude: 10, rain: 'temperate' },
+  banff: { hemisphere: 1, amplitude: 17, rain: 'temperate' },
+  grandcanyon: { hemisphere: 1, amplitude: 15, rain: 'dry' },
+  mexicocity: { hemisphere: 1, amplitude: 5, rain: 'monsoon' },
+  havana: { hemisphere: 1, amplitude: 5, rain: 'monsoon' },
+  buenosaires: { hemisphere: -1, amplitude: 9, rain: 'temperate' },
+  cartagena: { hemisphere: 1, amplitude: 2, rain: 'monsoon' },
+  torresdelpaine: { hemisphere: -1, amplitude: 8, rain: 'temperate' },
 }
 
-export function weatherForDate(destination, dateISO) {
-  if (!dateISO) return destination.weather
-  const monthIdx = new Date(dateISO).getMonth()
-  const profile = CLIMATE_PROFILE[destination.id] || { hemisphere: 1, amplitude: 10 }
+const TEMP_SWING_BY_RAIN = { dry: 13, monsoon: 6, temperate: 8 }
+
+function precipitationLevel(monthIdx, anchor, rain) {
+  const dist = Math.min(Math.abs(monthIdx - anchor), 12 - Math.abs(monthIdx - anchor))
+  if (rain === 'dry') return dist >= 5 ? 'Modérée' : 'Faible'
+  if (dist <= 1) return 'Faible'
+  if (dist <= 3) return 'Modérée'
+  return 'Élevée'
+}
+
+// dateISO/endISO: selected travel period. When both are set, the average is
+// computed for the midpoint of the stay so a trip spanning two months isn't
+// skewed toward the departure date alone.
+export function weatherForDate(destination, dateISO, endISO) {
+  const profile = CLIMATE_PROFILE[destination.id] || { hemisphere: 1, amplitude: 10, rain: 'temperate' }
   const { months: bestMonthSet, anchor } = parseBestMonths(destination.bestMonths)
   const baseTemp = parseInt(destination.weather.temp, 10) || 20
   const hottestMonth = profile.hemisphere === 1 ? 6 : 0
   const angle = (m) => (2 * Math.PI * (m - hottestMonth)) / 12
   const mean = baseTemp - profile.amplitude * Math.cos(angle(anchor))
+
+  const typical = !dateISO
+  let monthIdx = anchor
+  if (dateISO) {
+    const start = new Date(dateISO)
+    const end = endISO ? new Date(endISO) : start
+    monthIdx = new Date((start.getTime() + end.getTime()) / 2).getMonth()
+  }
+
   const temp = Math.round(mean + profile.amplitude * Math.cos(angle(monthIdx)))
+  const swing = TEMP_SWING_BY_RAIN[profile.rain] || 8
   const season = seasonLabel(monthIdx, profile.hemisphere)
   return {
     temp: `${temp}°C`,
+    tempMin: `${Math.round(temp - swing / 2)}°C`,
+    tempMax: `${Math.round(temp + swing / 2)}°C`,
     season,
+    precipitation: precipitationLevel(monthIdx, anchor, profile.rain),
     note: bestMonthSet.has(monthIdx) ? destination.weather.note : undefined,
+    typical,
   }
 }
 

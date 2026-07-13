@@ -31,7 +31,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
   const d = destinations.find((x) => x.id === destinationId) ?? destinations[0]
   const localActivities = activities.filter((a) => a.destinationId === d.id)
   const departureCity = quiz?.departureCity || flightsFromCity
-  const weather = weatherForDate(d, quiz?.startDate)
+  const weather = weatherForDate(d, quiz?.startDate, quiz?.endDate)
   const minNights = minNightsFor(d)
   const nightsTooShort = quiz?.nights && quiz.nights < minNights
   const transportByMode = getTransportOptions(d, { startDate: quiz?.startDate, departureCity })
@@ -68,7 +68,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
           </div>
           <p className="text-[14px] text-ink/75 leading-relaxed mb-6">{d.description}</p>
 
-          <div className="grid grid-cols-3 gap-2.5 mb-7">
+          <div className="grid grid-cols-3 gap-2.5 mb-2.5">
             <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
               <Icon name="clock" className="w-4 h-4 text-pine mb-1.5" />
               <p className="text-[13px] font-medium text-ink">{d.duration}</p>
@@ -82,12 +82,22 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
             <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
               <Icon name="pin" className="w-4 h-4 text-pine mb-1.5" />
               <p className="text-[13px] font-medium text-ink">{weather.temp}</p>
-              <p className="text-[11px] text-stone">{weather.season}{!quiz?.startDate && ' · type'}</p>
+              <p className="text-[11px] text-stone">{weather.season}{weather.typical && ' · type'}</p>
             </div>
           </div>
-          {weather.note && (
-            <p className="text-[12px] text-stone mb-7">{weather.note}</p>
-          )}
+          <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-[12px] text-stone mb-2 px-1">
+            <span>Min {weather.tempMin} · Max {weather.tempMax}</span>
+            <span className="flex items-center gap-1">
+              <Icon name="drop" className="w-3 h-3 text-pine" />
+              Précipitations {weather.precipitation.toLowerCase()}
+            </span>
+          </div>
+          <p className="text-[11px] text-stone mb-7">
+            {weather.typical
+              ? 'Moyennes saisonnières typiques'
+              : `Prévision moyenne pour ${new Date(quiz.startDate).toLocaleDateString('fr-FR', { month: 'long' })}`}
+            {weather.note ? ` · ${weather.note}` : ''}
+          </p>
 
           {nightsTooShort && (
             <div className="flex items-start gap-2.5 rounded-2xl bg-gold-400/15 border border-gold-400/40 p-3.5 mb-7">
