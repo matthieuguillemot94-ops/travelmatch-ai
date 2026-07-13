@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { matchDestinations, recommendedDuration } from '../data/mockData.js'
+import { matchDestinations, recommendedDuration, destinations } from '../data/mockData.js'
 import ScoreRing from '../components/ScoreRing.jsx'
 import { Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
@@ -34,7 +34,7 @@ export default function ResultsScreen({ profile, quiz, onOpenDestination, onBack
         </button>
         <p className="text-[12px] uppercase tracking-wide text-stone mb-1">Pour {profile.name || 'vous'}</p>
         <h1 className="font-serif text-[23px] text-ink leading-tight">Vos destinations les plus compatibles</h1>
-        <p className="text-[12px] text-stone mt-1">{matched.length} destinations sur 50, triées selon vos envies</p>
+        <p className="text-[12px] text-stone mt-1">{matched.length} destinations sur {destinations.length}, triées selon vos envies</p>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-28">

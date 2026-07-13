@@ -60,6 +60,46 @@ export const DESTINATION_COORDS = {
   porto: { lat: 41.1579, lon: -8.6291 },
   budapest: { lat: 47.4979, lon: 19.0402 },
   copenhagen: { lat: 55.6761, lon: 12.5683 },
+  london: { lat: 51.5074, lon: -0.1278 },
+  berlin: { lat: 52.52, lon: 13.405 },
+  madrid: { lat: 40.4168, lon: -3.7038 },
+  brussels: { lat: 50.8503, lon: 4.3517 },
+  dublin: { lat: 53.3498, lon: -6.2603 },
+  oslo: { lat: 59.9139, lon: 10.7522 },
+  stockholm: { lat: 59.3293, lon: 18.0686 },
+  helsinki: { lat: 60.1699, lon: 24.9384 },
+  warsaw: { lat: 52.2297, lon: 21.0122 },
+  athens: { lat: 37.9838, lon: 23.7275 },
+  zagreb: { lat: 45.815, lon: 15.9819 },
+  ljubljana: { lat: 46.0569, lon: 14.5058 },
+  bratislava: { lat: 48.1486, lon: 17.1077 },
+  sofia: { lat: 42.6977, lon: 23.3219 },
+  bucharest: { lat: 44.4268, lon: 26.1025 },
+  belgrade: { lat: 44.7866, lon: 20.4489 },
+  bern: { lat: 46.948, lon: 7.4474 },
+  vilnius: { lat: 54.6872, lon: 25.2797 },
+  riga: { lat: 56.9496, lon: 24.1052 },
+  tallinn: { lat: 59.437, lon: 24.7536 },
+  luxembourg: { lat: 49.6116, lon: 6.1319 },
+  valletta: { lat: 35.8989, lon: 14.5146 },
+  monaco: { lat: 43.7384, lon: 7.4246 },
+  nicosia: { lat: 35.1856, lon: 33.3823 },
+  munich: { lat: 48.1351, lon: 11.582 },
+  milan: { lat: 45.4642, lon: 9.19 },
+  florence: { lat: 43.7696, lon: 11.2558 },
+  nice: { lat: 43.7102, lon: 7.262 },
+  ibiza: { lat: 38.9067, lon: 1.4206 },
+  mykonos: { lat: 37.4467, lon: 25.3289 },
+  interlaken: { lat: 46.6863, lon: 7.8632 },
+  bruges: { lat: 51.2093, lon: 3.2247 },
+  salzburg: { lat: 47.8095, lon: 13.055 },
+  dubrovnik: { lat: 42.6507, lon: 18.0944 },
+  seville: { lat: 37.3891, lon: -5.9845 },
+  cinqueterre: { lat: 44.1461, lon: 9.6439 },
+  amalfi: { lat: 40.634, lon: 14.6027 },
+  hamburg: { lat: 53.5511, lon: 9.9937 },
+  krakow: { lat: 50.0647, lon: 19.945 },
+  innsbruck: { lat: 47.2692, lon: 11.4041 },
 }
 
 export const comfortLevels = [
@@ -1140,7 +1180,1056 @@ export const destinations = [
     weather: { season: 'Été austral', temp: '14°C' },
     bestMonths: 'Novembre – Mars',
   },
-
+  {
+    id: 'london',
+    city: 'Londres',
+    country: 'Royaume-Uni',
+    continent: 'Europe',
+    score: 83,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/London_Skyline_%28125508655%29.jpeg/960px-London_Skyline_%28125508655%29.jpeg',
+    gradient: 'linear-gradient(160deg, #221912 0%, #6B4226 45%, #B98454 80%, #EBCB8E 100%)',
+    tags: ['Histoire', 'Architecture', 'Art & Design'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1350,
+    matchReasons: [
+      { label: 'Scène culturelle foisonnante', weight: 33 },
+      { label: 'Architecture royale et moderne', weight: 26 }
+    ],
+    description:
+      'Entre palais royaux, musées gratuits et rooftops sur la Tamise, Londres condense des siècles d’histoire et une énergie résolument contemporaine.',
+    weather: { season: 'Printemps', temp: '16°C' },
+    bestMonths: 'Mai – Juin',
+  },
+  {
+    id: 'berlin',
+    city: 'Berlin',
+    country: 'Allemagne',
+    continent: 'Europe',
+    score: 94,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Museumsinsel_Berlin_Juli_2021_1_%28cropped%29_b.jpg/960px-Museumsinsel_Berlin_Juli_2021_1_%28cropped%29_b.jpg',
+    gradient: 'linear-gradient(160deg, #16242A 0%, #2C5E5E 45%, #6FA692 80%, #E4D488 100%)',
+    tags: ['Histoire', 'Art & Design', 'Vie nocturne'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 980,
+    matchReasons: [
+      { label: 'Mémoire historique dense', weight: 34 },
+      { label: 'Scène artistique alternative', weight: 27 }
+    ],
+    description:
+      'Vestiges du Mur, galeries underground et nuits sans fin : Berlin réinvente sans cesse son propre récit.',
+    weather: { season: 'Printemps', temp: '17°C' },
+    bestMonths: 'Mai – Juin',
+  },
+  {
+    id: 'madrid',
+    city: 'Madrid',
+    country: 'Espagne',
+    continent: 'Europe',
+    score: 80,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Plaza_Mayor_De_Madrid_%28215862629%29_edited.jpeg/960px-Plaza_Mayor_De_Madrid_%28215862629%29_edited.jpeg',
+    gradient: 'linear-gradient(160deg, #1A1F2E 0%, #384A6B 45%, #6C89B0 80%, #DCE3E8 100%)',
+    tags: ['Art & Design', 'Gastronomie', 'Vie nocturne'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1080,
+    matchReasons: [
+      { label: 'Musées d’exception', weight: 32 },
+      { label: 'Vie de tapas animée', weight: 28 }
+    ],
+    description:
+      'Entre le Prado, les terrasses du Retiro et les tapas qui durent jusqu’à l’aube, Madrid vit à un rythme irrésistible.',
+    weather: { season: 'Printemps', temp: '19°C' },
+    bestMonths: 'Avril – Juin',
+  },
+  {
+    id: 'brussels',
+    city: 'Bruxelles',
+    country: 'Belgique',
+    continent: 'Europe',
+    score: 85,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Grand_Place_Bruselas_2.jpg/960px-Grand_Place_Bruselas_2.jpg',
+    gradient: 'linear-gradient(160deg, #201826 0%, #5A3B5E 45%, #A96E8C 80%, #EFC49A 100%)',
+    tags: ['Gastronomie', 'Architecture'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1020,
+    matchReasons: [
+      { label: 'Gastronomie généreuse', weight: 31 },
+      { label: 'Art nouveau à ciel ouvert', weight: 25 }
+    ],
+    description:
+      'Chocolat, bières trappistes et façades Art nouveau : Bruxelles cultive un art de vivre discret mais généreux.',
+    weather: { season: 'Printemps', temp: '16°C' },
+    bestMonths: 'Mai – Juin',
+  },
+  {
+    id: 'dublin',
+    city: 'Dublin',
+    country: 'Irlande',
+    continent: 'Europe',
+    score: 79,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Dublin_-_aerial_-_2025-07-07_01.jpg/960px-Dublin_-_aerial_-_2025-07-07_01.jpg',
+    gradient: 'linear-gradient(160deg, #221912 0%, #6B4226 45%, #B98454 80%, #EBCB8E 100%)',
+    tags: ['Vie locale', 'Histoire', 'Vie nocturne'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1150,
+    matchReasons: [
+      { label: 'Convivialité légendaire des pubs', weight: 34 },
+      { label: 'Littérature et histoire vivantes', weight: 24 }
+    ],
+    description:
+      'Entre pubs chaleureux, falaises voisines et accueil légendaire, Dublin a le charme d’une capitale qui n’a rien perdu de son village.',
+    weather: { season: 'Été', temp: '15°C' },
+    bestMonths: 'Juin – Août',
+  },
+  {
+    id: 'oslo',
+    city: 'Oslo',
+    country: 'Norvège',
+    continent: 'Europe',
+    score: 94,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Nationaltheatret_evening.jpg/960px-Nationaltheatret_evening.jpg',
+    gradient: 'linear-gradient(160deg, #16242A 0%, #2C5E5E 45%, #6FA692 80%, #E4D488 100%)',
+    tags: ['Nature', 'Détente', 'Art & Design'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 1650,
+    matchReasons: [
+      { label: 'Nature scandinave accessible', weight: 35 },
+      { label: 'Design épuré', weight: 23 }
+    ],
+    description:
+      'Fjord aux portes de la ville, musées audacieux et forêts pour s’évader en tram : Oslo marie nature et modernité.',
+    weather: { season: 'Été', temp: '17°C' },
+    bestMonths: 'Juin – Août',
+  },
+  {
+    id: 'stockholm',
+    city: 'Stockholm',
+    country: 'Suède',
+    continent: 'Europe',
+    score: 83,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Royal_Dramatic_Theatre_Stockholm.jpg/960px-Royal_Dramatic_Theatre_Stockholm.jpg',
+    gradient: 'linear-gradient(160deg, #201826 0%, #5A3B5E 45%, #A96E8C 80%, #EFC49A 100%)',
+    tags: ['Art & Design', 'Nature', 'Histoire'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 1580,
+    matchReasons: [
+      { label: 'Archipel et vieille ville pittoresque', weight: 33 },
+      { label: 'Design scandinave partout', weight: 26 }
+    ],
+    description:
+      'Bâtie sur quatorze îles, Stockholm relie ruelles médiévales de Gamla Stan et design scandinave avec une élégance tranquille.',
+    weather: { season: 'Été', temp: '18°C' },
+    bestMonths: 'Juin – Août',
+  },
+  {
+    id: 'helsinki',
+    city: 'Helsinki',
+    country: 'Finlande',
+    continent: 'Europe',
+    score: 91,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Suomenlinna_%28cropped%29.jpg/960px-Suomenlinna_%28cropped%29.jpg',
+    gradient: 'linear-gradient(160deg, #221912 0%, #6B4226 45%, #B98454 80%, #EBCB8E 100%)',
+    tags: ['Nature', 'Art & Design', 'Sérénité'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 1620,
+    matchReasons: [
+      { label: 'Sérénité nordique', weight: 34 },
+      { label: 'Saunas et design', weight: 25 }
+    ],
+    description:
+      'Îles boisées, saunas au bord de l’eau et architecture épurée : Helsinki offre une parenthèse nordique reposante.',
+    weather: { season: 'Été', temp: '17°C' },
+    bestMonths: 'Juin – Août',
+  },
+  {
+    id: 'warsaw',
+    city: 'Varsovie',
+    country: 'Pologne',
+    continent: 'Europe',
+    score: 87,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Aleja_Niepdleglosci_Warsaw_2022_aerial_%28cropped%29.jpg/960px-Aleja_Niepdleglosci_Warsaw_2022_aerial_%28cropped%29.jpg',
+    gradient: 'linear-gradient(160deg, #241C1E 0%, #6E4A42 45%, #C99A5E 80%, #EDD79C 100%)',
+    tags: ['Histoire', 'Vie locale'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 790,
+    matchReasons: [
+      { label: 'Résilience historique poignante', weight: 32 },
+      { label: 'Excellent rapport qualité-prix', weight: 29 }
+    ],
+    description:
+      'Reconstruite pierre par pierre après-guerre, Varsovie mêle mémoire poignante et scène culturelle en pleine effervescence.',
+    weather: { season: 'Été', temp: '17°C' },
+    bestMonths: 'Mai – Août',
+  },
+  {
+    id: 'athens',
+    city: 'Athènes',
+    country: 'Grèce',
+    continent: 'Europe',
+    score: 81,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Monastiraki_Square_and_Acropolis_in_Athens_%2844149181684%29.jpg/960px-Monastiraki_Square_and_Acropolis_in_Athens_%2844149181684%29.jpg',
+    gradient: 'linear-gradient(160deg, #241016 0%, #6E2E3B 45%, #B5495B 80%, #EFC2A6 100%)',
+    tags: ['Histoire', 'Gastronomie'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 980,
+    matchReasons: [
+      { label: 'Berceau de l’Antiquité', weight: 36 },
+      { label: 'Tavernes conviviales', weight: 24 }
+    ],
+    description:
+      'Sous l’Acropole, Athènes vit entre ruines antiques, marchés animés et tavernes où les tables débordent jusqu’au trottoir.',
+    weather: { season: 'Printemps', temp: '20°C' },
+    bestMonths: 'Avril – Mai',
+  },
+  {
+    id: 'zagreb',
+    city: 'Zagreb',
+    country: 'Croatie',
+    continent: 'Europe',
+    score: 92,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Zagreb_%2829255640143%29.jpg/960px-Zagreb_%2829255640143%29.jpg',
+    gradient: 'linear-gradient(160deg, #1B2A2E 0%, #3D5A66 45%, #8FAFAE 80%, #E8DCC0 100%)',
+    tags: ['Histoire', 'Vie locale'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 760,
+    matchReasons: [
+      { label: 'Vieille ville pittoresque', weight: 30 },
+      { label: 'Ambiance de café authentique', weight: 26 }
+    ],
+    description:
+      'Marchés couverts, cafés animés et une ville haute pavée : Zagreb séduit sans jamais forcer le trait.',
+    weather: { season: 'Printemps', temp: '16°C' },
+    bestMonths: 'Mai – Juin',
+  },
+  {
+    id: 'ljubljana',
+    city: 'Ljubljana',
+    country: 'Slovénie',
+    continent: 'Europe',
+    score: 87,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Ljubljana_Old_Town%2C_Slovenia_%28Old_Camera%29_%2833286165680%29.jpg/960px-Ljubljana_Old_Town%2C_Slovenia_%28Old_Camera%29_%2833286165680%29.jpg',
+    gradient: 'linear-gradient(160deg, #221B12 0%, #6B5326 45%, #B99A54 80%, #F0E3B8 100%)',
+    tags: ['Nature', 'Architecture', 'Sérénité'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 810,
+    matchReasons: [
+      { label: 'Capitale verte et piétonne', weight: 33 },
+      { label: 'Château surplombant la ville', weight: 24 }
+    ],
+    description:
+      'Rivière paisible, ponts signés Plečnik et château sur la colline : Ljubljana est une capitale à taille humaine.',
+    weather: { season: 'Printemps', temp: '17°C' },
+    bestMonths: 'Mai – Juin',
+  },
+  {
+    id: 'bratislava',
+    city: 'Bratislava',
+    country: 'Slovaquie',
+    continent: 'Europe',
+    score: 90,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Slovakia_bratislava.jpg/960px-Slovakia_bratislava.jpg',
+    gradient: 'linear-gradient(160deg, #16242A 0%, #2C5E5E 45%, #6FA692 80%, #E4D488 100%)',
+    tags: ['Histoire', 'Vie locale'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 720,
+    matchReasons: [
+      { label: 'Vieille ville compacte et charmante', weight: 31 },
+      { label: 'Budget très accessible', weight: 30 }
+    ],
+    description:
+      'Château perché sur le Danube et ruelles baroques : Bratislava est une capitale intime, souvent oubliée à tort.',
+    weather: { season: 'Été', temp: '17°C' },
+    bestMonths: 'Mai – Août',
+  },
+  {
+    id: 'sofia',
+    city: 'Sofia',
+    country: 'Bulgarie',
+    continent: 'Europe',
+    score: 91,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Russian_church_%2837591925970%29.jpg/960px-Russian_church_%2837591925970%29.jpg',
+    gradient: 'linear-gradient(160deg, #221B12 0%, #6B5326 45%, #B99A54 80%, #F0E3B8 100%)',
+    tags: ['Histoire', 'Spiritualité'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 700,
+    matchReasons: [
+      { label: 'Patrimoine orthodoxe remarquable', weight: 30 },
+      { label: 'Coût de la vie très bas', weight: 31 }
+    ],
+    description:
+      'Dômes dorés, montagnes en toile de fond et marchés animés : Sofia surprend par sa richesse pour un budget minime.',
+    weather: { season: 'Été', temp: '18°C' },
+    bestMonths: 'Mai – Septembre',
+  },
+  {
+    id: 'bucharest',
+    city: 'Bucarest',
+    country: 'Roumanie',
+    continent: 'Europe',
+    score: 92,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Catedrala_M%C3%A2ntuirii_Neamului_%28Aprilie_2025%29.jpg/960px-Catedrala_M%C3%A2ntuirii_Neamului_%28Aprilie_2025%29.jpg',
+    gradient: 'linear-gradient(160deg, #1E2A3A 0%, #3E5C76 45%, #7FA6C4 80%, #E9E4C9 100%)',
+    tags: ['Architecture', 'Vie nocturne'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 750,
+    matchReasons: [
+      { label: 'Architecture Belle Époque', weight: 29 },
+      { label: 'Vie nocturne abordable', weight: 27 }
+    ],
+    description:
+      'Surnommée le « petit Paris », Bucarest marie grands boulevards Belle Époque et une scène nocturne qui ne dort jamais.',
+    weather: { season: 'Été', temp: '18°C' },
+    bestMonths: 'Mai – Septembre',
+  },
+  {
+    id: 'belgrade',
+    city: 'Belgrade',
+    country: 'Serbie',
+    continent: 'Europe',
+    score: 85,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/%D0%9A%D0%B0%D0%BB%D0%B5%D0%BC%D0%B5%D0%B3%D0%B4%D0%B0%D0%BD%2C_%D1%81%D0%BF%D0%BE%D0%BC%D0%B5%D0%BD%D0%B8%D0%BA_%D0%9F%D0%BE%D0%B1%D1%98%D0%B5%D0%B4%D0%BD%D0%B8%D0%BA%2C_%D0%91%D0%B8%D0%BE%D0%B3%D1%80%D0%B0%D0%B4.jpg/960px-%D0%9A%D0%B0%D0%BB%D0%B5%D0%BC%D0%B5%D0%B3%D0%B4%D0%B0%D0%BD%2C_%D1%81%D0%BF%D0%BE%D0%BC%D0%B5%D0%BD%D0%B8%D0%BA_%D0%9F%D0%BE%D0%B1%D1%98%D0%B5%D0%B4%D0%BD%D0%B8%D0%BA%2C_%D0%91%D0%B8%D0%BE%D0%B3%D1%80%D0%B0%D0%B4.jpg',
+    gradient: 'linear-gradient(160deg, #201826 0%, #5A3B5E 45%, #A96E8C 80%, #EFC49A 100%)',
+    tags: ['Vie nocturne', 'Histoire'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 730,
+    matchReasons: [
+      { label: 'Vie nocturne réputée', weight: 32 },
+      { label: 'Forteresse et confluence spectaculaire', weight: 24 }
+    ],
+    description:
+      'À la confluence de la Save et du Danube, Belgrade enchaîne forteresse millénaire et nuits parmi les plus animées d’Europe.',
+    weather: { season: 'Été', temp: '18°C' },
+    bestMonths: 'Mai – Septembre',
+  },
+  {
+    id: 'bern',
+    city: 'Berne',
+    country: 'Suisse',
+    continent: 'Europe',
+    score: 90,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Zytglogge_01.jpg/960px-Zytglogge_01.jpg',
+    gradient: 'linear-gradient(160deg, #1B2A2E 0%, #3D5A66 45%, #8FAFAE 80%, #E8DCC0 100%)',
+    tags: ['Histoire', 'Architecture', 'Nature'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 1780,
+    matchReasons: [
+      { label: 'Vieille ville classée à l’UNESCO', weight: 30 },
+      { label: 'Alpes à portée de train', weight: 25 }
+    ],
+    description:
+      'Arcades médiévales, ours au bord de l’Aar et Alpes en toile de fond : Berne est une capitale à échelle humaine.',
+    weather: { season: 'Été', temp: '16°C' },
+    bestMonths: 'Juin – Août',
+  },
+  {
+    id: 'vilnius',
+    city: 'Vilnius',
+    country: 'Lituanie',
+    continent: 'Europe',
+    score: 82,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Vilnius_old_town_by_Augustas_Didzgalvis.jpg/960px-Vilnius_old_town_by_Augustas_Didzgalvis.jpg',
+    gradient: 'linear-gradient(160deg, #16242A 0%, #2C5E5E 45%, #6FA692 80%, #E4D488 100%)',
+    tags: ['Histoire', 'Spiritualité'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 770,
+    matchReasons: [
+      { label: 'Baroque préservé et intime', weight: 30 },
+      { label: 'Ambiance étudiante décontractée', weight: 23 }
+    ],
+    description:
+      'Plus grande vieille ville baroque d’Europe de l’Est, Vilnius se découvre à pied entre églises et cafés étudiants.',
+    weather: { season: 'Été', temp: '17°C' },
+    bestMonths: 'Mai – Août',
+  },
+  {
+    id: 'riga',
+    city: 'Riga',
+    country: 'Lettonie',
+    continent: 'Europe',
+    score: 86,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Views_from_St._Peter%27s_Church_Spire%2C_Riga_20180808-2.jpg/960px-Views_from_St._Peter%27s_Church_Spire%2C_Riga_20180808-2.jpg',
+    gradient: 'linear-gradient(160deg, #1B2A2E 0%, #3D5A66 45%, #8FAFAE 80%, #E8DCC0 100%)',
+    tags: ['Architecture', 'Art & Design'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 760,
+    matchReasons: [
+      { label: 'Plus grande collection Art nouveau d’Europe', weight: 32 },
+      { label: 'Vieille ville hanséatique', weight: 24 }
+    ],
+    description:
+      'Riga concentre la plus riche collection d’immeubles Art nouveau du continent, entre halles animées et vieille ville hanséatique.',
+    weather: { season: 'Été', temp: '17°C' },
+    bestMonths: 'Mai – Août',
+  },
+  {
+    id: 'tallinn',
+    city: 'Tallinn',
+    country: 'Estonie',
+    continent: 'Europe',
+    score: 86,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Old_Town_of_Tallinn%2C_Tallinn%2C_Estonia_-_panoramio_%2858%29.jpg/960px-Old_Town_of_Tallinn%2C_Tallinn%2C_Estonia_-_panoramio_%2858%29.jpg',
+    gradient: 'linear-gradient(160deg, #1B2A2E 0%, #3D5A66 45%, #8FAFAE 80%, #E8DCC0 100%)',
+    tags: ['Histoire', 'Architecture'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 790,
+    matchReasons: [
+      { label: 'Vieille ville médiévale intacte', weight: 34 },
+      { label: 'Ville numérique et innovante', weight: 22 }
+    ],
+    description:
+      'Remparts, tours et pavés médiévaux intacts : Tallinn ressemble à un décor de conte, wifi gratuit compris partout.',
+    weather: { season: 'Été', temp: '16°C' },
+    bestMonths: 'Mai – Août',
+  },
+  {
+    id: 'luxembourg',
+    city: 'Luxembourg',
+    country: 'Luxembourg',
+    continent: 'Europe',
+    score: 88,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Luxembourg_Grand_Ducal_Palace_01.jpg/960px-Luxembourg_Grand_Ducal_Palace_01.jpg',
+    gradient: 'linear-gradient(160deg, #16242A 0%, #2C5E5E 45%, #6FA692 80%, #E4D488 100%)',
+    tags: ['Architecture', 'Nature'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 1480,
+    matchReasons: [
+      { label: 'Vieille ville fortifiée spectaculaire', weight: 29 },
+      { label: 'Compacte et facile à explorer', weight: 24 }
+    ],
+    description:
+      'Perchée sur ses falaises, la vieille ville fortifiée de Luxembourg surplombe des gorges verdoyantes en plein centre urbain.',
+    weather: { season: 'Été', temp: '16°C' },
+    bestMonths: 'Mai – Août',
+  },
+  {
+    id: 'valletta',
+    city: 'La Valette',
+    country: 'Malte',
+    continent: 'Europe',
+    score: 87,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/St_Sebastian_Curtain_%28cropped%29.jpg/960px-St_Sebastian_Curtain_%28cropped%29.jpg',
+    gradient: 'linear-gradient(160deg, #241016 0%, #6E2E3B 45%, #B5495B 80%, #EFC2A6 100%)',
+    tags: ['Histoire', 'Océan', 'Architecture'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1180,
+    matchReasons: [
+      { label: 'Ville-forteresse UNESCO', weight: 33 },
+      { label: 'Lumière méditerranéenne unique', weight: 24 }
+    ],
+    description:
+      'Bastions dorés surplombant la Méditerranée, La Valette tient tout entière dans ses remparts baroques classés à l’UNESCO.',
+    weather: { season: 'Printemps', temp: '23°C' },
+    bestMonths: 'Avril – Juin',
+  },
+  {
+    id: 'monaco',
+    city: 'Monaco',
+    country: 'Monaco',
+    continent: 'Europe',
+    score: 90,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Panorama_von_Monaco-La_Turbie.jpg/960px-Panorama_von_Monaco-La_Turbie.jpg',
+    gradient: 'linear-gradient(160deg, #1A1F2E 0%, #384A6B 45%, #6C89B0 80%, #DCE3E8 100%)',
+    tags: ['Vie nocturne', 'Océan', 'Romantisme'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 2450,
+    matchReasons: [
+      { label: 'Glamour méditerranéen', weight: 34 },
+      { label: 'Casino et Formule 1', weight: 22 }
+    ],
+    description:
+      'Yachts dans le port, casino mythique et corniches vertigineuses : Monaco condense le glamour méditerranéen sur un timbre-poste.',
+    weather: { season: 'Printemps', temp: '20°C' },
+    bestMonths: 'Avril – Juin',
+  },
+  {
+    id: 'nicosia',
+    city: 'Nicosie',
+    country: 'Chypre',
+    continent: 'Europe',
+    score: 91,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Nicosia%27s_skyline_2024.jpg/960px-Nicosia%27s_skyline_2024.jpg',
+    gradient: 'linear-gradient(160deg, #241016 0%, #6E2E3B 45%, #B5495B 80%, #EFC2A6 100%)',
+    tags: ['Histoire', 'Gastronomie'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1050,
+    matchReasons: [
+      { label: 'Dernière capitale divisée d’Europe', weight: 28 },
+      { label: 'Cuisine chypriote généreuse', weight: 25 }
+    ],
+    description:
+      'Seule capitale encore divisée du continent, Nicosie se découvre entre ruelles vénitiennes et tavernes chypriotes conviviales.',
+    weather: { season: 'Printemps', temp: '22°C' },
+    bestMonths: 'Avril – Mai',
+  },
+  {
+    id: 'munich',
+    city: 'Munich',
+    country: 'Allemagne',
+    continent: 'Europe',
+    score: 95,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Rathaus_and_Marienplatz_from_Peterskirche_-_August_2006.jpg/960px-Rathaus_and_Marienplatz_from_Peterskirche_-_August_2006.jpg',
+    gradient: 'linear-gradient(160deg, #221B12 0%, #6B5326 45%, #B99A54 80%, #F0E3B8 100%)',
+    tags: ['Gastronomie', 'Vie nocturne', 'Nature'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1180,
+    matchReasons: [
+      { label: 'Brasseries et culture bavaroise', weight: 31 },
+      { label: 'Alpes accessibles en train', weight: 23 }
+    ],
+    description:
+      'Entre biergartens animés, Marienplatz et Alpes bavaroises à une heure de train, Munich cultive un art de vivre chaleureux.',
+    weather: { season: 'Été', temp: '16°C' },
+    bestMonths: 'Juin – Septembre',
+  },
+  {
+    id: 'milan',
+    city: 'Milan',
+    country: 'Italie',
+    continent: 'Europe',
+    score: 93,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Milan_Cathedral_from_Piazza_del_Duomo.jpg/960px-Milan_Cathedral_from_Piazza_del_Duomo.jpg',
+    gradient: 'linear-gradient(160deg, #241016 0%, #6E2E3B 45%, #B5495B 80%, #EFC2A6 100%)',
+    tags: ['Art & Design', 'Gastronomie', 'Vie nocturne'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1220,
+    matchReasons: [
+      { label: 'Capitale mondiale de la mode', weight: 32 },
+      { label: 'Aperitivo et gastronomie raffinée', weight: 25 }
+    ],
+    description:
+      'Défilés, Duomo gothique et aperitivo interminable : Milan impose son élégance discrète à quiconque flâne dans ses rues.',
+    weather: { season: 'Printemps', temp: '18°C' },
+    bestMonths: 'Avril – Juin',
+  },
+  {
+    id: 'florence',
+    city: 'Florence',
+    country: 'Italie',
+    continent: 'Europe',
+    score: 93,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg/960px-Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg',
+    gradient: 'linear-gradient(160deg, #241C1E 0%, #6E4A42 45%, #C99A5E 80%, #EDD79C 100%)',
+    tags: ['Art & Design', 'Histoire', 'Gastronomie'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1280,
+    matchReasons: [
+      { label: 'Berceau de la Renaissance', weight: 37 },
+      { label: 'Trattorias toscanes authentiques', weight: 23 }
+    ],
+    description:
+      'Coupole de Brunelleschi, Offices et trattorias toscanes : Florence est un musée à ciel ouvert que l’on savoure aussi à table.',
+    weather: { season: 'Printemps', temp: '19°C' },
+    bestMonths: 'Avril – Juin',
+  },
+  {
+    id: 'nice',
+    city: 'Nice',
+    country: 'France',
+    continent: 'Europe',
+    score: 84,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/CollineDuChateau_NiceFrance2022.png/960px-CollineDuChateau_NiceFrance2022.png',
+    gradient: 'linear-gradient(160deg, #14231F 0%, #2E5240 45%, #6C9A72 80%, #E3DA9E 100%)',
+    tags: ['Océan', 'Gastronomie', 'Romantisme'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1150,
+    matchReasons: [
+      { label: 'Riviera française et Promenade des Anglais', weight: 33 },
+      { label: 'Marchés provençaux colorés', weight: 23 }
+    ],
+    description:
+      'Entre Promenade des Anglais, vieille ville ocre et marchés provençaux, Nice incarne la douceur de vivre de la Riviera.',
+    weather: { season: 'Printemps', temp: '21°C' },
+    bestMonths: 'Mai – Juin',
+  },
+  {
+    id: 'ibiza',
+    city: 'Ibiza',
+    country: 'Espagne',
+    continent: 'Europe',
+    score: 84,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/ForbysIbizaTown_03.jpg/960px-ForbysIbizaTown_03.jpg',
+    gradient: 'linear-gradient(160deg, #1E2A3A 0%, #3E5C76 45%, #7FA6C4 80%, #E9E4C9 100%)',
+    tags: ['Vie nocturne', 'Plage', 'Océan'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1320,
+    matchReasons: [
+      { label: 'Vie nocturne mondialement connue', weight: 35 },
+      { label: 'Criques secrètes et Dalt Vila', weight: 22 }
+    ],
+    description:
+      'Clubs mythiques la nuit, criques turquoise et Dalt Vila fortifiée le jour : Ibiza a bien plus d’un visage.',
+    weather: { season: 'Été', temp: '24°C' },
+    bestMonths: 'Juin – Septembre',
+  },
+  {
+    id: 'mykonos',
+    city: 'Mykonos',
+    country: 'Grèce',
+    continent: 'Europe',
+    score: 80,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/2011_Dimos_Mykonou.png/960px-2011_Dimos_Mykonou.png',
+    gradient: 'linear-gradient(160deg, #14231F 0%, #2E5240 45%, #6C9A72 80%, #E3DA9E 100%)',
+    tags: ['Plage', 'Vie nocturne', 'Romantisme'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 1580,
+    matchReasons: [
+      { label: 'Moulins à vent et ruelles blanches', weight: 32 },
+      { label: 'Plages et beach clubs réputés', weight: 26 }
+    ],
+    description:
+      'Maisons cycladiques immaculées, moulins iconiques et beach clubs animés : Mykonos joue sur tous les tableaux de la fête à la carte postale.',
+    weather: { season: 'Été', temp: '24°C' },
+    bestMonths: 'Juin – Septembre',
+  },
+  {
+    id: 'interlaken',
+    city: 'Interlaken',
+    country: 'Suisse',
+    continent: 'Europe',
+    score: 88,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Goldswil-Viadukt_Panorama_mit_Interlaken_im_Hintergrund_2.jpg/960px-Goldswil-Viadukt_Panorama_mit_Interlaken_im_Hintergrund_2.jpg',
+    gradient: 'linear-gradient(160deg, #1E2A3A 0%, #3E5C76 45%, #7FA6C4 80%, #E9E4C9 100%)',
+    tags: ['Nature', 'Aventure', 'Randonnée'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 1980,
+    matchReasons: [
+      { label: 'Base idéale pour les Alpes bernoises', weight: 38 },
+      { label: 'Sports d’aventure en tout genre', weight: 26 }
+    ],
+    description:
+      'Entre deux lacs turquoise, au pied de la Jungfrau, Interlaken est le camp de base rêvé pour l’aventure alpine.',
+    weather: { season: 'Été', temp: '15°C' },
+    bestMonths: 'Juin – Septembre',
+  },
+  {
+    id: 'bruges',
+    city: 'Bruges',
+    country: 'Belgique',
+    continent: 'Europe',
+    score: 81,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Br%C3%BCgge_Blick_vom_Belfried_4.jpg/960px-Br%C3%BCgge_Blick_vom_Belfried_4.jpg',
+    gradient: 'linear-gradient(160deg, #221B12 0%, #6B5326 45%, #B99A54 80%, #F0E3B8 100%)',
+    tags: ['Histoire', 'Romantisme', 'Gastronomie'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1120,
+    matchReasons: [
+      { label: 'Venise du Nord préservée', weight: 34 },
+      { label: 'Chocolatiers et bières d’abbaye', weight: 24 }
+    ],
+    description:
+      'Canaux paisibles, pignons à gradins et chocolatiers à chaque coin de rue : Bruges a des allures de carte postale médiévale.',
+    weather: { season: 'Été', temp: '16°C' },
+    bestMonths: 'Mai – Août',
+  },
+  {
+    id: 'salzburg',
+    city: 'Salzbourg',
+    country: 'Autriche',
+    continent: 'Europe',
+    score: 88,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Salzburg_%2848489551981%29.jpg/960px-Salzburg_%2848489551981%29.jpg',
+    gradient: 'linear-gradient(160deg, #1B2A2E 0%, #3D5A66 45%, #8FAFAE 80%, #E8DCC0 100%)',
+    tags: ['Histoire', 'Art & Design', 'Nature'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1250,
+    matchReasons: [
+      { label: 'Ville natale de Mozart', weight: 30 },
+      { label: 'Décor alpin spectaculaire', weight: 27 }
+    ],
+    description:
+      'Forteresse dominant la ville, ruelles baroques et Alpes en arrière-plan : Salzbourg a tout d’une scène de comédie musicale.',
+    weather: { season: 'Été', temp: '16°C' },
+    bestMonths: 'Juin – Septembre',
+  },
+  {
+    id: 'dubrovnik',
+    city: 'Dubrovnik',
+    country: 'Croatie',
+    continent: 'Europe',
+    score: 89,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/The_walls_of_the_fortress_and_View_of_the_old_city._panorama.jpg/960px-The_walls_of_the_fortress_and_View_of_the_old_city._panorama.jpg',
+    gradient: 'linear-gradient(160deg, #241016 0%, #6E2E3B 45%, #B5495B 80%, #EFC2A6 100%)',
+    tags: ['Histoire', 'Océan', 'Architecture'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1290,
+    matchReasons: [
+      { label: 'Remparts et vieille ville spectaculaires', weight: 36 },
+      { label: 'Adriatique cristalline', weight: 25 }
+    ],
+    description:
+      'Remparts millénaires plongeant dans l’Adriatique turquoise : Dubrovnik mérite amplement son surnom de « perle de l’Adriatique ».',
+    weather: { season: 'Été', temp: '23°C' },
+    bestMonths: 'Juin – Septembre',
+  },
+  {
+    id: 'seville',
+    city: 'Séville',
+    country: 'Espagne',
+    continent: 'Europe',
+    score: 83,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Plaza_de_Espa%C3%B1a_%28Sevilla%29_-_01.jpg/960px-Plaza_de_Espa%C3%B1a_%28Sevilla%29_-_01.jpg',
+    gradient: 'linear-gradient(160deg, #221B12 0%, #6B5326 45%, #B99A54 80%, #F0E3B8 100%)',
+    tags: ['Histoire', 'Vie nocturne', 'Gastronomie'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1140,
+    matchReasons: [
+      { label: 'Flamenco et ferveur andalouse', weight: 33 },
+      { label: 'Tapas et vie de rue animée', weight: 25 }
+    ],
+    description:
+      'Alcazar mauresque, ferveur du flamenco et tapas partagées jusque tard : Séville vit avec une intensité toute andalouse.',
+    weather: { season: 'Printemps', temp: '21°C' },
+    bestMonths: 'Mars – Mai',
+  },
+  {
+    id: 'cinqueterre',
+    city: 'Cinque Terre',
+    country: 'Italie',
+    continent: 'Europe',
+    score: 89,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Cinque_Terre_%28Italy%2C_October_2020%29_-_24_%2850543603956%29.jpg/960px-Cinque_Terre_%28Italy%2C_October_2020%29_-_24_%2850543603956%29.jpg',
+    gradient: 'linear-gradient(160deg, #221B12 0%, #6B5326 45%, #B99A54 80%, #F0E3B8 100%)',
+    tags: ['Océan', 'Randonnée', 'Photographie'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1260,
+    matchReasons: [
+      { label: 'Villages colorés accrochés à la falaise', weight: 37 },
+      { label: 'Randonnées côtières spectaculaires', weight: 25 }
+    ],
+    description:
+      'Cinq villages pastel suspendus entre falaises et Méditerranée, reliés par des sentiers côtiers parmi les plus photographiés d’Italie.',
+    weather: { season: 'Printemps', temp: '20°C' },
+    bestMonths: 'Avril – Juin',
+  },
+  {
+    id: 'amalfi',
+    city: 'Côte Amalfitaine',
+    country: 'Italie',
+    continent: 'Europe',
+    score: 84,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Positano_Sunset.JPG/960px-Positano_Sunset.JPG',
+    gradient: 'linear-gradient(160deg, #1B2A2E 0%, #3D5A66 45%, #8FAFAE 80%, #E8DCC0 100%)',
+    tags: ['Océan', 'Romantisme', 'Gastronomie'],
+    duration: '4 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 1620,
+    matchReasons: [
+      { label: 'Panoramas vertigineux sur la mer', weight: 36 },
+      { label: 'Citronniers et cuisine côtière', weight: 24 }
+    ],
+    description:
+      'Routes en lacets suspendues au-dessus de la mer, citronniers en terrasses et villages pastel : la Côte Amalfitaine est un vertige de beauté.',
+    weather: { season: 'Printemps', temp: '21°C' },
+    bestMonths: 'Avril – Juin',
+  },
+  {
+    id: 'hamburg',
+    city: 'Hambourg',
+    country: 'Allemagne',
+    continent: 'Europe',
+    score: 90,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Speicherstadt_abends.jpg/960px-Speicherstadt_abends.jpg',
+    gradient: 'linear-gradient(160deg, #1E2A3A 0%, #3E5C76 45%, #7FA6C4 80%, #E9E4C9 100%)',
+    tags: ['Vie nocturne', 'Architecture'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1080,
+    matchReasons: [
+      { label: 'Port historique et Speicherstadt', weight: 30 },
+      { label: 'Vie nocturne à la Reeperbahn', weight: 26 }
+    ],
+    description:
+      'Entrepôts néogothiques de la Speicherstadt, port animé et nuits sur la Reeperbahn : Hambourg cultive un charme urbain singulier.',
+    weather: { season: 'Été', temp: '16°C' },
+    bestMonths: 'Juin – Août',
+  },
+  {
+    id: 'krakow',
+    city: 'Cracovie',
+    country: 'Pologne',
+    continent: 'Europe',
+    score: 81,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG/960px-Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG',
+    gradient: 'linear-gradient(160deg, #221912 0%, #6B4226 45%, #B98454 80%, #EBCB8E 100%)',
+    tags: ['Histoire', 'Vie locale'],
+    duration: '4 jours',
+    budgetLevel: '€',
+    budgetEstimate: 760,
+    matchReasons: [
+      { label: 'Place du marché médiévale intacte', weight: 33 },
+      { label: 'Prix très accessibles', weight: 28 }
+    ],
+    description:
+      'Plus grande place médiévale d’Europe et château du Wawel : Cracovie a préservé un centre historique d’une richesse rare.',
+    weather: { season: 'Été', temp: '17°C' },
+    bestMonths: 'Mai – Septembre',
+  },
+  {
+    id: 'innsbruck',
+    city: 'Innsbruck',
+    country: 'Autriche',
+    continent: 'Europe',
+    score: 79,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/B%C3%BCrgerstra%C3%9Fe_26%2B24_%28BT0A2830%29.jpg/960px-B%C3%BCrgerstra%C3%9Fe_26%2B24_%28BT0A2830%29.jpg',
+    gradient: 'linear-gradient(160deg, #241016 0%, #6E2E3B 45%, #B5495B 80%, #EFC2A6 100%)',
+    tags: ['Nature', 'Aventure', 'Histoire'],
+    duration: '4 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1320,
+    matchReasons: [
+      { label: 'Alpes tyroliennes à perte de vue', weight: 36 },
+      { label: 'Toit d’Or et vieille ville alpine', weight: 23 }
+    ],
+    description:
+      'Encerclée de sommets tyroliens, Innsbruck marie vieille ville baroque et accès immédiat aux pistes et sentiers alpins.',
+    weather: { season: 'Été', temp: '15°C' },
+    bestMonths: 'Juin – Septembre',
+  },
+  {
+    id: 'tokyo',
+    city: 'Tokyo',
+    country: 'Japon',
+    continent: 'Asie',
+    score: 88,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg/960px-Skyscrapers_of_Shinjuku_2009_January.jpg',
+    gradient: 'linear-gradient(160deg, #16242A 0%, #2C5E5E 45%, #6FA692 80%, #E4D488 100%)',
+    tags: ['Culture', 'Gastronomie', 'Art & Design'],
+    duration: '7 jours',
+    budgetLevel: '€€€',
+    budgetEstimate: 2380,
+    matchReasons: [
+      { label: 'Contraste tradition-futurisme unique', weight: 34 },
+      { label: 'Gastronomie inégalée', weight: 28 }
+    ],
+    description:
+      'Néons de Shibuya, temples silencieux et gastronomie sans égale : Tokyo orchestre le grand écart entre tradition et futur.',
+    weather: { season: 'Printemps', temp: '16°C' },
+    bestMonths: 'Mars – Mai',
+  },
+  {
+    id: 'beijing',
+    city: 'Pékin',
+    country: 'Chine',
+    continent: 'Asie',
+    score: 87,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/The_Forbidden_City_-_View_from_Coal_Hill.jpg/960px-The_Forbidden_City_-_View_from_Coal_Hill.jpg',
+    gradient: 'linear-gradient(160deg, #221912 0%, #6B4226 45%, #B98454 80%, #EBCB8E 100%)',
+    tags: ['Histoire', 'Architecture'],
+    duration: '7 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1780,
+    matchReasons: [
+      { label: 'Cité Interdite et Grande Muraille', weight: 36 },
+      { label: 'Patrimoine impérial monumental', weight: 26 }
+    ],
+    description:
+      'Cité Interdite, Grande Muraille aux portes de la ville : Pékin porte encore la grandeur de la Chine impériale.',
+    weather: { season: 'Printemps', temp: '13°C' },
+    bestMonths: 'Avril – Mai',
+  },
+  {
+    id: 'lima',
+    city: 'Lima',
+    country: 'Pérou',
+    continent: 'Amérique du Sud',
+    score: 93,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Lima%2C_Peru%E2%80%A6the_Plaza_de_Armas_de_Lima_by_day_%288444360764%29.jpg/960px-Lima%2C_Peru%E2%80%A6the_Plaza_de_Armas_de_Lima_by_day_%288444360764%29.jpg',
+    gradient: 'linear-gradient(160deg, #241C1E 0%, #6E4A42 45%, #C99A5E 80%, #EDD79C 100%)',
+    tags: ['Gastronomie', 'Océan'],
+    duration: '7 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1480,
+    matchReasons: [
+      { label: 'Capitale gastronomique d’Amérique du Sud', weight: 38 },
+      { label: 'Falaises sur le Pacifique', weight: 22 }
+    ],
+    description:
+      'Ceviche sur les falaises de Miraflores : Lima s’est imposée comme l’une des capitales gastronomiques du continent.',
+    weather: { season: 'Été austral', temp: '19°C' },
+    bestMonths: 'Décembre – Mars',
+  },
+  {
+    id: 'santiago',
+    city: 'Santiago',
+    country: 'Chili',
+    continent: 'Amérique du Sud',
+    score: 94,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Palacio_de_La_Moneda_-_miguelreflex.jpg/960px-Palacio_de_La_Moneda_-_miguelreflex.jpg',
+    gradient: 'linear-gradient(160deg, #1B2A2E 0%, #3D5A66 45%, #8FAFAE 80%, #E8DCC0 100%)',
+    tags: ['Vin', 'Nature', 'Gastronomie'],
+    duration: '7 jours',
+    budgetLevel: '€€',
+    budgetEstimate: 1520,
+    matchReasons: [
+      { label: 'Vignobles à une heure du centre', weight: 32 },
+      { label: 'Andes en toile de fond', weight: 27 }
+    ],
+    description:
+      'Cordillère enneigée en arrière-plan et vignobles à portée de métro : Santiago surprend par sa proximité avec la nature.',
+    weather: { season: 'Été austral', temp: '20°C' },
+    bestMonths: 'Novembre – Mars',
+  },
+  {
+    id: 'hanoi',
+    city: 'Hanoï',
+    country: 'Vietnam',
+    continent: 'Asie',
+    score: 80,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Hanoi_skyline_with_Ba_Vi_Mountain.jpg/960px-Hanoi_skyline_with_Ba_Vi_Mountain.jpg',
+    gradient: 'linear-gradient(160deg, #16242A 0%, #2C5E5E 45%, #6FA692 80%, #E4D488 100%)',
+    tags: ['Gastronomie', 'Histoire', 'Vie locale'],
+    duration: '7 jours',
+    budgetLevel: '€',
+    budgetEstimate: 980,
+    matchReasons: [
+      { label: 'Vieux quartier trépidant', weight: 33 },
+      { label: 'Street food légendaire', weight: 29 }
+    ],
+    description:
+      'Scooters, vapeurs de pho et vieux quartier aux mille métiers : Hanoï vibre d’une énergie de rue permanente.',
+    weather: { season: 'Printemps', temp: '20°C' },
+    bestMonths: 'Octobre – Décembre',
+  },
+  {
+    id: 'fes',
+    city: 'Fès',
+    country: 'Maroc',
+    continent: 'Afrique',
+    score: 85,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Bab_Bou_Jeloud_Frame_Minaret_Fes_Nov25_A7CR_09127-8_HDR3.jpg/960px-Bab_Bou_Jeloud_Frame_Minaret_Fes_Nov25_A7CR_09127-8_HDR3.jpg',
+    gradient: 'linear-gradient(160deg, #201826 0%, #5A3B5E 45%, #A96E8C 80%, #EFC49A 100%)',
+    tags: ['Histoire', 'Artisanat', 'Spiritualité'],
+    duration: '7 jours',
+    budgetLevel: '€',
+    budgetEstimate: 890,
+    matchReasons: [
+      { label: 'Médina médiévale la mieux préservée', weight: 37 },
+      { label: 'Artisanat traditionnel vivant', weight: 25 }
+    ],
+    description:
+      'Tanneries ocre, médersas et dédale de ruelles millénaires : Fès abrite la médina la mieux préservée du monde arabe.',
+    weather: { season: 'Printemps', temp: '19°C' },
+    bestMonths: 'Mars – Mai',
+  },
+  {
+    id: 'casablanca',
+    city: 'Casablanca',
+    country: 'Maroc',
+    continent: 'Afrique',
+    score: 80,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Casa_finance_city_6_%28cropped%29.jpg/960px-Casa_finance_city_6_%28cropped%29.jpg',
+    gradient: 'linear-gradient(160deg, #1A1F2E 0%, #384A6B 45%, #6C89B0 80%, #DCE3E8 100%)',
+    tags: ['Architecture', 'Vie urbaine'],
+    duration: '7 jours',
+    budgetLevel: '€',
+    budgetEstimate: 840,
+    matchReasons: [
+      { label: 'Mosquée Hassan II monumentale', weight: 34 },
+      { label: 'Modernité art déco', weight: 22 }
+    ],
+    description:
+      'Front de mer dominé par la mosquée Hassan II, Casablanca marie modernité économique et patrimoine Art déco méconnu.',
+    weather: { season: 'Printemps', temp: '20°C' },
+    bestMonths: 'Avril – Juin',
+  },
+  {
+    id: 'kualalumpur',
+    city: 'Kuala Lumpur',
+    country: 'Malaisie',
+    continent: 'Asie',
+    score: 95,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Bukit_Bintang_junction_in_2024_2.jpg/960px-Bukit_Bintang_junction_in_2024_2.jpg',
+    gradient: 'linear-gradient(160deg, #201826 0%, #5A3B5E 45%, #A96E8C 80%, #EFC49A 100%)',
+    tags: ['Vie urbaine', 'Gastronomie'],
+    duration: '7 jours',
+    budgetLevel: '€',
+    budgetEstimate: 980,
+    matchReasons: [
+      { label: 'Skyline spectaculaire des Petronas', weight: 30 },
+      { label: 'Melting-pot culinaire', weight: 27 }
+    ],
+    description:
+      'Tours Petronas illuminées et marchés nocturnes multiethniques : Kuala Lumpur est un carrefour culinaire et vertical fascinant.',
+    weather: { season: 'Toute l’année', temp: '28°C' },
+    bestMonths: 'Toute l’année',
+  },
+  {
+    id: 'manila',
+    city: 'Manille',
+    country: 'Philippines',
+    continent: 'Asie',
+    score: 88,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Cityscape_of_Manila%2C_2025_%2801%29.jpg/960px-Cityscape_of_Manila%2C_2025_%2801%29.jpg',
+    gradient: 'linear-gradient(160deg, #1B2A2E 0%, #3D5A66 45%, #8FAFAE 80%, #E8DCC0 100%)',
+    tags: ['Histoire', 'Vie urbaine'],
+    duration: '7 jours',
+    budgetLevel: '€',
+    budgetEstimate: 920,
+    matchReasons: [
+      { label: 'Intramuros et héritage colonial', weight: 29 },
+      { label: 'Îles voisines accessibles', weight: 24 }
+    ],
+    description:
+      'Bastions espagnols d’Intramuros et énergie tentaculaire : Manille surprend par ses contrastes et ses îles à portée de vol.',
+    weather: { season: 'Hiver sec', temp: '28°C' },
+    bestMonths: 'Décembre – Février',
+  },
+  {
+    id: 'jakarta',
+    city: 'Jakarta',
+    country: 'Indonésie',
+    continent: 'Asie',
+    score: 94,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Bundaran_Hotel_Indonesia_%282025%29.jpg/960px-Bundaran_Hotel_Indonesia_%282025%29.jpg',
+    gradient: 'linear-gradient(160deg, #1A1F2E 0%, #384A6B 45%, #6C89B0 80%, #DCE3E8 100%)',
+    tags: ['Vie urbaine', 'Gastronomie'],
+    duration: '7 jours',
+    budgetLevel: '€',
+    budgetEstimate: 950,
+    matchReasons: [
+      { label: 'Métropole tentaculaire et vivante', weight: 28 },
+      { label: 'Street food indonésienne', weight: 26 }
+    ],
+    description:
+      'Mégapole tentaculaire aux mille marchés, Jakarta est le point de départ animé vers les mille îles de l’archipel indonésien.',
+    weather: { season: 'Toute l’année', temp: '29°C' },
+    bestMonths: 'Toute l’année',
+  },
 ]
 
 export const activities = [
@@ -1323,7 +2412,7 @@ export function getItinerary(destination, nights, quiz = {}) {
   const dailyBudget = quiz.budgetDaily || Math.round((destination.budgetEstimate * 0.15) / n)
   const mealsAmount = Math.round(dailyBudget * 0.55 * n)
   const activitiesAmount = Math.round(dailyBudget * 0.45 * n)
-  const stayAmount = quiz.budgetStay || Math.round(totalBudget * 0.35)
+  const stayAmount = quiz.budgetStay ? quiz.budgetStay * n : Math.round(totalBudget * 0.35)
   const transportAmount = quiz.budgetTransport || Math.round(totalBudget * 0.25)
 
   return {
@@ -1548,6 +2637,56 @@ const CLIMATE_PROFILE = {
   buenosaires: { hemisphere: -1, amplitude: 9, rain: 'temperate' },
   cartagena: { hemisphere: 1, amplitude: 2, rain: 'monsoon' },
   torresdelpaine: { hemisphere: -1, amplitude: 8, rain: 'temperate' },
+  london: { hemisphere: 1, amplitude: 10, rain: 'temperate' },
+  berlin: { hemisphere: 1, amplitude: 15, rain: 'temperate' },
+  madrid: { hemisphere: 1, amplitude: 13, rain: 'temperate' },
+  brussels: { hemisphere: 1, amplitude: 11, rain: 'temperate' },
+  dublin: { hemisphere: 1, amplitude: 9, rain: 'temperate' },
+  oslo: { hemisphere: 1, amplitude: 16, rain: 'temperate' },
+  stockholm: { hemisphere: 1, amplitude: 16, rain: 'temperate' },
+  helsinki: { hemisphere: 1, amplitude: 17, rain: 'temperate' },
+  warsaw: { hemisphere: 1, amplitude: 17, rain: 'temperate' },
+  athens: { hemisphere: 1, amplitude: 12, rain: 'dry' },
+  zagreb: { hemisphere: 1, amplitude: 13, rain: 'temperate' },
+  ljubljana: { hemisphere: 1, amplitude: 13, rain: 'temperate' },
+  bratislava: { hemisphere: 1, amplitude: 14, rain: 'temperate' },
+  sofia: { hemisphere: 1, amplitude: 15, rain: 'temperate' },
+  bucharest: { hemisphere: 1, amplitude: 16, rain: 'temperate' },
+  belgrade: { hemisphere: 1, amplitude: 15, rain: 'temperate' },
+  bern: { hemisphere: 1, amplitude: 15, rain: 'temperate' },
+  vilnius: { hemisphere: 1, amplitude: 17, rain: 'temperate' },
+  riga: { hemisphere: 1, amplitude: 17, rain: 'temperate' },
+  tallinn: { hemisphere: 1, amplitude: 17, rain: 'temperate' },
+  luxembourg: { hemisphere: 1, amplitude: 12, rain: 'temperate' },
+  valletta: { hemisphere: 1, amplitude: 10, rain: 'dry' },
+  monaco: { hemisphere: 1, amplitude: 10, rain: 'dry' },
+  nicosia: { hemisphere: 1, amplitude: 12, rain: 'dry' },
+  munich: { hemisphere: 1, amplitude: 16, rain: 'temperate' },
+  milan: { hemisphere: 1, amplitude: 14, rain: 'temperate' },
+  florence: { hemisphere: 1, amplitude: 13, rain: 'temperate' },
+  nice: { hemisphere: 1, amplitude: 10, rain: 'dry' },
+  ibiza: { hemisphere: 1, amplitude: 9, rain: 'dry' },
+  mykonos: { hemisphere: 1, amplitude: 9, rain: 'dry' },
+  interlaken: { hemisphere: 1, amplitude: 14, rain: 'temperate' },
+  bruges: { hemisphere: 1, amplitude: 11, rain: 'temperate' },
+  salzburg: { hemisphere: 1, amplitude: 15, rain: 'temperate' },
+  dubrovnik: { hemisphere: 1, amplitude: 10, rain: 'dry' },
+  seville: { hemisphere: 1, amplitude: 14, rain: 'dry' },
+  cinqueterre: { hemisphere: 1, amplitude: 10, rain: 'dry' },
+  amalfi: { hemisphere: 1, amplitude: 10, rain: 'dry' },
+  hamburg: { hemisphere: 1, amplitude: 11, rain: 'temperate' },
+  krakow: { hemisphere: 1, amplitude: 17, rain: 'temperate' },
+  innsbruck: { hemisphere: 1, amplitude: 16, rain: 'temperate' },
+  tokyo: { hemisphere: 1, amplitude: 15, rain: 'monsoon' },
+  beijing: { hemisphere: 1, amplitude: 20, rain: 'monsoon' },
+  lima: { hemisphere: -1, amplitude: 6, rain: 'dry' },
+  santiago: { hemisphere: -1, amplitude: 11, rain: 'dry' },
+  hanoi: { hemisphere: 1, amplitude: 12, rain: 'monsoon' },
+  fes: { hemisphere: 1, amplitude: 14, rain: 'dry' },
+  casablanca: { hemisphere: 1, amplitude: 7, rain: 'dry' },
+  kualalumpur: { hemisphere: 1, amplitude: 1, rain: 'monsoon' },
+  manila: { hemisphere: 1, amplitude: 3, rain: 'monsoon' },
+  jakarta: { hemisphere: 1, amplitude: 1, rain: 'monsoon' },
 }
 
 const TEMP_SWING_BY_RAIN = { dry: 13, monsoon: 6, temperate: 8 }
@@ -1720,6 +2859,10 @@ const CONTINENT_BASE_FARE = {
   Océanie: 1150,
 }
 
+// Europe-tagged destinations that aren't actually reachable from France by
+// train/bus/car — island or ocean-separated, so only flights make sense.
+const NO_GROUND_TRANSPORT = new Set(['santorin', 'reykjavik', 'dublin', 'valletta', 'nicosia', 'ibiza', 'mykonos'])
+
 function haversineKm(a, b) {
   const R = 6371
   const dLat = ((b.lat - a.lat) * Math.PI) / 180
@@ -1749,7 +2892,7 @@ export function getTransportOptions(destination, dates = {}) {
     { ...carrier(AIRLINES[(seed + 5) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.66) / 5) * 5, stops: 1, stopCity: stop2, duration: formatDuration(baseHours + 5.5) },
   ]
 
-  const isEurope = destination.continent === 'Europe'
+  const isEurope = destination.continent === 'Europe' && !NO_GROUND_TRANSPORT.has(destination.id)
   const trainBase = Math.round((baseDirectPrice * 0.5) / 5) * 5
   const trains = !isEurope ? [] : [
     { ...carrier(TRAIN_COMPANIES[seed % TRAIN_COMPANIES.length]), price: trainBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 3.4) },

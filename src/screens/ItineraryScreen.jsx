@@ -6,7 +6,7 @@ import Icon from '../components/Icon.jsx'
 const typeIcon = { stay: 'suitcase', walk: 'peak', food: 'fork', activity: 'sparkle', rest: 'drop' }
 const colorMap = { pine: '#2F5D50', gold: '#D9A55C', berry: '#B5495B', mint: '#4FA98A' }
 
-export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, onValidateTrip }) {
+export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, onValidateTrip, onUnvalidateTrip }) {
   const [activeDay, setActiveDay] = useState(1)
   const d = destinations.find((x) => x.id === destinationId) ?? destinations[0]
   const itin = getItinerary(d, quiz?.nights, quiz)
@@ -20,7 +20,7 @@ export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, on
         <h1 className="font-serif text-[22px] text-ink leading-tight">{d.city} · {itin.days.length} jour{itin.days.length > 1 ? 's' : ''}</h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-40">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-48">
         <div className="rounded-2xl bg-white border border-ink/[0.06] p-4 mb-5">
           <div className="flex items-baseline justify-between mb-3">
             <span className="text-[12px] uppercase tracking-wide text-stone">Budget total estimé</span>
@@ -87,9 +87,16 @@ export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, on
       </div>
 
       <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
-        <PrimaryButton onClick={onValidateTrip} disabled={!!confirmedTrip} icon={confirmedTrip ? 'check' : 'shield'} className={confirmedTrip ? 'bg-pine' : ''}>
-          {confirmedTrip ? 'Voyage validé' : 'Valider mon voyage'}
-        </PrimaryButton>
+        {confirmedTrip ? (
+          <div className="space-y-2">
+            <PrimaryButton disabled icon="check" className="bg-pine">Voyage validé</PrimaryButton>
+            <button onClick={onUnvalidateTrip} className="w-full text-center text-[12.5px] text-stone underline underline-offset-2">
+              Modifier ce voyage
+            </button>
+          </div>
+        ) : (
+          <PrimaryButton onClick={onValidateTrip} icon="shield">Valider mon voyage</PrimaryButton>
+        )}
       </div>
     </div>
   )

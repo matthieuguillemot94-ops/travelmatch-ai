@@ -3,7 +3,7 @@ import { dashboardTrip } from '../data/mockData.js'
 import { PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 
-export default function DashboardScreen({ confirmedTrip, onOpenItinerary, onOpenAssistant, onOpenNewTrip }) {
+export default function DashboardScreen({ confirmedTrip, onOpenItinerary, onOpenAssistant, onOpenNewTrip, onUnvalidateTrip }) {
   const [checklist, setChecklist] = useState(dashboardTrip.checklist)
   const done = checklist.filter((c) => c.done).length
   const toggle = (i) => setChecklist((c) => c.map((item, idx) => (idx === i ? { ...item, done: !item.done } : item)))
@@ -55,6 +55,10 @@ export default function DashboardScreen({ confirmedTrip, onOpenItinerary, onOpen
             <p className="text-[13px] text-paper/75">{trip.departureDate === 'Dates à définir' ? trip.departureDate : `Départ le ${trip.departureDate}`}</p>
           </div>
         </div>
+
+        <button onClick={onUnvalidateTrip} className="text-[12.5px] text-stone underline underline-offset-2">
+          Modifier ce voyage
+        </button>
 
         <div className="rounded-2xl bg-white border border-ink/[0.06] p-4">
           <div className="flex items-baseline justify-between mb-2.5">

@@ -17,7 +17,7 @@ function IconTile({ label, icon, selected, onClick }) {
   )
 }
 
-function BudgetRow({ label, icon, value, min, max, step, onChange }) {
+function BudgetRow({ label, icon, value, suffix, min, max, step, onChange }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
@@ -25,7 +25,9 @@ function BudgetRow({ label, icon, value, min, max, step, onChange }) {
           <Icon name={icon} className="w-4 h-4 text-pine" />
           {label}
         </span>
-        <span className="font-mono tabular text-[13px] font-medium text-ink">{value.toLocaleString('fr-FR')} €</span>
+        <span className="font-mono tabular text-[13px] font-medium text-ink">
+          {value.toLocaleString('fr-FR')} € {suffix && <span className="text-stone font-sans font-normal">{suffix}</span>}
+        </span>
       </div>
       <input
         type="range"
@@ -41,7 +43,7 @@ function BudgetRow({ label, icon, value, min, max, step, onChange }) {
 }
 
 function recomputeBudget(q) {
-  return q.budgetTransport + q.budgetStay + q.budgetDaily * q.nights
+  return q.budgetTransport + q.budgetStay * q.nights + q.budgetDaily * q.nights
 }
 
 const DEFAULT_TRAVELERS = { solo: 1, couple: 2, famille: 4, amis: 4 }
@@ -94,7 +96,7 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
         <button onClick={onOpenProfile} className="w-10 h-10 rounded-full shrink-0" style={{ background: 'linear-gradient(135deg,#2F5D50,#4FA98A)' }} />
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-44 space-y-7">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-56 space-y-7">
         {confirmedTrip && (
           <button
             onClick={onOpenDashboard}
@@ -232,15 +234,21 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
               step={50}
               onChange={updateBudgetPart('budgetTransport')}
             />
-            <BudgetRow
-              label="Hébergement"
-              icon="bed"
-              value={quiz.budgetStay}
-              min={100}
-              max={6000}
-              step={50}
-              onChange={updateBudgetPart('budgetStay')}
-            />
+            <div>
+              <BudgetRow
+                label="Hébergement"
+                icon="bed"
+                value={quiz.budgetStay}
+                suffix="/ nuit"
+                min={20}
+                max={400}
+                step={5}
+                onChange={updateBudgetPart('budgetStay')}
+              />
+              <p className="text-[11.5px] text-stone mt-1.5">
+                {quiz.budgetStay.toLocaleString('fr-FR')} € × {quiz.nights} nuits = {(quiz.budgetStay * quiz.nights).toLocaleString('fr-FR')} €
+              </p>
+            </div>
             <div>
               <BudgetRow
                 label="Frais quotidiens / jour (repas, activités…)"

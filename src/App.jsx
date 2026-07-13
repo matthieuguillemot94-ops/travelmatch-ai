@@ -25,9 +25,9 @@ export default function App() {
   const [profile, setProfile] = useState({ name: '', avatar: 0, travelerType: null, visitedCountries: [] })
   const [quiz, setQuiz] = useState({
     interests: [],
-    budget: 1180,
+    budget: 1185,
     budgetTransport: 450,
-    budgetStay: 450,
+    budgetStay: 65,
     budgetDaily: 40,
     departureCity: 'Paris',
     duration: '1 semaine',
@@ -42,6 +42,8 @@ export default function App() {
   const [destinationId, setDestinationId] = useState('kyoto')
   const [activityId, setActivityId] = useState('fushimi-dawn')
   const [confirmedTrip, setConfirmedTrip] = useState(null)
+
+  const unvalidateTrip = () => setConfirmedTrip(null)
 
   const validateTrip = () => {
     const d = destinations.find((x) => x.id === destinationId)
@@ -144,7 +146,13 @@ export default function App() {
         )}
 
         {screen === 'itinerary' && (
-          <ItineraryScreen destinationId={destinationId} quiz={quiz} confirmedTrip={confirmedTrip} onValidateTrip={validateTrip} />
+          <ItineraryScreen
+            destinationId={destinationId}
+            quiz={quiz}
+            confirmedTrip={confirmedTrip}
+            onValidateTrip={validateTrip}
+            onUnvalidateTrip={unvalidateTrip}
+          />
         )}
 
         {screen === 'assistant' && <AssistantScreen />}
@@ -155,6 +163,7 @@ export default function App() {
             onOpenItinerary={() => setScreen('itinerary')}
             onOpenAssistant={() => setScreen('assistant')}
             onOpenNewTrip={() => setScreen('newTrip')}
+            onUnvalidateTrip={unvalidateTrip}
           />
         )}
 
