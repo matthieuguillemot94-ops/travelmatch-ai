@@ -44,6 +44,8 @@ function recomputeBudget(q) {
   return q.budgetTransport + q.budgetStay + q.budgetDaily * q.nights
 }
 
+const DEFAULT_TRAVELERS = { solo: 1, couple: 2, famille: 4, amis: 4 }
+
 export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProfile, onOpenDashboard, onFinish }) {
   const update = (patch) => setQuiz((q) => ({ ...q, ...patch }))
   const toggleMood = (m) => update({ mood: quiz.mood.includes(m) ? quiz.mood.filter((i) => i !== m) : [...quiz.mood, m] })
@@ -56,6 +58,8 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
       return next
     })
   }
+
+  const updateTravelers = (delta) => setQuiz((q) => ({ ...q, travelers: Math.max(1, Math.min(10, q.travelers + delta)) }))
 
   const updateNights = (nights) => {
     setQuiz((q) => {
@@ -125,8 +129,38 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
           <label className="block text-[12px] font-medium text-ink/70 mb-2.5 uppercase tracking-wide">Avec qui</label>
           <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-6 px-6">
             {groupOptions.map((g) => (
-              <IconTile key={g.id} label={g.label} icon={g.icon} selected={quiz.group === g.id} onClick={() => update({ group: g.id })} />
+              <IconTile
+                key={g.id}
+                label={g.label}
+                icon={g.icon}
+                selected={quiz.group === g.id}
+                onClick={() => update({ group: g.id, travelers: DEFAULT_TRAVELERS[g.id] || quiz.travelers })}
+              />
             ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Nombre de voyageurs</label>
+          <div className="flex items-center justify-between rounded-2xl border border-ink/10 bg-white px-4 py-3">
+            <span className="text-[13.5px] text-ink">Voyageurs</span>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => updateTravelers(-1)}
+                className="w-8 h-8 rounded-full bg-ink/5 flex items-center justify-center text-ink"
+              >
+                <Icon name="minus" className="w-3.5 h-3.5" strokeWidth={2} />
+              </button>
+              <span className="w-24 text-center font-mono tabular text-[15px] font-semibold text-ink">
+                {quiz.travelers} voyageur{quiz.travelers > 1 ? 's' : ''}
+              </span>
+              <button
+                onClick={() => updateTravelers(1)}
+                className="w-8 h-8 rounded-full bg-ink text-paper flex items-center justify-center"
+              >
+                <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2} />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -180,7 +214,9 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
 
         <div>
           <div className="flex items-baseline justify-between mb-3">
-            <label className="text-[12px] font-medium text-ink/70 uppercase tracking-wide">Budget du voyage</label>
+            <label className="text-[12px] font-medium text-ink/70 uppercase tracking-wide">
+              Budget du voyage <span className="normal-case font-normal text-stone">· par personne</span>
+            </label>
             <span className="font-mono tabular text-[18px] font-semibold text-ink">{quiz.budget.toLocaleString('fr-FR')} €</span>
           </div>
           <div className="rounded-2xl border border-ink/10 bg-white p-4 space-y-4">
@@ -215,6 +251,14 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
               <p className="text-[11.5px] text-stone mt-1.5">
                 {quiz.budgetDaily.toLocaleString('fr-FR')} € × {quiz.nights} nuits = {(quiz.budgetDaily * quiz.nights).toLocaleString('fr-FR')} €
               </p>
+            </div>
+            <div className="flex items-center justify-between pt-3.5 border-t border-ink/10">
+              <span className="text-[12.5px] text-ink/70">
+                Budget total · {quiz.travelers} voyageur{quiz.travelers > 1 ? 's' : ''}
+              </span>
+              <span className="font-mono tabular text-[16px] font-semibold text-ink">
+                {(quiz.budget * quiz.travelers).toLocaleString('fr-FR')} €
+              </span>
             </div>
           </div>
         </div>

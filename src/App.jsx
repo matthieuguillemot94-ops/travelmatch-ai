@@ -34,6 +34,7 @@ export default function App() {
     group: 'solo',
     comfort: 'confort',
     mood: [],
+    travelers: 1,
     nights: 7,
     startDate: null,
     endDate: null,
