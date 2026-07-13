@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { destinations, activities, getTransportOptions, getStayOptions, flightsFromCity, weatherForDate, minNightsFor } from '../data/mockData.js'
+import { destinations, activities, getTransportOptions, getStayOptions, flightsFromCity, weatherForDate, minNightsFor, departureCities, DESTINATION_COORDS } from '../data/mockData.js'
 import ScoreRing from '../components/ScoreRing.jsx'
 import { PrimaryButton, Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
+import RouteMap from '../components/RouteMap.jsx'
 
 const SOURCE_TONE = { Airbnb: 'berry', 'Booking.com': 'pine', Vrbo: 'mint' }
 const BADGE_TONE_CLASSES = {
@@ -41,6 +42,8 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
   const activeModeInfo = availableModes.find((m) => m.key === safeActiveMode) || availableModes[0]
   const transportOptions = [...(transportByMode[safeActiveMode] || [])].sort((a, b) => a.price - b.price)
   const stayOptions = getStayOptions(d)
+  const originCoords = departureCities.find((c) => c.id === departureCity)
+  const destCoords = DESTINATION_COORDS[d.id]
 
   return (
     <div className="h-full w-full bg-paper flex flex-col">
@@ -153,6 +156,14 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
                 </button>
               ))}
             </div>
+          )}
+
+          {safeActiveMode === 'personalCars' && originCoords && destCoords && (
+            <RouteMap
+              origin={originCoords}
+              destination={destCoords}
+              className="rounded-2xl overflow-hidden border border-ink/[0.06] mb-3.5 h-52"
+            />
           )}
 
           <div className="space-y-2.5 mb-8">

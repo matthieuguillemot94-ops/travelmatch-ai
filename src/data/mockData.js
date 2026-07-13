@@ -33,14 +33,34 @@ export const groupOptions = [
 ]
 
 export const departureCities = [
-  { id: 'Paris', label: 'Paris', priceMult: 1, hoursAdd: 0 },
-  { id: 'Lyon', label: 'Lyon', priceMult: 1.08, hoursAdd: 1.5 },
-  { id: 'Marseille', label: 'Marseille', priceMult: 1.1, hoursAdd: 1.5 },
-  { id: 'Toulouse', label: 'Toulouse', priceMult: 1.1, hoursAdd: 1.5 },
-  { id: 'Nantes', label: 'Nantes', priceMult: 1.08, hoursAdd: 1.5 },
-  { id: 'Bordeaux', label: 'Bordeaux', priceMult: 1.1, hoursAdd: 1.5 },
-  { id: 'Nice', label: 'Nice', priceMult: 1.05, hoursAdd: 1 },
+  { id: 'Paris', label: 'Paris', priceMult: 1, hoursAdd: 0, lat: 48.8566, lon: 2.3522 },
+  { id: 'Lyon', label: 'Lyon', priceMult: 1.08, hoursAdd: 1.5, lat: 45.764, lon: 4.8357 },
+  { id: 'Marseille', label: 'Marseille', priceMult: 1.1, hoursAdd: 1.5, lat: 43.2965, lon: 5.3698 },
+  { id: 'Toulouse', label: 'Toulouse', priceMult: 1.1, hoursAdd: 1.5, lat: 43.6047, lon: 1.4442 },
+  { id: 'Nantes', label: 'Nantes', priceMult: 1.08, hoursAdd: 1.5, lat: 47.2184, lon: -1.5536 },
+  { id: 'Bordeaux', label: 'Bordeaux', priceMult: 1.1, hoursAdd: 1.5, lat: 44.8378, lon: -0.5792 },
+  { id: 'Nice', label: 'Nice', priceMult: 1.05, hoursAdd: 1, lat: 43.7102, lon: 7.262 },
 ]
+
+// Coordinates for the European destinations reachable by personal car (used
+// to draw the real driving route on the map in "Comment y aller").
+export const DESTINATION_COORDS = {
+  lisbonne: { lat: 38.7223, lon: -9.1393 },
+  douro: { lat: 41.1621, lon: -7.7975 },
+  paris: { lat: 48.8566, lon: 2.3522 },
+  rome: { lat: 41.9028, lon: 12.4964 },
+  santorin: { lat: 36.3932, lon: 25.4615 },
+  reykjavik: { lat: 64.1466, lon: -21.9426 },
+  barcelona: { lat: 41.3874, lon: 2.1686 },
+  amsterdam: { lat: 52.3676, lon: 4.9041 },
+  prague: { lat: 50.0755, lon: 14.4378 },
+  vienna: { lat: 48.2082, lon: 16.3738 },
+  venice: { lat: 45.4408, lon: 12.3155 },
+  edinburgh: { lat: 55.9533, lon: -3.1883 },
+  porto: { lat: 41.1579, lon: -8.6291 },
+  budapest: { lat: 47.4979, lon: 19.0402 },
+  copenhagen: { lat: 55.6761, lon: 12.5683 },
+}
 
 export const comfortLevels = [
   { id: 'simple', label: 'Simple & authentique', icon: 'leaf' },
@@ -1574,6 +1594,28 @@ const BUS_COMPANIES = ['FlixBus', 'BlaBlaBus', 'Eurolines']
 const CARPOOL_COMPANIES = ['BlaBlaCar']
 const GROUND_STOPOVER_CITIES = ['Bruxelles', 'Lyon', 'Milan', 'Amsterdam', 'Barcelone']
 
+function dateLabelFor(dateISO) {
+  return dateISO ? new Date(dateISO).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+}
+
+// Deep-links to real, live search results for the route/date instead of a
+// carrier's generic homepage. Google Flights parses natural-language queries
+// reliably across any city pair; individual rail/bus/carpool operators don't
+// expose a stable public URL schema, so a targeted Google search is the most
+// honest way to land the user near real tickets without guessing a fragile
+// booking-API query format.
+function flightSearchUrl(originCity, destinationCity, dateISO) {
+  const dateLabel = dateLabelFor(dateISO)
+  const query = `Vols de ${originCity} à ${destinationCity}${dateLabel ? ` le ${dateLabel}` : ''}`
+  return `https://www.google.com/travel/flights?q=${encodeURIComponent(query)}`
+}
+
+function groundSearchUrl(companyName, originCity, destinationCity, dateISO) {
+  const dateLabel = dateLabelFor(dateISO)
+  const query = `${companyName} billets ${originCity} ${destinationCity}${dateLabel ? ` ${dateLabel}` : ''}`
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`
+}
+
 export function getTransportOptions(destination, dates = {}) {
   const seed = hashString(destination.id)
   const departure = departureCities.find((c) => c.id === dates.departureCity) || departureCities[0]
@@ -1585,28 +1627,29 @@ export function getTransportOptions(destination, dates = {}) {
   const stop1 = STOPOVER_CITIES[seed % STOPOVER_CITIES.length]
   const stop2 = STOPOVER_CITIES[(seed + 2) % STOPOVER_CITIES.length]
   const groundStop = GROUND_STOPOVER_CITIES[seed % GROUND_STOPOVER_CITIES.length]
+  const flightUrl = flightSearchUrl(departure.id, destination.city, dates.startDate)
 
   const flights = [
-    { ...carrier(AIRLINES[seed % AIRLINES.length]), price: baseDirectPrice, stops: 0, stopCity: null, duration: formatDuration(baseHours) },
-    { ...carrier(AIRLINES[(seed + 3) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.82) / 5) * 5, stops: 1, stopCity: stop1, duration: formatDuration(baseHours + 3.5) },
-    { ...carrier(AIRLINES[(seed + 5) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.66) / 5) * 5, stops: 1, stopCity: stop2, duration: formatDuration(baseHours + 5.5) },
+    { ...carrier(AIRLINES[seed % AIRLINES.length]), price: baseDirectPrice, stops: 0, stopCity: null, duration: formatDuration(baseHours), url: flightUrl },
+    { ...carrier(AIRLINES[(seed + 3) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.82) / 5) * 5, stops: 1, stopCity: stop1, duration: formatDuration(baseHours + 3.5), url: flightUrl },
+    { ...carrier(AIRLINES[(seed + 5) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.66) / 5) * 5, stops: 1, stopCity: stop2, duration: formatDuration(baseHours + 5.5), url: flightUrl },
   ]
 
   const isEurope = destination.continent === 'Europe'
   const trainBase = Math.round((baseDirectPrice * 0.5) / 5) * 5
   const trains = !isEurope ? [] : [
-    { ...carrier(TRAIN_COMPANIES[seed % TRAIN_COMPANIES.length]), price: trainBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 3.4) },
-    { ...carrier(TRAIN_COMPANIES[(seed + 1) % TRAIN_COMPANIES.length]), price: Math.round((trainBase * 0.78) / 5) * 5, stops: 1, stopCity: groundStop, duration: formatDuration(baseHours * 4.6) },
+    { ...carrier(TRAIN_COMPANIES[seed % TRAIN_COMPANIES.length]), price: trainBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 3.4), url: groundSearchUrl(TRAIN_COMPANIES[seed % TRAIN_COMPANIES.length], departure.id, destination.city, dates.startDate) },
+    { ...carrier(TRAIN_COMPANIES[(seed + 1) % TRAIN_COMPANIES.length]), price: Math.round((trainBase * 0.78) / 5) * 5, stops: 1, stopCity: groundStop, duration: formatDuration(baseHours * 4.6), url: groundSearchUrl(TRAIN_COMPANIES[(seed + 1) % TRAIN_COMPANIES.length], departure.id, destination.city, dates.startDate) },
   ]
 
   const busBase = Math.round((baseDirectPrice * 0.28) / 5) * 5
   const buses = !isEurope ? [] : [
-    { ...carrier(BUS_COMPANIES[seed % BUS_COMPANIES.length]), price: busBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 6.5) },
+    { ...carrier(BUS_COMPANIES[seed % BUS_COMPANIES.length]), price: busBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 6.5), url: groundSearchUrl(BUS_COMPANIES[seed % BUS_COMPANIES.length], departure.id, destination.city, dates.startDate) },
   ]
 
   const carBase = Math.round((baseDirectPrice * 0.22) / 5) * 5
   const cars = !isEurope ? [] : [
-    { ...carrier(CARPOOL_COMPANIES[0]), price: carBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 5.2) },
+    { ...carrier(CARPOOL_COMPANIES[0]), price: carBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 5.2), url: groundSearchUrl(CARPOOL_COMPANIES[0], departure.id, destination.city, dates.startDate) },
   ]
 
   const personalCarBase = Math.round((baseDirectPrice * 0.15) / 5) * 5
