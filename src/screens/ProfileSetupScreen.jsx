@@ -128,7 +128,7 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
             </div>
           )}
           <div className="rounded-2xl border border-ink/10 bg-white max-h-52 overflow-y-auto no-scrollbar divide-y divide-ink/[0.05]">
-            {filteredCountries.slice(0, 40).map((c) => {
+            {filteredCountries.map((c) => {
               const selected = profile.visitedCountries?.includes(c.code)
               return (
                 <button

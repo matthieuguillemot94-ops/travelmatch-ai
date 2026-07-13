@@ -117,6 +117,7 @@ export default function App() {
           <ResultsScreen
             profile={profile}
             quiz={quiz}
+            onBack={() => setScreen('newTrip')}
             onOpenDestination={(id) => {
               setDestinationId(id)
               setScreen('destination')

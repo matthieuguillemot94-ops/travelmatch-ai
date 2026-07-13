@@ -1562,7 +1562,12 @@ export function getTransportOptions(destination, dates = {}) {
     { ...carrier(CARPOOL_COMPANIES[0]), price: carBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 5.2) },
   ]
 
-  return { flights, trains, buses, cars }
+  const personalCarBase = Math.round((baseDirectPrice * 0.15) / 5) * 5
+  const personalCars = !isEurope ? [] : [
+    { ...carrier('Votre voiture'), price: personalCarBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 5.4), note: 'Carburant et péages estimés' },
+  ]
+
+  return { flights, trains, buses, cars, personalCars }
 }
 
 // ---- Visited-countries picker + world map ----

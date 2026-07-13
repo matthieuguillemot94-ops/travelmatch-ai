@@ -15,7 +15,8 @@ const TRANSPORT_MODES = [
   { key: 'flights', label: 'Avion', icon: 'send', prefix: 'Vols' },
   { key: 'trains', label: 'Train', icon: 'train', prefix: 'Trajets en train' },
   { key: 'buses', label: 'Bus', icon: 'bus', prefix: 'Trajets en bus' },
-  { key: 'cars', label: 'Covoiturage', icon: 'car', prefix: 'Covoiturages' },
+  { key: 'cars', label: 'Covoiturage', icon: 'users', prefix: 'Covoiturages' },
+  { key: 'personalCars', label: 'Voiture perso', icon: 'car', prefix: 'Trajet en voiture' },
 ]
 
 function CarrierBadge({ code, tone }) {
@@ -146,7 +147,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
                     {i === 0 && <Tag tone="gold">Meilleur prix</Tag>}
                   </div>
                   <p className="text-[11.5px] text-stone">
-                    {t.stops === 0 ? 'Direct' : `1 escale · ${t.stopCity}`} · {t.duration}
+                    {t.stops === 0 ? 'Direct' : `1 escale · ${t.stopCity}`} · {t.duration}{t.note ? ` · ${t.note}` : ''}
                   </p>
                 </div>
                 <span className="font-mono tabular text-[15px] font-semibold text-ink shrink-0">{t.price} €</span>

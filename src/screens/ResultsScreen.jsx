@@ -16,7 +16,7 @@ function SkeletonCard() {
   )
 }
 
-export default function ResultsScreen({ profile, quiz, onOpenDestination }) {
+export default function ResultsScreen({ profile, quiz, onOpenDestination, onBack }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -29,6 +29,9 @@ export default function ResultsScreen({ profile, quiz, onOpenDestination }) {
   return (
     <div className="h-full w-full bg-paper flex flex-col">
       <div className="px-6 pt-3 pb-4 shrink-0">
+        <button onClick={onBack} className="w-9 h-9 rounded-full bg-ink/5 flex items-center justify-center mb-3">
+          <Icon name="arrow-left" className="w-4.5 h-4.5 text-ink" />
+        </button>
         <p className="text-[12px] uppercase tracking-wide text-stone mb-1">Pour {profile.name || 'vous'}</p>
         <h1 className="font-serif text-[23px] text-ink leading-tight">Vos destinations les plus compatibles</h1>
         <p className="text-[12px] text-stone mt-1">{matched.length} destinations sur 50, triées selon vos envies</p>
