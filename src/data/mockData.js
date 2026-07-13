@@ -1345,6 +1345,18 @@ export function minNightsFor(destination) {
   return MIN_NIGHTS_BY_CONTINENT[destination.continent] || 4
 }
 
+// A realistic "worth the trip" duration range, driven by actual travel time
+// from the chosen departure city rather than a fixed per-destination number
+// — so short stays are only ever suggested for destinations that are
+// genuinely close, and far-flung ones always get a longer recommended range.
+export function recommendedDuration(destination, departureCityId) {
+  const departure = departureCities.find((c) => c.id === departureCityId) || departureCities[0]
+  const travelHours = (CONTINENT_FLIGHT_HOURS[destination.continent] || 8) + departure.hoursAdd
+  const minNights = minNightsFor(destination)
+  const buffer = travelHours > 15 ? 4 : travelHours > 8 ? 3 : 2
+  return `${minNights}-${minNights + buffer} jours`
+}
+
 export function matchDestinations({ mood = [], interests = [], budget = 3000, nights = 7 } = {}) {
   const wantedTags = new Set()
   mood.forEach((m) => (MOOD_TAGS[m] || []).forEach((t) => wantedTags.add(t)))
@@ -1521,6 +1533,14 @@ const CONTINENT_FLIGHT_HOURS = {
 
 export const flightsFromCity = 'Paris'
 
+function lodgingSearchUrl(source, destination) {
+  const place = `${destination.city}, ${destination.country}`
+  if (source === 'Airbnb') return `https://www.airbnb.fr/s/${encodeURIComponent(`${destination.city}--${destination.country}`)}/homes`
+  if (source === 'Booking.com') return `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(place)}`
+  if (source === 'Vrbo') return `https://www.vrbo.com/search?destination=${encodeURIComponent(place)}`
+  return null
+}
+
 export function getStayOptions(destination) {
   const basePerNight = Math.max(25, Math.round((destination.budgetEstimate * 0.085) / 5) * 5)
   return [
@@ -1530,6 +1550,7 @@ export function getStayOptions(destination) {
       type: 'Appartement entier',
       pricePerNight: basePerNight + 6,
       rating: 4.8,
+      url: lodgingSearchUrl('Airbnb', destination),
     },
     {
       source: 'Booking.com',
@@ -1537,6 +1558,7 @@ export function getStayOptions(destination) {
       type: 'Hôtel 3★',
       pricePerNight: Math.max(20, basePerNight - 8),
       rating: 4.5,
+      url: lodgingSearchUrl('Booking.com', destination),
     },
     {
       source: 'Vrbo',
@@ -1544,6 +1566,7 @@ export function getStayOptions(destination) {
       type: 'Maison entière',
       pricePerNight: basePerNight + 18,
       rating: 4.9,
+      url: lodgingSearchUrl('Vrbo', destination),
     },
   ]
 }
@@ -1594,26 +1617,28 @@ const BUS_COMPANIES = ['FlixBus', 'BlaBlaBus', 'Eurolines']
 const CARPOOL_COMPANIES = ['BlaBlaCar']
 const GROUND_STOPOVER_CITIES = ['Bruxelles', 'Lyon', 'Milan', 'Amsterdam', 'Barcelone']
 
-function dateLabelFor(dateISO) {
-  return dateISO ? new Date(dateISO).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+// Typical round-trip economy fare from Paris by continent (€), calibrated
+// against real-world airfare ranges rather than tied to the trip's overall
+// budget estimate — flights to far continents cost more even when the
+// destination itself is inexpensive to live in.
+const CONTINENT_BASE_FARE = {
+  Europe: 130,
+  'Moyen-Orient': 420,
+  Afrique: 480,
+  Asie: 620,
+  'Amérique du Nord': 560,
+  'Amérique du Sud': 750,
+  Océanie: 1150,
 }
 
-// Deep-links to real, live search results for the route/date instead of a
-// carrier's generic homepage. Google Flights parses natural-language queries
-// reliably across any city pair; individual rail/bus/carpool operators don't
-// expose a stable public URL schema, so a targeted Google search is the most
-// honest way to land the user near real tickets without guessing a fragile
-// booking-API query format.
-function flightSearchUrl(originCity, destinationCity, dateISO) {
-  const dateLabel = dateLabelFor(dateISO)
-  const query = `Vols de ${originCity} à ${destinationCity}${dateLabel ? ` le ${dateLabel}` : ''}`
-  return `https://www.google.com/travel/flights?q=${encodeURIComponent(query)}`
-}
-
-function groundSearchUrl(companyName, originCity, destinationCity, dateISO) {
-  const dateLabel = dateLabelFor(dateISO)
-  const query = `${companyName} billets ${originCity} ${destinationCity}${dateLabel ? ` ${dateLabel}` : ''}`
-  return `https://www.google.com/search?q=${encodeURIComponent(query)}`
+function haversineKm(a, b) {
+  const R = 6371
+  const dLat = ((b.lat - a.lat) * Math.PI) / 180
+  const dLon = ((b.lon - a.lon) * Math.PI) / 180
+  const lat1 = (a.lat * Math.PI) / 180
+  const lat2 = (b.lat * Math.PI) / 180
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2
+  return 2 * R * Math.asin(Math.sqrt(h))
 }
 
 export function getTransportOptions(destination, dates = {}) {
@@ -1621,46 +1646,58 @@ export function getTransportOptions(destination, dates = {}) {
   const departure = departureCities.find((c) => c.id === dates.departureCity) || departureCities[0]
   const baseHours = (CONTINENT_FLIGHT_HOURS[destination.continent] || 8) + departure.hoursAdd
   const seasonMult = seasonMultiplier(dates.startDate)
+  const fareVariance = 0.85 + (seed % 30) / 100
   const baseDirectPrice = Math.round(
-    Math.max(120, Math.round((destination.budgetEstimate * 0.26) / 10) * 10) * seasonMult * departure.priceMult
-  )
+    ((CONTINENT_BASE_FARE[destination.continent] || 500) * seasonMult * departure.priceMult * fareVariance) / 5
+  ) * 5
   const stop1 = STOPOVER_CITIES[seed % STOPOVER_CITIES.length]
   const stop2 = STOPOVER_CITIES[(seed + 2) % STOPOVER_CITIES.length]
   const groundStop = GROUND_STOPOVER_CITIES[seed % GROUND_STOPOVER_CITIES.length]
-  const flightUrl = flightSearchUrl(departure.id, destination.city, dates.startDate)
 
   const flights = [
-    { ...carrier(AIRLINES[seed % AIRLINES.length]), price: baseDirectPrice, stops: 0, stopCity: null, duration: formatDuration(baseHours), url: flightUrl },
-    { ...carrier(AIRLINES[(seed + 3) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.82) / 5) * 5, stops: 1, stopCity: stop1, duration: formatDuration(baseHours + 3.5), url: flightUrl },
-    { ...carrier(AIRLINES[(seed + 5) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.66) / 5) * 5, stops: 1, stopCity: stop2, duration: formatDuration(baseHours + 5.5), url: flightUrl },
+    { ...carrier(AIRLINES[seed % AIRLINES.length]), price: baseDirectPrice, stops: 0, stopCity: null, duration: formatDuration(baseHours) },
+    { ...carrier(AIRLINES[(seed + 3) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.82) / 5) * 5, stops: 1, stopCity: stop1, duration: formatDuration(baseHours + 3.5) },
+    { ...carrier(AIRLINES[(seed + 5) % AIRLINES.length]), price: Math.round((baseDirectPrice * 0.66) / 5) * 5, stops: 1, stopCity: stop2, duration: formatDuration(baseHours + 5.5) },
   ]
 
   const isEurope = destination.continent === 'Europe'
   const trainBase = Math.round((baseDirectPrice * 0.5) / 5) * 5
   const trains = !isEurope ? [] : [
-    { ...carrier(TRAIN_COMPANIES[seed % TRAIN_COMPANIES.length]), price: trainBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 3.4), url: groundSearchUrl(TRAIN_COMPANIES[seed % TRAIN_COMPANIES.length], departure.id, destination.city, dates.startDate) },
-    { ...carrier(TRAIN_COMPANIES[(seed + 1) % TRAIN_COMPANIES.length]), price: Math.round((trainBase * 0.78) / 5) * 5, stops: 1, stopCity: groundStop, duration: formatDuration(baseHours * 4.6), url: groundSearchUrl(TRAIN_COMPANIES[(seed + 1) % TRAIN_COMPANIES.length], departure.id, destination.city, dates.startDate) },
+    { ...carrier(TRAIN_COMPANIES[seed % TRAIN_COMPANIES.length]), price: trainBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 3.4) },
+    { ...carrier(TRAIN_COMPANIES[(seed + 1) % TRAIN_COMPANIES.length]), price: Math.round((trainBase * 0.78) / 5) * 5, stops: 1, stopCity: groundStop, duration: formatDuration(baseHours * 4.6) },
   ]
 
   const busBase = Math.round((baseDirectPrice * 0.28) / 5) * 5
   const buses = !isEurope ? [] : [
-    { ...carrier(BUS_COMPANIES[seed % BUS_COMPANIES.length]), price: busBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 6.5), url: groundSearchUrl(BUS_COMPANIES[seed % BUS_COMPANIES.length], departure.id, destination.city, dates.startDate) },
+    { ...carrier(BUS_COMPANIES[seed % BUS_COMPANIES.length]), price: busBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 6.5) },
   ]
 
-  const carBase = Math.round((baseDirectPrice * 0.22) / 5) * 5
+  const carpoolBase = Math.round((baseDirectPrice * 0.22) / 5) * 5
   const cars = !isEurope ? [] : [
-    { ...carrier(CARPOOL_COMPANIES[0]), price: carBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 5.2), url: groundSearchUrl(CARPOOL_COMPANIES[0], departure.id, destination.city, dates.startDate) },
+    { ...carrier(CARPOOL_COMPANIES[0]), price: carpoolBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 5.2) },
   ]
 
-  const personalCarBase = Math.round((baseDirectPrice * 0.15) / 5) * 5
+  // Personal car: real driving distance (haversine + a road-routing
+  // correction factor) times a realistic per-km fuel + toll rate, instead of
+  // a flat cut of the flight price — a 1400km drive should cost far more
+  // than a 300km one even though both may share a similar flight budget.
+  const originCoords = departure
+  const destCoords = DESTINATION_COORDS[destination.id]
+  let personalCarPrice = Math.round((baseDirectPrice * 0.15) / 5) * 5
+  let personalCarHours = baseHours * 5.4
+  if (originCoords && destCoords) {
+    const roadKm = haversineKm(originCoords, destCoords) * 1.2
+    personalCarPrice = Math.round((roadKm * 2 * 0.2) / 5) * 5
+    personalCarHours = roadKm / 90
+  }
   const mapsUrl = `https://www.google.com/maps/dir/${encodeURIComponent(departure.id)}/${encodeURIComponent(`${destination.city}, ${destination.country}`)}`
   const personalCars = !isEurope ? [] : [
     {
       ...carrier('Votre voiture'),
-      price: personalCarBase,
+      price: personalCarPrice,
       stops: 0,
       stopCity: null,
-      duration: formatDuration(baseHours * 5.4),
+      duration: formatDuration(personalCarHours),
       note: 'Carburant et péages estimés',
       url: mapsUrl,
     },

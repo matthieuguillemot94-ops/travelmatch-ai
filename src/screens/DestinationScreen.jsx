@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { destinations, activities, getTransportOptions, getStayOptions, flightsFromCity, weatherForDate, minNightsFor, departureCities, DESTINATION_COORDS } from '../data/mockData.js'
+import { destinations, activities, getTransportOptions, getStayOptions, flightsFromCity, weatherForDate, minNightsFor, recommendedDuration, departureCities, DESTINATION_COORDS } from '../data/mockData.js'
 import ScoreRing from '../components/ScoreRing.jsx'
 import { PrimaryButton, Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
@@ -35,6 +35,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
   const weather = weatherForDate(d, quiz?.startDate, quiz?.endDate)
   const minNights = minNightsFor(d)
   const nightsTooShort = quiz?.nights && quiz.nights < minNights
+  const duration = recommendedDuration(d, departureCity)
   const transportByMode = getTransportOptions(d, { startDate: quiz?.startDate, departureCity })
   const availableModes = TRANSPORT_MODES.filter((m) => transportByMode[m.key]?.length)
   const [activeMode, setActiveMode] = useState('flights')
@@ -74,7 +75,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
           <div className="grid grid-cols-2 gap-2.5 mb-2.5">
             <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
               <Icon name="clock" className="w-4 h-4 text-pine mb-1.5" />
-              <p className="text-[13px] font-medium text-ink">{d.duration}</p>
+              <p className="text-[13px] font-medium text-ink">{duration}</p>
               <p className="text-[11px] text-stone">Durée conseillée</p>
             </div>
             <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
@@ -202,22 +203,33 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
         </div>
 
         <div className="flex gap-3.5 overflow-x-auto no-scrollbar px-6 pb-2 mb-8">
-          {stayOptions.map((s, i) => (
-            <div key={i} className="w-[190px] shrink-0 rounded-2xl bg-white border border-ink/[0.06] p-3.5 shadow-card">
-              <Tag tone={SOURCE_TONE[s.source] || 'pine'}>{s.source}</Tag>
-              <p className="text-[13px] font-medium text-ink leading-snug mt-2 mb-1">{s.title}</p>
-              <p className="text-[11px] text-stone mb-2.5">{s.type}</p>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1 text-[11.5px] text-ink/70">
-                  <Icon name="star" className="w-3 h-3 text-gold-600" />
-                  {s.rating}
-                </span>
-                <span className="font-mono tabular text-[13px] font-semibold text-ink">
-                  {s.pricePerNight} € <span className="text-[10px] text-stone font-sans font-normal">/nuit</span>
-                </span>
-              </div>
-            </div>
-          ))}
+          {stayOptions.map((s, i) => {
+            const Wrapper = s.url ? 'a' : 'div'
+            const wrapperProps = s.url ? { href: s.url, target: '_blank', rel: 'noopener noreferrer' } : {}
+            return (
+              <Wrapper
+                key={i}
+                {...wrapperProps}
+                className={`w-[190px] shrink-0 rounded-2xl bg-white border border-ink/[0.06] p-3.5 shadow-card ${s.url ? 'active:scale-[0.98] transition-transform' : ''}`}
+              >
+                <div className="flex items-center justify-between">
+                  <Tag tone={SOURCE_TONE[s.source] || 'pine'}>{s.source}</Tag>
+                  {s.url && <Icon name="externalLink" className="w-3 h-3 text-stone" strokeWidth={1.8} />}
+                </div>
+                <p className="text-[13px] font-medium text-ink leading-snug mt-2 mb-1">{s.title}</p>
+                <p className="text-[11px] text-stone mb-2.5">{s.type}</p>
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-1 text-[11.5px] text-ink/70">
+                    <Icon name="star" className="w-3 h-3 text-gold-600" />
+                    {s.rating}
+                  </span>
+                  <span className="font-mono tabular text-[13px] font-semibold text-ink">
+                    {s.pricePerNight} € <span className="text-[10px] text-stone font-sans font-normal">/nuit</span>
+                  </span>
+                </div>
+              </Wrapper>
+            )
+          })}
         </div>
 
         <div className="px-6">

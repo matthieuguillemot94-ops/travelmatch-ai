@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { matchDestinations } from '../data/mockData.js'
+import { matchDestinations, recommendedDuration } from '../data/mockData.js'
 import ScoreRing from '../components/ScoreRing.jsx'
 import { Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
@@ -79,7 +79,7 @@ export default function ResultsScreen({ profile, quiz, onOpenDestination, onBack
                     {d.tags.map((t) => <Tag key={t}>{t}</Tag>)}
                   </div>
                   <div className="flex items-center gap-3 text-[12.5px] text-stone">
-                    <span className="flex items-center gap-1"><Icon name="clock" className="w-3.5 h-3.5" />{d.duration}</span>
+                    <span className="flex items-center gap-1"><Icon name="clock" className="w-3.5 h-3.5" />{recommendedDuration(d, quiz?.departureCity)}</span>
                     <span className="flex items-center gap-1 font-mono tabular"><Icon name="coin" className="w-3.5 h-3.5" />~{d.budgetEstimate} €</span>
                   </div>
                 </div>
