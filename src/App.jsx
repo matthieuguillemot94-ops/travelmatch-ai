@@ -144,7 +144,7 @@ export default function App() {
         )}
 
         {screen === 'itinerary' && (
-          <ItineraryScreen confirmedTrip={confirmedTrip} onValidateTrip={validateTrip} />
+          <ItineraryScreen destinationId={destinationId} quiz={quiz} confirmedTrip={confirmedTrip} onValidateTrip={validateTrip} />
         )}
 
         {screen === 'assistant' && <AssistantScreen />}

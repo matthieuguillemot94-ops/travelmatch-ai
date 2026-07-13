@@ -1210,44 +1210,133 @@ export const activities = [
   },
 ]
 
-export const itinerary = {
-  destinationId: 'kyoto',
-  totalBudget: 1850,
-  spentBreakdown: [
-    { label: 'Hébergement', amount: 720, color: 'pine' },
-    { label: 'Activités', amount: 460, color: 'gold' },
-    { label: 'Repas', amount: 410, color: 'berry' },
-    { label: 'Transport', amount: 260, color: 'mint' },
+// ---- Day-by-day itinerary generator ----
+// Builds a full morning-to-dinner schedule for any destination and any trip
+// length, so the Itinéraire tab always reflects whatever the user is
+// currently exploring on Voyager instead of a single hardcoded example.
+
+const ITINERARY_TEMPLATES = {
+  morning: [
+    { tags: ['Nature', 'Randonnée', 'Aventure', 'Montagne'], type: 'walk', label: (d) => `Randonnée dans les environs de ${d.city}` },
+    { tags: ['Plage', 'Océan'], type: 'walk', label: () => 'Matinée plage et baignade' },
+    { tags: ['Spiritualité', 'Sérénité'], type: 'activity', label: () => 'Visite d’un temple ou sanctuaire emblématique' },
+    { tags: ['Histoire', 'Architecture'], type: 'walk', label: (d) => `Visite guidée du centre historique de ${d.city}` },
+    { tags: ['Histoire', 'Architecture'], type: 'walk', label: () => 'Découverte des monuments emblématiques' },
+    { tags: ['Culture', 'Art & Design'], type: 'activity', label: () => 'Musée et galeries locales' },
+    { tags: ['Culture', 'Art & Design'], type: 'activity', label: (d) => `Immersion dans un quartier culturel de ${d.city}` },
+    { tags: ['Gastronomie'], type: 'food', label: () => 'Marché matinal et petit-déjeuner local' },
+    { tags: ['Vie locale', 'Artisanat'], type: 'walk', label: (d) => `Balade dans les quartiers authentiques de ${d.city}` },
+    { tags: [], type: 'walk', label: (d) => `Découverte du centre de ${d.city}` },
   ],
-  days: [
-    {
-      day: 1,
-      title: 'Arrivée & Higashiyama',
-      items: [
-        { time: '14:00', label: 'Installation à la machiya de Gion', type: 'stay' },
-        { time: '16:30', label: 'Balade dans les ruelles de Higashiyama', type: 'walk' },
-        { time: '19:00', label: 'Dîner kaiseki intimiste', type: 'food' },
-      ],
-    },
-    {
-      day: 2,
-      title: 'Sanctuaires & marché',
-      items: [
-        { time: '05:45', label: 'Lever de soleil à Fushimi Inari', type: 'activity' },
-        { time: '11:00', label: 'Dégustation au marché Nishiki', type: 'food' },
-        { time: '15:00', label: 'Cérémonie du thé chez l’habitant', type: 'activity' },
-      ],
-    },
-    {
-      day: 3,
-      title: 'Arashiyama',
-      items: [
-        { time: '08:00', label: 'Forêt de bambous, avant l’affluence', type: 'walk' },
-        { time: '10:30', label: 'Pont Togetsukyo & sanctuaire des singes', type: 'walk' },
-        { time: '18:30', label: 'Onsen et dîner libre', type: 'rest' },
-      ],
-    },
+  lunch: [
+    { tags: ['Gastronomie'], type: 'food', label: () => 'Déjeuner chez un producteur local' },
+    { tags: ['Vie locale'], type: 'food', label: () => 'Déjeuner dans une adresse de quartier' },
+    { tags: [], type: 'food', label: () => 'Déjeuner dans une adresse locale' },
   ],
+  afternoon: [
+    { tags: ['Randonnée', 'Nature', 'Aventure'], type: 'walk', label: (d) => `Exploration nature autour de ${d.city}` },
+    { tags: ['Plage', 'Océan'], type: 'rest', label: () => 'Après-midi détente au bord de l’eau' },
+    { tags: ['Artisanat', 'Vie locale'], type: 'activity', label: () => 'Marché artisanal et rencontres locales' },
+    { tags: ['Histoire', 'Architecture', 'Culture'], type: 'activity', label: () => 'Visite d’un site emblématique' },
+    { tags: ['Histoire', 'Architecture', 'Culture'], type: 'walk', label: (d) => `Exploration d’un quartier historique de ${d.city}` },
+    { tags: ['Vin', 'Gastronomie'], type: 'activity', label: () => 'Dégustation chez un producteur' },
+    { tags: [], type: 'walk', label: (d) => `Découverte libre de ${d.city}` },
+  ],
+  lateAfternoon: [
+    { tags: ['Bien-être', 'Détente', 'Sérénité'], type: 'rest', label: () => 'Moment bien-être / spa' },
+    { tags: ['Photographie'], type: 'rest', label: () => 'Point de vue au coucher du soleil' },
+    { tags: ['Vie nocturne'], type: 'rest', label: (d) => `Apéro dans les quartiers animés de ${d.city}` },
+    { tags: ['Gastronomie', 'Vin'], type: 'rest', label: () => 'Pause gourmande dans un café local' },
+    { tags: [], type: 'rest', label: () => 'Temps libre pour flâner' },
+  ],
+  dinner: [
+    { tags: ['Gastronomie'], type: 'food', label: () => 'Dîner gastronomique' },
+    { tags: ['Vie nocturne'], type: 'food', label: () => 'Dîner puis sortie nocturne' },
+    { tags: [], type: 'food', label: () => 'Dîner dans un restaurant local' },
+  ],
+}
+
+function pickTemplate(pool, destination, seed) {
+  const tagged = pool.filter((t) => t.tags.length > 0 && t.tags.some((tag) => destination.tags.includes(tag)))
+  const candidates = tagged.length ? tagged : pool
+  return candidates[seed % candidates.length]
+}
+
+function dayDateLabel(startDateISO, dayIndex) {
+  if (!startDateISO) return null
+  const date = new Date(startDateISO)
+  date.setDate(date.getDate() + dayIndex)
+  return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+}
+
+export function getItinerary(destination, nights, quiz = {}) {
+  const n = Math.max(1, Math.min(30, nights || 3))
+  const localActivities = activities.filter((a) => a.destinationId === destination.id)
+  const realFoodQueue = localActivities.filter((a) => a.category.includes('Gastronomie'))
+  const realActivityQueue = localActivities.filter((a) => !a.category.includes('Gastronomie'))
+  const days = []
+
+  for (let day = 1; day <= n; day++) {
+    const seedBase = hashString(`${destination.id}-${day}`)
+    const date = dayDateLabel(quiz.startDate, day - 1)
+
+    if (day === 1) {
+      const dinner = pickTemplate(ITINERARY_TEMPLATES.dinner, destination, seedBase)
+      days.push({
+        day,
+        date,
+        title: 'Arrivée & premiers pas',
+        items: [
+          { time: '14:00', label: 'Installation à votre hébergement', type: 'stay' },
+          { time: '16:30', label: `Première balade dans ${destination.city}`, type: 'walk' },
+          { time: '19:30', label: dinner.label(destination), type: 'food' },
+        ],
+      })
+      continue
+    }
+
+    const morningReal = realActivityQueue.shift()
+    const morning = pickTemplate(ITINERARY_TEMPLATES.morning, destination, seedBase)
+    const lunch = pickTemplate(ITINERARY_TEMPLATES.lunch, destination, seedBase + 1)
+    const afternoonReal = realActivityQueue.shift()
+    const afternoon = pickTemplate(ITINERARY_TEMPLATES.afternoon, destination, seedBase + 2)
+    const late = pickTemplate(ITINERARY_TEMPLATES.lateAfternoon, destination, seedBase + 3)
+    const dinnerReal = realFoodQueue.shift()
+    const dinner = pickTemplate(ITINERARY_TEMPLATES.dinner, destination, seedBase + 4)
+    const reasonTitle = destination.matchReasons[(day - 2) % destination.matchReasons.length]?.label || destination.tags[0]
+
+    days.push({
+      day,
+      date,
+      title: reasonTitle,
+      items: [
+        { time: '09:00', label: morningReal ? morningReal.title : morning.label(destination), type: morningReal ? 'activity' : morning.type },
+        { time: '12:30', label: lunch.label(destination), type: 'food' },
+        { time: '14:30', label: afternoonReal ? afternoonReal.title : afternoon.label(destination), type: afternoonReal ? 'activity' : afternoon.type },
+        { time: '17:00', label: late.label(destination), type: late.type },
+        { time: '19:30', label: dinnerReal ? dinnerReal.title : dinner.label(destination), type: 'food' },
+      ],
+    })
+  }
+
+  const totalBudget = quiz.budget || destination.budgetEstimate
+  const dailyBudget = quiz.budgetDaily || Math.round((destination.budgetEstimate * 0.15) / n)
+  const mealsAmount = Math.round(dailyBudget * 0.55 * n)
+  const activitiesAmount = Math.round(dailyBudget * 0.45 * n)
+  const stayAmount = quiz.budgetStay || Math.round(totalBudget * 0.35)
+  const transportAmount = quiz.budgetTransport || Math.round(totalBudget * 0.25)
+
+  return {
+    destinationId: destination.id,
+    totalBudget: stayAmount + activitiesAmount + mealsAmount + transportAmount,
+    spentBreakdown: [
+      { label: 'Hébergement', amount: stayAmount, color: 'pine' },
+      { label: 'Activités', amount: activitiesAmount, color: 'gold' },
+      { label: 'Repas', amount: mealsAmount, color: 'berry' },
+      { label: 'Transport', amount: transportAmount, color: 'mint' },
+    ],
+    days,
+  }
 }
 
 export const chatSuggestions = [

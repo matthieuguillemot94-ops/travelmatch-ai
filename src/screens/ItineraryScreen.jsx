@@ -1,36 +1,38 @@
 import { useState } from 'react'
-import { itinerary, destinations } from '../data/mockData.js'
+import { destinations, getItinerary } from '../data/mockData.js'
 import { PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const typeIcon = { stay: 'suitcase', walk: 'peak', food: 'fork', activity: 'sparkle', rest: 'drop' }
 const colorMap = { pine: '#2F5D50', gold: '#D9A55C', berry: '#B5495B', mint: '#4FA98A' }
 
-export default function ItineraryScreen({ confirmedTrip, onValidateTrip }) {
+export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, onValidateTrip }) {
   const [activeDay, setActiveDay] = useState(1)
-  const d = destinations.find((x) => x.id === itinerary.destinationId)
-  const day = itinerary.days.find((x) => x.day === activeDay)
+  const d = destinations.find((x) => x.id === destinationId) ?? destinations[0]
+  const itin = getItinerary(d, quiz?.nights, quiz)
+  const safeActiveDay = itin.days.some((x) => x.day === activeDay) ? activeDay : 1
+  const day = itin.days.find((x) => x.day === safeActiveDay)
 
   return (
     <div className="h-full w-full bg-paper flex flex-col">
       <div className="px-6 pt-3 pb-4 shrink-0">
         <p className="text-[12px] uppercase tracking-wide text-stone mb-1">Itinéraire généré par l’IA</p>
-        <h1 className="font-serif text-[22px] text-ink leading-tight">{d.city}, {d.duration}</h1>
+        <h1 className="font-serif text-[22px] text-ink leading-tight">{d.city} · {itin.days.length} jour{itin.days.length > 1 ? 's' : ''}</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-40">
         <div className="rounded-2xl bg-white border border-ink/[0.06] p-4 mb-5">
           <div className="flex items-baseline justify-between mb-3">
             <span className="text-[12px] uppercase tracking-wide text-stone">Budget total estimé</span>
-            <span className="font-mono tabular text-[18px] font-semibold text-ink">{itinerary.totalBudget.toLocaleString('fr-FR')} €</span>
+            <span className="font-mono tabular text-[18px] font-semibold text-ink">{itin.totalBudget.toLocaleString('fr-FR')} €</span>
           </div>
           <div className="h-2.5 rounded-full overflow-hidden flex mb-3">
-            {itinerary.spentBreakdown.map((b) => (
-              <div key={b.label} style={{ width: `${(b.amount / itinerary.totalBudget) * 100}%`, background: colorMap[b.color] }} />
+            {itin.spentBreakdown.map((b) => (
+              <div key={b.label} style={{ width: `${(b.amount / itin.totalBudget) * 100}%`, background: colorMap[b.color] }} />
             ))}
           </div>
           <div className="grid grid-cols-2 gap-y-1.5 gap-x-3">
-            {itinerary.spentBreakdown.map((b) => (
+            {itin.spentBreakdown.map((b) => (
               <div key={b.label} className="flex items-center gap-1.5 text-[12px] text-ink/70">
                 <span className="w-2 h-2 rounded-full shrink-0" style={{ background: colorMap[b.color] }} />
                 {b.label} <span className="font-mono tabular ml-auto">{b.amount} €</span>
@@ -49,13 +51,13 @@ export default function ItineraryScreen({ confirmedTrip, onValidateTrip }) {
           <span className="absolute top-2 right-3 text-[10.5px] text-stone bg-white/80 px-2 py-0.5 rounded-full">Trajet suggéré</span>
         </div>
 
-        <div className="flex gap-2 mb-5">
-          {itinerary.days.map((dd) => (
+        <div className="flex gap-2 mb-5 overflow-x-auto no-scrollbar -mx-6 px-6">
+          {itin.days.map((dd) => (
             <button
               key={dd.day}
               onClick={() => setActiveDay(dd.day)}
-              className={`px-3.5 py-2 rounded-full text-[12.5px] font-medium border ${
-                activeDay === dd.day ? 'bg-ink text-paper border-ink' : 'bg-white text-ink/70 border-ink/10'
+              className={`shrink-0 px-3.5 py-2 rounded-full text-[12.5px] font-medium border ${
+                safeActiveDay === dd.day ? 'bg-ink text-paper border-ink' : 'bg-white text-ink/70 border-ink/10'
               }`}
             >
               Jour {dd.day}
@@ -63,7 +65,10 @@ export default function ItineraryScreen({ confirmedTrip, onValidateTrip }) {
           ))}
         </div>
 
-        <h2 className="font-serif text-[17px] text-ink mb-4">{day.title}</h2>
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="font-serif text-[17px] text-ink">{day.title}</h2>
+          {day.date && <span className="text-[12px] text-stone">{day.date}</span>}
+        </div>
         <div className="relative pl-6">
           <div className="absolute left-[7px] top-1.5 bottom-1.5 w-px bg-ink/10" />
           <div className="space-y-5">

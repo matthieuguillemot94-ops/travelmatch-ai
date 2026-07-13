@@ -59,7 +59,8 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
     })
   }
 
-  const updateTravelers = (delta) => setQuiz((q) => ({ ...q, travelers: Math.max(1, Math.min(10, q.travelers + delta)) }))
+  const updateTravelers = (delta) =>
+    setQuiz((q) => ({ ...q, travelers: Math.max(1, Math.min(q.group === 'solo' ? 1 : 10, q.travelers + delta)) }))
 
   const updateNights = (nights) => {
     setQuiz((q) => {
@@ -93,7 +94,7 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
         <button onClick={onOpenProfile} className="w-10 h-10 rounded-full shrink-0" style={{ background: 'linear-gradient(135deg,#2F5D50,#4FA98A)' }} />
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-28 space-y-7">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-44 space-y-7">
         {confirmedTrip && (
           <button
             onClick={onOpenDashboard}
@@ -147,7 +148,8 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
             <div className="flex items-center gap-4">
               <button
                 onClick={() => updateTravelers(-1)}
-                className="w-8 h-8 rounded-full bg-ink/5 flex items-center justify-center text-ink"
+                disabled={quiz.group === 'solo'}
+                className="w-8 h-8 rounded-full bg-ink/5 flex items-center justify-center text-ink disabled:opacity-30"
               >
                 <Icon name="minus" className="w-3.5 h-3.5" strokeWidth={2} />
               </button>
@@ -156,7 +158,8 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
               </span>
               <button
                 onClick={() => updateTravelers(1)}
-                className="w-8 h-8 rounded-full bg-ink text-paper flex items-center justify-center"
+                disabled={quiz.group === 'solo'}
+                className="w-8 h-8 rounded-full bg-ink text-paper flex items-center justify-center disabled:opacity-30"
               >
                 <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2} />
               </button>
