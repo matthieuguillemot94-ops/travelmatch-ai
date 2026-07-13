@@ -77,7 +77,7 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
   }
 
   const firstName = userProfile.name.split(' ')[0]
-  const canContinue = quiz.mood.length >= 1
+  const canContinue = quiz.mood.length >= 1 && !!quiz.group && !!quiz.comfort && !!quiz.departureCity && !!quiz.startDate && !!quiz.endDate
 
   return (
     <div className="h-full w-full bg-paper flex flex-col relative">
@@ -221,6 +221,11 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
       </div>
 
       <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
+        {!canContinue && (
+          <p className="text-[11.5px] text-stone text-center mb-2">
+            Complétez vos envies et vos dates de voyage pour continuer
+          </p>
+        )}
         <PrimaryButton onClick={onFinish} disabled={!canContinue} icon="sparkle">
           Voir mes recommandations
         </PrimaryButton>
