@@ -43,6 +43,8 @@ const paths = {
   bus: 'M4 6h16v10a1 1 0 0 1-1 1h-1a2 2 0 1 1-4 0H10a2 2 0 1 1-4 0H5a1 1 0 0 1-1-1V6Zm0 0a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2M4 11h16M8 3v3m8-3v3',
   car: 'M4 17h16v-4l-2-5a2 2 0 0 0-1.9-1.3H7.9A2 2 0 0 0 6 8l-2 5v4Zm0 0a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0M4 13h16M7 8.7h10',
   calendar: 'M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm3 7h2m4 0h2m-8 4h2m4 0h2',
+  sun: 'M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10ZM12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4',
+  externalLink: 'M14 5h5v5M19 5l-8 8M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3',
 }
 
 export default function Icon({ name, className = 'w-5 h-5', strokeWidth = 1.6 }) {

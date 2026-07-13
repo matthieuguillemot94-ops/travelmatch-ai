@@ -68,7 +68,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
           </div>
           <p className="text-[14px] text-ink/75 leading-relaxed mb-6">{d.description}</p>
 
-          <div className="grid grid-cols-3 gap-2.5 mb-2.5">
+          <div className="grid grid-cols-2 gap-2.5 mb-2.5">
             <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
               <Icon name="clock" className="w-4 h-4 text-pine mb-1.5" />
               <p className="text-[13px] font-medium text-ink">{d.duration}</p>
@@ -79,25 +79,33 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
               <p className="text-[13px] font-medium text-ink font-mono tabular">{d.budgetEstimate} €</p>
               <p className="text-[11px] text-stone">Budget estimé</p>
             </div>
-            <div className="rounded-2xl bg-white border border-ink/[0.06] p-3">
-              <Icon name="pin" className="w-4 h-4 text-pine mb-1.5" />
-              <p className="text-[13px] font-medium text-ink">{weather.temp}</p>
-              <p className="text-[11px] text-stone">{weather.season}{weather.typical && ' · type'}</p>
+          </div>
+
+          <div className="rounded-2xl bg-white border border-ink/[0.06] p-3.5 mb-7">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-mint-100 flex items-center justify-center shrink-0">
+                <Icon name="sun" className="w-4.5 h-4.5 text-pine" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[15px] font-medium text-ink">
+                  {weather.temp} <span className="text-stone font-normal text-[12.5px]">· {weather.season}{weather.typical && ' · type'}</span>
+                </p>
+                <p className="text-[11px] text-stone">
+                  {weather.typical
+                    ? 'Moyennes saisonnières typiques'
+                    : `Prévision moyenne pour ${new Date(quiz.startDate).toLocaleDateString('fr-FR', { month: 'long' })}`}
+                </p>
+              </div>
             </div>
+            <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink/70 mt-3 pt-3 border-t border-ink/[0.06]">
+              <span>Min {weather.tempMin} · Max {weather.tempMax}</span>
+              <span className="flex items-center gap-1">
+                <Icon name="drop" className="w-3 h-3 text-pine" />
+                Précipitations {weather.precipitation.toLowerCase()}
+              </span>
+            </div>
+            {weather.note && <p className="text-[11.5px] text-stone mt-2">{weather.note}</p>}
           </div>
-          <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-[12px] text-stone mb-2 px-1">
-            <span>Min {weather.tempMin} · Max {weather.tempMax}</span>
-            <span className="flex items-center gap-1">
-              <Icon name="drop" className="w-3 h-3 text-pine" />
-              Précipitations {weather.precipitation.toLowerCase()}
-            </span>
-          </div>
-          <p className="text-[11px] text-stone mb-7">
-            {weather.typical
-              ? 'Moyennes saisonnières typiques'
-              : `Prévision moyenne pour ${new Date(quiz.startDate).toLocaleDateString('fr-FR', { month: 'long' })}`}
-            {weather.note ? ` · ${weather.note}` : ''}
-          </p>
 
           {nightsTooShort && (
             <div className="flex items-start gap-2.5 rounded-2xl bg-gold-400/15 border border-gold-400/40 p-3.5 mb-7">
@@ -148,21 +156,35 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
           )}
 
           <div className="space-y-2.5 mb-8">
-            {transportOptions.map((t, i) => (
-              <div key={i} className="flex items-center gap-3 rounded-2xl bg-white border border-ink/[0.06] p-3.5">
-                <CarrierBadge code={t.code} tone={t.tone} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                    <p className="text-[13.5px] font-medium text-ink truncate">{t.name}</p>
-                    {i === 0 && <Tag tone="gold">Meilleur prix</Tag>}
+            {transportOptions.map((t, i) => {
+              const Wrapper = t.url ? 'a' : 'div'
+              const wrapperProps = t.url ? { href: t.url, target: '_blank', rel: 'noopener noreferrer' } : {}
+              return (
+                <Wrapper
+                  key={i}
+                  {...wrapperProps}
+                  className={`flex items-center gap-3 rounded-2xl bg-white border border-ink/[0.06] p-3.5 ${t.url ? 'active:scale-[0.98] transition-transform' : ''}`}
+                >
+                  <CarrierBadge code={t.code} tone={t.tone} />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                      <p className="text-[13.5px] font-medium text-ink truncate">{t.name}</p>
+                      {i === 0 && <Tag tone="gold">Meilleur prix</Tag>}
+                    </div>
+                    <p className="text-[11.5px] text-stone">
+                      {t.stops === 0 ? 'Direct' : `1 escale · ${t.stopCity}`} · {t.duration}{t.note ? ` · ${t.note}` : ''}
+                    </p>
                   </div>
-                  <p className="text-[11.5px] text-stone">
-                    {t.stops === 0 ? 'Direct' : `1 escale · ${t.stopCity}`} · {t.duration}{t.note ? ` · ${t.note}` : ''}
-                  </p>
-                </div>
-                <span className="font-mono tabular text-[15px] font-semibold text-ink shrink-0">{t.price} €</span>
-              </div>
-            ))}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className="text-right">
+                      <p className="font-mono tabular text-[15px] font-semibold text-ink leading-tight">{t.price} €</p>
+                      <p className="text-[10px] text-stone leading-tight">aller-retour</p>
+                    </div>
+                    {t.url && <Icon name="externalLink" className="w-3.5 h-3.5 text-stone" strokeWidth={1.8} />}
+                  </div>
+                </Wrapper>
+              )
+            })}
           </div>
 
           <h2 className="font-serif text-[17px] text-ink mb-3">Où loger</h2>

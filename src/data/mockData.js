@@ -1546,8 +1546,27 @@ const BADGE_TONES = ['pine', 'gold', 'berry', 'mint']
 function badgeTone(name) {
   return BADGE_TONES[hashString(name) % BADGE_TONES.length]
 }
+const CARRIER_URLS = {
+  'Air France': 'https://www.airfrance.fr',
+  KLM: 'https://www.klm.fr',
+  Lufthansa: 'https://www.lufthansa.com',
+  'Turkish Airlines': 'https://www.turkishairlines.com',
+  Emirates: 'https://www.emirates.com',
+  'Qatar Airways': 'https://www.qatarairways.com',
+  'British Airways': 'https://www.britishairways.com',
+  Iberia: 'https://www.iberia.com',
+  'SNCF Connect': 'https://www.sncf-connect.com',
+  Eurostar: 'https://www.eurostar.com',
+  Trenitalia: 'https://www.trenitalia.com',
+  Renfe: 'https://www.renfe.com',
+  'Deutsche Bahn': 'https://www.bahn.de',
+  FlixBus: 'https://www.flixbus.fr',
+  BlaBlaBus: 'https://www.blablacar.fr/bus',
+  Eurolines: 'https://www.eurolines.fr',
+  BlaBlaCar: 'https://www.blablacar.fr',
+}
 function carrier(name) {
-  return { name, code: initials(name), tone: badgeTone(name) }
+  return { name, code: initials(name), tone: badgeTone(name), url: CARRIER_URLS[name] || null }
 }
 
 const TRAIN_COMPANIES = ['SNCF Connect', 'Eurostar', 'Trenitalia', 'Renfe', 'Deutsche Bahn']
@@ -1591,8 +1610,17 @@ export function getTransportOptions(destination, dates = {}) {
   ]
 
   const personalCarBase = Math.round((baseDirectPrice * 0.15) / 5) * 5
+  const mapsUrl = `https://www.google.com/maps/dir/${encodeURIComponent(departure.id)}/${encodeURIComponent(`${destination.city}, ${destination.country}`)}`
   const personalCars = !isEurope ? [] : [
-    { ...carrier('Votre voiture'), price: personalCarBase, stops: 0, stopCity: null, duration: formatDuration(baseHours * 5.4), note: 'Carburant et péages estimés' },
+    {
+      ...carrier('Votre voiture'),
+      price: personalCarBase,
+      stops: 0,
+      stopCity: null,
+      duration: formatDuration(baseHours * 5.4),
+      note: 'Carburant et péages estimés',
+      url: mapsUrl,
+    },
   ]
 
   return { flights, trains, buses, cars, personalCars }
