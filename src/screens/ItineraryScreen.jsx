@@ -6,8 +6,29 @@ import Icon from '../components/Icon.jsx'
 const typeIcon = { stay: 'suitcase', walk: 'peak', food: 'fork', activity: 'sparkle', rest: 'drop' }
 const colorMap = { pine: '#2F5D50', gold: '#D9A55C', berry: '#B5495B', mint: '#4FA98A' }
 
-export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, onValidateTrip, onUnvalidateTrip }) {
+export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, onValidateTrip, onUnvalidateTrip, onGoToVoyager }) {
   const [activeDay, setActiveDay] = useState(1)
+
+  if (!destinationId) {
+    return (
+      <div className="h-full w-full bg-paper flex flex-col">
+        <div className="px-6 pt-3 pb-4 shrink-0">
+          <p className="text-[12px] uppercase tracking-wide text-stone mb-1">Itinéraire généré par l’IA</p>
+          <h1 className="font-serif text-[22px] text-ink leading-tight">Votre itinéraire</h1>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center px-10 text-center gap-4">
+          <div className="w-16 h-16 rounded-full bg-ink/5 flex items-center justify-center">
+            <Icon name="route" className="w-7 h-7 text-stone" strokeWidth={1.6} />
+          </div>
+          <p className="text-[14px] text-ink/70 leading-relaxed">
+            Aucun itinéraire pour l’instant. Complétez vos envies et vos dates dans l’onglet Voyager pour en générer un.
+          </p>
+          <PrimaryButton onClick={onGoToVoyager} icon="compass">Aller dans Voyager</PrimaryButton>
+        </div>
+      </div>
+    )
+  }
+
   const d = destinations.find((x) => x.id === destinationId) ?? destinations[0]
   const itin = getItinerary(d, quiz?.nights, quiz)
   const safeActiveDay = itin.days.some((x) => x.day === activeDay) ? activeDay : 1

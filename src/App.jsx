@@ -41,12 +41,13 @@ export default function App() {
   })
   const [destinationId, setDestinationId] = useState('kyoto')
   const [activityId, setActivityId] = useState('fushimi-dawn')
+  const [itineraryDestinationId, setItineraryDestinationId] = useState(null)
   const [confirmedTrip, setConfirmedTrip] = useState(null)
 
   const unvalidateTrip = () => setConfirmedTrip(null)
 
   const validateTrip = () => {
-    const d = destinations.find((x) => x.id === destinationId)
+    const d = destinations.find((x) => x.id === itineraryDestinationId)
     if (!d) return
     const days = quiz.startDate
       ? Math.max(1, Math.round((new Date(quiz.startDate) - new Date()) / 86400000))
@@ -137,7 +138,10 @@ export default function App() {
               setActivityId(id)
               setScreen('activity')
             }}
-            onGenerateItinerary={() => setScreen('itinerary')}
+            onGenerateItinerary={() => {
+              setItineraryDestinationId(destinationId)
+              setScreen('itinerary')
+            }}
           />
         )}
 
@@ -147,11 +151,12 @@ export default function App() {
 
         {screen === 'itinerary' && (
           <ItineraryScreen
-            destinationId={destinationId}
+            destinationId={itineraryDestinationId}
             quiz={quiz}
             confirmedTrip={confirmedTrip}
             onValidateTrip={validateTrip}
             onUnvalidateTrip={unvalidateTrip}
+            onGoToVoyager={() => setScreen('newTrip')}
           />
         )}
 
