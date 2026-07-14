@@ -4,6 +4,8 @@ import ScoreRing from '../components/ScoreRing.jsx'
 import { PrimaryButton, Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 import RouteMap from '../components/RouteMap.jsx'
+import LiveWeather from '../components/LiveWeather.jsx'
+import PracticalInfo from '../components/PracticalInfo.jsx'
 
 const SOURCE_TONE = { Airbnb: 'berry', 'Booking.com': 'pine', Vrbo: 'mint' }
 const BADGE_TONE_CLASSES = {
@@ -109,6 +111,9 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
               </span>
             </div>
             {weather.note && <p className="text-[11.5px] text-stone mt-2">{weather.note}</p>}
+            <div className="mt-3 pt-3 border-t border-ink/[0.06]">
+              <LiveWeather coords={DESTINATION_COORDS[d.id]} />
+            </div>
           </div>
 
           {nightsTooShort && (
@@ -120,6 +125,8 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
               </p>
             </div>
           )}
+
+          <PracticalInfo country={d.country} />
 
           <h2 className="font-serif text-[17px] text-ink mb-3">Pourquoi cette destination</h2>
           <div className="space-y-2.5 mb-8">
