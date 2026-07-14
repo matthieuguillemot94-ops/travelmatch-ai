@@ -9,7 +9,11 @@ export default function HomeScreen({ onSignUp, onSignIn }) {
           style={{ background: 'linear-gradient(135deg,#EDBD82,#D9A55C)' }}
         >
           <svg viewBox="0 0 24 24" className="w-14 h-14">
-            <path d="M12 1.8 16.3 12 12 15.4 7.7 12Z" fill="#181510" />
+            <g transform="rotate(-45 12 12)">
+              <rect x="5" y="10.8" width="14" height="2.4" fill="#181510" />
+              <path d="M3 12 7 8.3 7 15.7Z" fill="#181510" />
+              <path d="M21 12 17 8.3 17 15.7Z" fill="#181510" />
+            </g>
           </svg>
         </div>
         <h1 className="font-serif text-paper text-[26px] tracking-wide">TravelMatch AI</h1>
