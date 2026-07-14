@@ -6,11 +6,10 @@ export default function HomeScreen({ onSignUp, onSignIn }) {
       <div className="flex-1 flex flex-col items-center justify-center px-8">
         <div
           className="w-20 h-20 rounded-full flex items-center justify-center mb-5 shadow-lift"
-          style={{ background: 'linear-gradient(135deg,#E8B876,#C08A3E)' }}
+          style={{ background: 'linear-gradient(135deg,#EDBD82,#D9A55C)' }}
         >
-          <svg viewBox="0 0 24 24" className="w-10 h-10">
-            <path d="M18 6 14 14 6 18 10 10Z" fill="#F7F2E9" />
-            <circle cx="12" cy="12" r="1.7" fill="#12211D" />
+          <svg viewBox="0 0 24 24" className="w-14 h-14">
+            <path d="M12 1.8 16.3 12 12 15.4 7.7 12Z" fill="#181510" />
           </svg>
         </div>
         <h1 className="font-serif text-paper text-[26px] tracking-wide">TravelMatch AI</h1>
