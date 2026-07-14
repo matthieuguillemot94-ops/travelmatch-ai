@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { destinations, getItinerary } from '../data/mockData.js'
+import { destinations, getItinerary, DESTINATION_COORDS } from '../data/mockData.js'
 import { PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
+import DayMap from '../components/DayMap.jsx'
 
 const typeIcon = { stay: 'suitcase', walk: 'peak', food: 'fork', activity: 'sparkle', rest: 'drop' }
 const colorMap = { pine: '#2F5D50', gold: '#D9A55C', berry: '#B5495B', mint: '#4FA98A' }
@@ -62,16 +63,6 @@ export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, on
           </div>
         </div>
 
-        <div className="relative h-28 rounded-2xl overflow-hidden border border-ink/[0.06] mb-6" style={{ background: '#E4EDE9' }}>
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 112">
-            <path d="M30 85 C70 40, 120 90, 160 55 S 260 30, 290 60" stroke="#2F5D50" strokeWidth="2" fill="none" strokeDasharray="1 7" strokeLinecap="round" />
-            <circle cx="30" cy="85" r="5" fill="#B5495B" />
-            <circle cx="160" cy="55" r="5" fill="#D9A55C" />
-            <circle cx="290" cy="60" r="5" fill="#4FA98A" />
-          </svg>
-          <span className="absolute top-2 right-3 text-[10.5px] text-stone bg-white/80 px-2 py-0.5 rounded-full">Trajet suggéré</span>
-        </div>
-
         <div className="flex gap-2 mb-5 overflow-x-auto no-scrollbar -mx-6 px-6">
           {itin.days.map((dd) => (
             <button
@@ -84,6 +75,17 @@ export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, on
               Jour {dd.day}
             </button>
           ))}
+        </div>
+
+        <div className="relative h-44 rounded-2xl overflow-hidden border border-ink/[0.06] mb-6">
+          <DayMap
+            city={d.city}
+            items={day.items}
+            cityCoords={DESTINATION_COORDS[d.id]}
+            dayKey={`${d.id}-${safeActiveDay}`}
+            className="w-full h-full"
+          />
+          <span className="absolute top-2 right-3 text-[10.5px] text-stone bg-white/80 px-2 py-0.5 rounded-full pointer-events-none">Lieux du jour {safeActiveDay}</span>
         </div>
 
         <div className="flex items-baseline justify-between mb-4">
