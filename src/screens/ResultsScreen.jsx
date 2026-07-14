@@ -63,7 +63,7 @@ export default function ResultsScreen({ profile, quiz, onOpenDestination, onBack
                   <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
                   <div className="absolute top-3 left-3">
                     <span className="text-[11px] font-medium bg-black/25 backdrop-blur text-white px-2.5 py-1 rounded-full">
-                      {i === 0 ? 'Meilleure correspondance' : d.tags[0]}
+                      {d.overBudget ? 'Au-delà de votre budget' : i === 0 ? 'Meilleure correspondance' : d.tags[0]}
                     </span>
                   </div>
                   <div className="absolute bottom-3 right-3 bg-white rounded-full shadow-card">
@@ -80,7 +80,7 @@ export default function ResultsScreen({ profile, quiz, onOpenDestination, onBack
                   </div>
                   <div className="flex items-center gap-3 text-[12.5px] text-stone">
                     <span className="flex items-center gap-1"><Icon name="clock" className="w-3.5 h-3.5" />{recommendedDuration(d, quiz?.departureCity)}</span>
-                    <span className="flex items-center gap-1 font-mono tabular"><Icon name="coin" className="w-3.5 h-3.5" />~{d.budgetEstimate} €</span>
+                    <span className={`flex items-center gap-1 font-mono tabular ${d.overBudget ? 'text-berry' : ''}`}><Icon name="coin" className="w-3.5 h-3.5" />~{d.budgetEstimate} €</span>
                   </div>
                 </div>
               </button>

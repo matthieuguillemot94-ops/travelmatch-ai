@@ -2686,16 +2686,28 @@ export function matchDestinations({ mood = [], interests = [], budget = 3000, ni
   mood.forEach((m) => (MOOD_TAGS[m] || []).forEach((t) => wantedTags.add(t)))
   interests.forEach((i) => (INTEREST_TAGS[i] || []).forEach((t) => wantedTags.add(t)))
 
-  return destinations
-    .map((d) => {
-      const overlap = d.tags.filter((t) => wantedTags.has(t)).length
-      const budgetFit = d.budgetEstimate <= budget ? 1 : d.budgetEstimate <= budget * 1.4 ? 0.4 : 0
-      const minNights = minNightsFor(d)
-      const nightsFit = nights >= minNights ? 1 : nights >= minNights - 2 ? 0.5 : 0.15
-      const matchScore = overlap * 16 + budgetFit * 12 + d.score * 0.25 + nightsFit * 10
-      return { ...d, matchScore, minNights }
-    })
-    .sort((a, b) => b.matchScore - a.matchScore)
+  const scoreFit = (d) => {
+    const overlap = d.tags.filter((t) => wantedTags.has(t)).length
+    const minNights = minNightsFor(d)
+    const nightsFit = nights >= minNights ? 1 : nights >= minNights - 2 ? 0.5 : 0.15
+    const matchScore = overlap * 16 + d.score * 0.25 + nightsFit * 10
+    return { ...d, matchScore, minNights }
+  }
+
+  // Never surface a destination the user can't actually afford: only
+  // destinations at or under the declared budget are eligible.
+  const affordable = destinations.filter((d) => d.budgetEstimate <= budget).map(scoreFit).sort((a, b) => b.matchScore - a.matchScore)
+  if (affordable.length >= 6) return affordable
+
+  // Budget too tight for enough matches: backfill with the cheapest remaining
+  // options, clearly flagged as over budget rather than silently shown as a fit.
+  const affordableIds = new Set(affordable.map((d) => d.id))
+  const backfill = destinations
+    .filter((d) => !affordableIds.has(d.id))
+    .sort((a, b) => a.budgetEstimate - b.budgetEstimate)
+    .slice(0, 6 - affordable.length)
+    .map((d) => ({ ...scoreFit(d), overBudget: true }))
+  return [...affordable, ...backfill]
 }
 
 // ---- Weather that actually follows the travel dates ----
