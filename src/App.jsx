@@ -183,7 +183,7 @@ export default function App() {
           />
         )}
 
-        {screen === 'profile' && <UserProfileScreen />}
+        {screen === 'profile' && <UserProfileScreen onLogout={() => setScreen('home')} />}
 
         {showNav && <BottomNav active={activeTab} onNavigate={setScreen} />}
       </PhoneShell>
