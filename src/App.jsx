@@ -42,6 +42,7 @@ export default function App() {
   const [destinationId, setDestinationId] = useState('kyoto')
   const [activityId, setActivityId] = useState('fushimi-dawn')
   const [itineraryDestinationId, setItineraryDestinationId] = useState(null)
+  const [itineraryTransport, setItineraryTransport] = useState(null)
   const [confirmedTrip, setConfirmedTrip] = useState(null)
 
   const unvalidateTrip = () => setConfirmedTrip(null)
@@ -138,8 +139,9 @@ export default function App() {
               setActivityId(id)
               setScreen('activity')
             }}
-            onGenerateItinerary={() => {
+            onGenerateItinerary={(transport) => {
               setItineraryDestinationId(destinationId)
+              setItineraryTransport(transport)
               setScreen('itinerary')
             }}
           />
@@ -152,15 +154,24 @@ export default function App() {
         {screen === 'itinerary' && (
           <ItineraryScreen
             destinationId={itineraryDestinationId}
+            transport={itineraryTransport}
             quiz={quiz}
             confirmedTrip={confirmedTrip}
             onValidateTrip={validateTrip}
             onUnvalidateTrip={unvalidateTrip}
             onGoToVoyager={() => setScreen('newTrip')}
+            onBack={() => setScreen('destination')}
           />
         )}
 
-        {screen === 'assistant' && <AssistantScreen />}
+        {screen === 'assistant' && (
+          <AssistantScreen
+            quiz={quiz}
+            confirmedTrip={confirmedTrip}
+            destinationId={itineraryDestinationId}
+            transport={itineraryTransport}
+          />
+        )}
 
         {screen === 'dashboard' && (
           <DashboardScreen

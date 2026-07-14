@@ -263,7 +263,16 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
       </div>
 
       <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
-        <PrimaryButton onClick={onGenerateItinerary} icon="route">Générer mon itinéraire</PrimaryButton>
+        <PrimaryButton
+          onClick={() =>
+            onGenerateItinerary(
+              transportOptions[0] ? { mode: activeModeInfo?.label, icon: activeModeInfo?.icon, ...transportOptions[0] } : null
+            )
+          }
+          icon="route"
+        >
+          Générer mon itinéraire
+        </PrimaryButton>
       </div>
     </div>
   )

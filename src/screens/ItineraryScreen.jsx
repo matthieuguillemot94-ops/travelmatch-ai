@@ -7,7 +7,7 @@ import DayMap, { typeColor } from '../components/DayMap.jsx'
 const typeIcon = { stay: 'suitcase', walk: 'peak', food: 'fork', activity: 'sparkle', rest: 'drop' }
 const colorMap = { pine: '#2F5D50', gold: '#D9A55C', berry: '#B5495B', mint: '#4FA98A' }
 
-export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, onValidateTrip, onUnvalidateTrip, onGoToVoyager }) {
+export default function ItineraryScreen({ destinationId, transport, quiz, confirmedTrip, onValidateTrip, onUnvalidateTrip, onGoToVoyager, onBack }) {
   const [activeDay, setActiveDay] = useState(1)
 
   if (!destinationId) {
@@ -38,11 +38,55 @@ export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, on
   return (
     <div className="h-full w-full bg-paper flex flex-col">
       <div className="px-6 pt-3 pb-4 shrink-0">
-        <p className="text-[12px] uppercase tracking-wide text-stone mb-1">Itinéraire généré par l’IA</p>
+        {!confirmedTrip && (
+          <button onClick={onBack} className="w-9 h-9 -ml-1.5 rounded-full bg-ink/5 flex items-center justify-center mb-3">
+            <Icon name="arrow-left" className="w-4.5 h-4.5 text-ink" />
+          </button>
+        )}
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-[12px] uppercase tracking-wide text-stone">Itinéraire généré par l’IA</p>
+          {confirmedTrip && (
+            <span className="flex items-center gap-1 text-[11px] font-medium text-pine bg-pine-100 px-2.5 py-1 rounded-full">
+              <Icon name="check" className="w-3 h-3" strokeWidth={2.4} /> Validé
+            </span>
+          )}
+        </div>
         <h1 className="font-serif text-[22px] text-ink leading-tight">{d.city} · {itin.days.length} jour{itin.days.length > 1 ? 's' : ''}</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-48">
+        {transport && (
+          <div className="rounded-2xl bg-white border border-ink/[0.06] p-3.5 mb-5">
+            <p className="text-[12px] uppercase tracking-wide text-stone mb-2.5">Comment y aller</p>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-pine-100 flex items-center justify-center shrink-0">
+                <Icon name={transport.icon || 'send'} className="w-4.5 h-4.5 text-pine" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13.5px] font-medium text-ink truncate">{transport.mode} · {transport.name}</p>
+                <p className="text-[11.5px] text-stone">
+                  {transport.stops === 0 ? 'Direct' : `1 escale · ${transport.stopCity}`} · {transport.duration}
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="font-mono tabular text-[15px] font-semibold text-ink leading-tight">{transport.price} €</p>
+                <p className="text-[10px] text-stone leading-tight">aller-retour</p>
+              </div>
+            </div>
+            {transport.url && (
+              <a
+                href={transport.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 pt-3 border-t border-ink/[0.06] flex items-center justify-center gap-1.5 text-[12.5px] font-medium text-pine"
+              >
+                Voir la réservation
+                <Icon name="externalLink" className="w-3 h-3" strokeWidth={1.8} />
+              </a>
+            )}
+          </div>
+        )}
+
         <div className="rounded-2xl bg-white border border-ink/[0.06] p-4 mb-5">
           <div className="flex items-baseline justify-between mb-3">
             <span className="text-[12px] uppercase tracking-wide text-stone">Budget total estimé</span>
