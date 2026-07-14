@@ -100,13 +100,13 @@ export default function UserProfileScreen() {
           <div className="rounded-2xl bg-white border border-ink/[0.06] divide-y divide-ink/[0.06]">
             {settingsItems.map((item) => (
               <button key={item.label} className="w-full flex items-center gap-3 px-4 py-3.5 text-left">
-                <Icon name={item.icon} className="w-4.5 h-4.5 text-pine shrink-0" />
+                <Icon name={item.icon} className="w-[18px] h-[18px] text-pine shrink-0" />
                 <span className="text-[13.5px] text-ink flex-1">{item.label}</span>
                 <Icon name="chevronRight" className="w-4 h-4 text-stone" />
               </button>
             ))}
             <button className="w-full flex items-center gap-3 px-4 py-3.5 text-left">
-              <Icon name="logout" className="w-4.5 h-4.5 text-berry shrink-0" />
+              <Icon name="logout" className="w-[18px] h-[18px] text-berry shrink-0" />
               <span className="text-[13.5px] text-berry flex-1">Se déconnecter</span>
             </button>
           </div>

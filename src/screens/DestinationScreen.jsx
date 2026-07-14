@@ -53,7 +53,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10" />
           <div className="absolute inset-x-0 top-0 flex items-center justify-between px-5 pt-3">
             <button onClick={onBack} className="w-9 h-9 rounded-full bg-black/25 backdrop-blur flex items-center justify-center text-white">
-              <Icon name="arrow-left" className="w-4.5 h-4.5" />
+              <Icon name="arrow-left" className="w-[18px] h-[18px]" />
             </button>
             <button className="w-9 h-9 rounded-full bg-black/25 backdrop-blur flex items-center justify-center text-white">
               <Icon name="star" className="w-4 h-4" />
@@ -88,7 +88,7 @@ export default function DestinationScreen({ destinationId, quiz, onBack, onOpenA
           <div className="rounded-2xl bg-white border border-ink/[0.06] p-3.5 mb-7">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-mint-100 flex items-center justify-center shrink-0">
-                <Icon name="sun" className="w-4.5 h-4.5 text-pine" />
+                <Icon name="sun" className="w-[18px] h-[18px] text-pine" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[15px] font-medium text-ink">

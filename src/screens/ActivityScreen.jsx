@@ -13,7 +13,7 @@ export default function ActivityScreen({ activityId, onBack }) {
         <div className="relative h-60 grain" style={{ background: a.gradient }}>
           <div className="absolute inset-x-0 top-0 flex items-center justify-between px-5 pt-3">
             <button onClick={onBack} className="w-9 h-9 rounded-full bg-black/25 backdrop-blur flex items-center justify-center text-white">
-              <Icon name="arrow-left" className="w-4.5 h-4.5" />
+              <Icon name="arrow-left" className="w-[18px] h-[18px]" />
             </button>
           </div>
           {a.offbeat && (

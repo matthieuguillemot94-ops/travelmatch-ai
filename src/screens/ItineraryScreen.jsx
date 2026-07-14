@@ -40,7 +40,7 @@ export default function ItineraryScreen({ destinationId, transport, quiz, confir
       <div className="px-6 pt-3 pb-4 shrink-0">
         {!confirmedTrip && (
           <button onClick={onBack} className="w-9 h-9 -ml-1.5 rounded-full bg-ink/5 flex items-center justify-center mb-3">
-            <Icon name="arrow-left" className="w-4.5 h-4.5 text-ink" />
+            <Icon name="arrow-left" className="w-[18px] h-[18px] text-ink" />
           </button>
         )}
         <div className="flex items-center justify-between mb-1">
@@ -60,7 +60,7 @@ export default function ItineraryScreen({ destinationId, transport, quiz, confir
             <p className="text-[12px] uppercase tracking-wide text-stone mb-2.5">Comment y aller</p>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-pine-100 flex items-center justify-center shrink-0">
-                <Icon name={transport.icon || 'send'} className="w-4.5 h-4.5 text-pine" />
+                <Icon name={transport.icon || 'send'} className="w-[18px] h-[18px] text-pine" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[13.5px] font-medium text-ink truncate">{transport.mode} · {transport.name}</p>

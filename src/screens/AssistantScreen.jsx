@@ -117,7 +117,7 @@ export default function AssistantScreen({ quiz, confirmedTrip, destinationId, tr
     <div className="h-full w-full bg-paper flex flex-col">
       <div className="flex items-center gap-2.5 px-6 pt-3 pb-3 border-b border-ink/[0.06] shrink-0">
         <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#2F5D50,#4FA98A)' }}>
-          <Icon name="sparkle" className="w-4.5 h-4.5 text-paper" />
+          <Icon name="sparkle" className="w-[18px] h-[18px] text-paper" />
         </div>
         <div>
           <p className="text-[14px] font-medium text-ink">Assistant TravelMatch</p>

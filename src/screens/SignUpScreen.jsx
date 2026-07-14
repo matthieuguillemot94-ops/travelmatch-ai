@@ -40,7 +40,7 @@ export default function SignUpScreen({ onBack, onContinue, onSignIn }) {
     <div className="h-full w-full bg-paper flex flex-col">
       <div className="flex items-center px-5 pt-3 pb-2">
         <button onClick={onBack} className="w-9 h-9 rounded-full bg-ink/5 flex items-center justify-center">
-          <Icon name="arrow-left" className="w-4.5 h-4.5 text-ink" />
+          <Icon name="arrow-left" className="w-[18px] h-[18px] text-ink" />
         </button>
       </div>
 

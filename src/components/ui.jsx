@@ -46,7 +46,7 @@ export function ScreenHeader({ title, onBack, tone = 'light', action }) {
     <div className={`flex items-center justify-between px-5 pt-2 pb-3 ${textTone}`}>
       {onBack ? (
         <button onClick={onBack} className={`w-9 h-9 rounded-full flex items-center justify-center ${tone === 'dark' ? 'bg-white/10' : 'bg-ink/5'}`}>
-          <Icon name="arrow-left" className="w-4.5 h-4.5" />
+          <Icon name="arrow-left" className="w-[18px] h-[18px]" />
         </button>
       ) : <div className="w-9" />}
       <span className="font-serif text-[17px]">{title}</span>
