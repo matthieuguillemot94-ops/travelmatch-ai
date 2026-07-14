@@ -2306,49 +2306,113 @@ export const activities = [
 
 const ITINERARY_TEMPLATES = {
   morning: [
-    { tags: ['Nature', 'Randonnée', 'Aventure', 'Montagne'], type: 'walk', label: (d) => `Randonnée dans les environs de ${d.city}` },
-    { tags: ['Plage', 'Océan'], type: 'walk', label: () => 'Matinée plage et baignade' },
-    { tags: ['Spiritualité', 'Sérénité'], type: 'activity', label: () => 'Visite d’un temple ou sanctuaire emblématique' },
-    { tags: ['Histoire', 'Architecture'], type: 'walk', label: (d) => `Visite guidée du centre historique de ${d.city}` },
-    { tags: ['Histoire', 'Architecture'], type: 'walk', label: () => 'Découverte des monuments emblématiques' },
-    { tags: ['Culture', 'Art & Design'], type: 'activity', label: () => 'Musée et galeries locales' },
-    { tags: ['Culture', 'Art & Design'], type: 'activity', label: (d) => `Immersion dans un quartier culturel de ${d.city}` },
-    { tags: ['Gastronomie'], type: 'food', label: () => 'Marché matinal et petit-déjeuner local' },
-    { tags: ['Vie locale', 'Artisanat'], type: 'walk', label: (d) => `Balade dans les quartiers authentiques de ${d.city}` },
-    { tags: [], type: 'walk', label: (d) => `Découverte du centre de ${d.city}` },
+    { tags: ['Nature', 'Randonnée', 'Aventure', 'Montagne'], type: 'walk', query: 'randonnée', label: (d) => `Randonnée dans les environs de ${d.city}` },
+    { tags: ['Plage', 'Océan'], type: 'walk', query: 'plage', label: () => 'Matinée plage et baignade' },
+    { tags: ['Spiritualité', 'Sérénité'], type: 'activity', query: 'temple', label: () => 'Visite d’un temple ou sanctuaire emblématique' },
+    { tags: ['Histoire', 'Architecture'], type: 'activity', query: 'monuments historiques', label: (d) => `Visite guidée du centre historique de ${d.city}` },
+    { tags: ['Histoire', 'Architecture'], type: 'activity', query: 'monuments', label: () => 'Découverte des monuments emblématiques' },
+    { tags: ['Culture', 'Art & Design'], type: 'activity', query: 'musée', label: () => 'Musée et galeries locales' },
+    { tags: ['Culture', 'Art & Design'], type: 'activity', query: 'galerie d’art', label: (d) => `Immersion dans un quartier culturel de ${d.city}` },
+    { tags: ['Gastronomie'], type: 'food', query: 'marché', label: () => 'Marché matinal et petit-déjeuner local' },
+    { tags: ['Vie locale', 'Artisanat'], type: 'walk', query: 'quartier historique', label: (d) => `Balade dans les quartiers authentiques de ${d.city}` },
+    { tags: [], type: 'walk', query: 'centre-ville', label: (d) => `Découverte du centre de ${d.city}` },
   ],
   lunch: [
-    { tags: ['Gastronomie'], type: 'food', label: () => 'Déjeuner chez un producteur local' },
-    { tags: ['Vie locale'], type: 'food', label: () => 'Déjeuner dans une adresse de quartier' },
-    { tags: [], type: 'food', label: () => 'Déjeuner dans une adresse locale' },
+    { tags: ['Gastronomie'], type: 'food', query: 'restaurant local', label: () => 'Déjeuner chez un producteur local' },
+    { tags: ['Vie locale'], type: 'food', query: 'restaurant', label: () => 'Déjeuner dans une adresse de quartier' },
+    { tags: [], type: 'food', query: 'restaurant', label: () => 'Déjeuner dans une adresse locale' },
   ],
   afternoon: [
-    { tags: ['Randonnée', 'Nature', 'Aventure'], type: 'walk', label: (d) => `Exploration nature autour de ${d.city}` },
-    { tags: ['Plage', 'Océan'], type: 'rest', label: () => 'Après-midi détente au bord de l’eau' },
-    { tags: ['Artisanat', 'Vie locale'], type: 'activity', label: () => 'Marché artisanal et rencontres locales' },
-    { tags: ['Histoire', 'Architecture', 'Culture'], type: 'activity', label: () => 'Visite d’un site emblématique' },
-    { tags: ['Histoire', 'Architecture', 'Culture'], type: 'walk', label: (d) => `Exploration d’un quartier historique de ${d.city}` },
-    { tags: ['Vin', 'Gastronomie'], type: 'activity', label: () => 'Dégustation chez un producteur' },
-    { tags: [], type: 'walk', label: (d) => `Découverte libre de ${d.city}` },
+    { tags: ['Randonnée', 'Nature', 'Aventure'], type: 'walk', query: 'randonnée', label: (d) => `Exploration nature autour de ${d.city}` },
+    { tags: ['Plage', 'Océan'], type: 'rest', query: 'plage', label: () => 'Après-midi détente au bord de l’eau' },
+    { tags: ['Artisanat', 'Vie locale'], type: 'activity', query: 'marché artisanal', label: () => 'Marché artisanal et rencontres locales' },
+    { tags: ['Histoire', 'Architecture', 'Culture'], type: 'activity', query: 'musée', label: () => 'Visite d’un site emblématique' },
+    { tags: ['Histoire', 'Architecture', 'Culture'], type: 'activity', query: 'quartier historique', label: (d) => `Exploration d’un quartier historique de ${d.city}` },
+    { tags: ['Vin', 'Gastronomie'], type: 'activity', query: 'cave à vin', label: () => 'Dégustation chez un producteur' },
+    { tags: [], type: 'walk', query: 'centre-ville', label: (d) => `Découverte libre de ${d.city}` },
   ],
   lateAfternoon: [
-    { tags: ['Bien-être', 'Détente', 'Sérénité'], type: 'rest', label: () => 'Moment bien-être / spa' },
-    { tags: ['Photographie'], type: 'rest', label: () => 'Point de vue au coucher du soleil' },
-    { tags: ['Vie nocturne'], type: 'rest', label: (d) => `Apéro dans les quartiers animés de ${d.city}` },
-    { tags: ['Gastronomie', 'Vin'], type: 'rest', label: () => 'Pause gourmande dans un café local' },
-    { tags: [], type: 'rest', label: () => 'Temps libre pour flâner' },
+    { tags: ['Bien-être', 'Détente', 'Sérénité'], type: 'rest', query: 'spa', label: () => 'Moment bien-être / spa' },
+    { tags: ['Photographie'], type: 'rest', query: 'point de vue', label: () => 'Point de vue au coucher du soleil' },
+    { tags: ['Vie nocturne'], type: 'rest', query: 'bar', label: (d) => `Apéro dans les quartiers animés de ${d.city}` },
+    { tags: ['Gastronomie', 'Vin'], type: 'rest', query: 'café', label: () => 'Pause gourmande dans un café local' },
+    { tags: [], type: 'rest', query: 'centre-ville', label: () => 'Temps libre pour flâner' },
   ],
   dinner: [
-    { tags: ['Gastronomie'], type: 'food', label: () => 'Dîner gastronomique' },
-    { tags: ['Vie nocturne'], type: 'food', label: () => 'Dîner puis sortie nocturne' },
-    { tags: [], type: 'food', label: () => 'Dîner dans un restaurant local' },
+    { tags: ['Gastronomie'], type: 'food', query: 'restaurant gastronomique', label: () => 'Dîner gastronomique' },
+    { tags: ['Vie nocturne'], type: 'food', query: 'bar restaurant', label: () => 'Dîner puis sortie nocturne' },
+    { tags: [], type: 'food', query: 'restaurant', label: () => 'Dîner dans un restaurant local' },
   ],
+}
+
+// A handful of real, verifiable landmark museums/monuments for well-known
+// destinations, used to make the "activity" slots feel genuinely
+// personalized instead of generic. Everywhere else falls back to a live
+// Google Maps search scoped to the activity type + city.
+const LANDMARK_ACTIVITIES = {
+  paris: [
+    { label: 'Musée du Louvre', url: 'https://www.louvre.fr' },
+    { label: 'Tour Eiffel', url: 'https://www.toureiffel.paris' },
+  ],
+  london: [
+    { label: 'British Museum', url: 'https://www.britishmuseum.org' },
+    { label: 'National Gallery', url: 'https://www.nationalgallery.org.uk' },
+  ],
+  rome: [
+    { label: 'Musées du Vatican', url: 'https://www.museivaticani.va' },
+    { label: 'Colisée', url: 'https://parcocolosseo.it' },
+  ],
+  madrid: [
+    { label: 'Musée du Prado', url: 'https://www.museodelprado.es' },
+    { label: 'Musée Reina Sofía', url: 'https://www.museoreinasofia.es' },
+  ],
+  florence: [{ label: 'Galerie des Offices', url: 'https://www.uffizi.it' }],
+  amsterdam: [
+    { label: 'Rijksmuseum', url: 'https://www.rijksmuseum.nl' },
+    { label: 'Musée Van Gogh', url: 'https://www.vangoghmuseum.nl' },
+  ],
+  barcelona: [
+    { label: 'Sagrada Família', url: 'https://sagradafamilia.org' },
+    { label: 'Musée Picasso', url: 'https://www.museupicasso.bcn.cat' },
+  ],
+  vienna: [
+    { label: 'Kunsthistorisches Museum', url: 'https://www.khm.at' },
+    { label: 'Château de Schönbrunn', url: 'https://www.schoenbrunn.at' },
+  ],
+  venice: [{ label: 'Palais des Doges', url: 'https://palazzoducale.visitmuve.it' }],
+  prague: [{ label: 'Château de Prague', url: 'https://www.hrad.cz' }],
+  budapest: [{ label: 'Bains Széchenyi', url: 'https://www.szechenyibath.hu' }],
+  athens: [{ label: 'Musée de l’Acropole', url: 'https://www.theacropolismuseum.gr' }],
+  munich: [{ label: 'Deutsches Museum', url: 'https://www.deutsches-museum.de' }],
+  milan: [{ label: 'Duomo di Milano', url: 'https://www.duomomilano.it' }],
+  dublin: [
+    { label: 'Guinness Storehouse', url: 'https://www.guinness-storehouse.com' },
+    { label: 'Trinity College – Book of Kells', url: 'https://www.tcd.ie/visit/book-of-kells/' },
+  ],
+  edinburgh: [{ label: 'Château d’Édimbourg', url: 'https://www.edinburghcastle.scot' }],
+  copenhagen: [{ label: 'Jardins de Tivoli', url: 'https://www.tivoli.dk' }],
+  stockholm: [{ label: 'Musée Vasa', url: 'https://www.vasamuseet.se' }],
+  lisbonne: [{ label: 'Monastère des Jerónimos', url: 'https://www.mosteirojeronimos.gov.pt' }],
+}
+
+function mapsSearchUrl(query, city) {
+  return `https://www.google.com/maps/search/${encodeURIComponent(`${query} ${city}`)}`
 }
 
 function pickTemplate(pool, destination, seed) {
   const tagged = pool.filter((t) => t.tags.length > 0 && t.tags.some((tag) => destination.tags.includes(tag)))
   const candidates = tagged.length ? tagged : pool
   return candidates[seed % candidates.length]
+}
+
+// Resolves a template pick into a concrete {label, type, url} item, favoring
+// a real landmark (queue) for activity-type slots when one is available.
+function resolveItem(template, destination, landmarkQueue) {
+  if (template.type === 'activity' && landmarkQueue.length) {
+    const landmark = landmarkQueue.shift()
+    return { label: landmark.label, type: 'activity', url: landmark.url }
+  }
+  return { label: template.label(destination), type: template.type, url: mapsSearchUrl(template.query, destination.city) }
 }
 
 function dayDateLabel(startDateISO, dayIndex) {
@@ -2358,11 +2422,52 @@ function dayDateLabel(startDateISO, dayIndex) {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
 }
 
+function parseDurationHours(str) {
+  if (!str) return 3
+  const m = str.match(/(\d+)h(\d+)?/)
+  if (!m) return 3
+  return parseInt(m[1], 10) + (m[2] ? parseInt(m[2], 10) : 0) / 60
+}
+
+function formatClock(decimalHour) {
+  const rounded = Math.round(decimalHour * 2) / 2
+  const h = ((Math.floor(rounded) % 24) + 24) % 24
+  const mm = Math.round((rounded % 1) * 60)
+  return `${String(h).padStart(2, '0')}:${String(mm).padStart(2, '0')}`
+}
+
+// Representative one-way travel time for this trip, used to keep day-1 and
+// the last day's schedule realistic (no activity before landing, no
+// activity that would make you miss the flight/train home).
+function primaryTravelHours(destination, quiz) {
+  const byMode = getTransportOptions(destination, { startDate: quiz.startDate, departureCity: quiz.departureCity })
+  const options = byMode.flights?.length
+    ? byMode.flights
+    : byMode.trains?.length
+      ? byMode.trains
+      : byMode.buses?.length
+        ? byMode.buses
+        : byMode.cars?.length
+          ? byMode.cars
+          : byMode.personalCars
+  if (!options?.length) return { hours: 3, isFlight: true }
+  const fastest = [...options].sort((a, b) => parseDurationHours(a.duration) - parseDurationHours(b.duration))[0]
+  return { hours: parseDurationHours(fastest.duration), isFlight: options === byMode.flights }
+}
+
+function realActivityItem(realEntry) {
+  // Curated in-app experiences (Kyoto, Lisbonne…) aren't real bookable
+  // venues, so no external link is attached — nothing to send people to.
+  return { label: realEntry.title, type: 'activity', url: undefined }
+}
+
 export function getItinerary(destination, nights, quiz = {}) {
   const n = Math.max(1, Math.min(30, nights || 3))
   const localActivities = activities.filter((a) => a.destinationId === destination.id)
   const realFoodQueue = localActivities.filter((a) => a.category.includes('Gastronomie'))
   const realActivityQueue = localActivities.filter((a) => !a.category.includes('Gastronomie'))
+  const landmarkQueue = [...(LANDMARK_ACTIVITIES[destination.id] || [])]
+  const { hours: travelHours, isFlight } = primaryTravelHours(destination, quiz)
   const days = []
 
   for (let day = 1; day <= n; day++) {
@@ -2370,28 +2475,69 @@ export function getItinerary(destination, nights, quiz = {}) {
     const date = dayDateLabel(quiz.startDate, day - 1)
 
     if (day === 1) {
-      const dinner = pickTemplate(ITINERARY_TEMPLATES.dinner, destination, seedBase)
-      days.push({
-        day,
-        date,
-        title: 'Arrivée & premiers pas',
-        items: [
-          { time: '14:00', label: 'Installation à votre hébergement', type: 'stay' },
-          { time: '16:30', label: `Première balade dans ${destination.city}`, type: 'walk' },
-          { time: '19:30', label: dinner.label(destination), type: 'food' },
-        ],
-      })
+      const HOME_DEPART_HOUR = 9
+      const arrivalDecimal = HOME_DEPART_HOUR + travelHours
+      const installDecimal = Math.min(21, arrivalDecimal + 1)
+      const dinnerT = pickTemplate(ITINERARY_TEMPLATES.dinner, destination, seedBase)
+      const dinnerItem = resolveItem(dinnerT, destination, [])
+      let items
+      if (n > 1 && installDecimal >= 19) {
+        items = [
+          { time: formatClock(installDecimal), label: 'Installation à votre hébergement', type: 'stay' },
+          { time: formatClock(Math.min(22.5, installDecimal + 1)), label: dinnerItem.label, type: 'food', url: dinnerItem.url },
+        ]
+      } else if (n > 1 && installDecimal >= 15) {
+        items = [
+          { time: formatClock(installDecimal), label: 'Installation à votre hébergement', type: 'stay' },
+          { time: formatClock(installDecimal + 1.5), label: `Première balade dans ${destination.city}`, type: 'walk', url: mapsSearchUrl('centre-ville', destination.city) },
+          { time: formatClock(Math.max(19.5, installDecimal + 3.5)), label: dinnerItem.label, type: 'food', url: dinnerItem.url },
+        ]
+      } else {
+        const installClamped = Math.max(11, installDecimal)
+        items = [
+          { time: formatClock(installClamped), label: 'Installation à votre hébergement', type: 'stay' },
+          { time: formatClock(installClamped + 2.5), label: `Première balade dans ${destination.city}`, type: 'walk', url: mapsSearchUrl('centre-ville', destination.city) },
+          { time: '19:30', label: dinnerItem.label, type: 'food', url: dinnerItem.url },
+        ]
+      }
+      days.push({ day, date, title: 'Arrivée & premiers pas', items })
+      continue
+    }
+
+    if (day === n && n > 1) {
+      const HOME_RETURN_HOUR = 17
+      const checkinBuffer = isFlight ? 2 : 0.75
+      const mustLeaveDecimal = HOME_RETURN_HOUR - checkinBuffer - 0.75
+      const departLabel = isFlight ? 'Départ vers l’aéroport' : 'Départ vers la gare'
+      let items
+      if (mustLeaveDecimal <= 10.5) {
+        items = [
+          { time: '08:00', label: 'Petit-déjeuner et derniers préparatifs', type: 'stay' },
+          { time: formatClock(Math.max(8.5, mustLeaveDecimal)), label: departLabel, type: 'stay' },
+        ]
+      } else {
+        const morningReal = realActivityQueue.shift()
+        const morningItem = morningReal ? realActivityItem(morningReal) : resolveItem(pickTemplate(ITINERARY_TEMPLATES.morning, destination, seedBase), destination, landmarkQueue)
+        items = [{ time: '09:00', label: morningItem.label, type: morningItem.type, url: morningItem.url }]
+        if (mustLeaveDecimal - 9 >= 5) {
+          const lunchItem = resolveItem(pickTemplate(ITINERARY_TEMPLATES.lunch, destination, seedBase + 1), destination, [])
+          items.push({ time: '12:30', label: lunchItem.label, type: lunchItem.type, url: lunchItem.url })
+        }
+        items.push({ time: formatClock(mustLeaveDecimal), label: departLabel, type: 'stay' })
+      }
+      const reasonTitle = destination.matchReasons[(day - 2) % destination.matchReasons.length]?.label || destination.tags[0]
+      days.push({ day, date, title: reasonTitle, items })
       continue
     }
 
     const morningReal = realActivityQueue.shift()
-    const morning = pickTemplate(ITINERARY_TEMPLATES.morning, destination, seedBase)
-    const lunch = pickTemplate(ITINERARY_TEMPLATES.lunch, destination, seedBase + 1)
+    const morningItem = morningReal ? realActivityItem(morningReal) : resolveItem(pickTemplate(ITINERARY_TEMPLATES.morning, destination, seedBase), destination, landmarkQueue)
+    const lunchItem = resolveItem(pickTemplate(ITINERARY_TEMPLATES.lunch, destination, seedBase + 1), destination, [])
     const afternoonReal = realActivityQueue.shift()
-    const afternoon = pickTemplate(ITINERARY_TEMPLATES.afternoon, destination, seedBase + 2)
-    const late = pickTemplate(ITINERARY_TEMPLATES.lateAfternoon, destination, seedBase + 3)
+    const afternoonItem = afternoonReal ? realActivityItem(afternoonReal) : resolveItem(pickTemplate(ITINERARY_TEMPLATES.afternoon, destination, seedBase + 2), destination, landmarkQueue)
+    const lateItem = resolveItem(pickTemplate(ITINERARY_TEMPLATES.lateAfternoon, destination, seedBase + 3), destination, [])
     const dinnerReal = realFoodQueue.shift()
-    const dinner = pickTemplate(ITINERARY_TEMPLATES.dinner, destination, seedBase + 4)
+    const dinnerItem = dinnerReal ? realActivityItem(dinnerReal) : resolveItem(pickTemplate(ITINERARY_TEMPLATES.dinner, destination, seedBase + 4), destination, [])
     const reasonTitle = destination.matchReasons[(day - 2) % destination.matchReasons.length]?.label || destination.tags[0]
 
     days.push({
@@ -2399,11 +2545,11 @@ export function getItinerary(destination, nights, quiz = {}) {
       date,
       title: reasonTitle,
       items: [
-        { time: '09:00', label: morningReal ? morningReal.title : morning.label(destination), type: morningReal ? 'activity' : morning.type },
-        { time: '12:30', label: lunch.label(destination), type: 'food' },
-        { time: '14:30', label: afternoonReal ? afternoonReal.title : afternoon.label(destination), type: afternoonReal ? 'activity' : afternoon.type },
-        { time: '17:00', label: late.label(destination), type: late.type },
-        { time: '19:30', label: dinnerReal ? dinnerReal.title : dinner.label(destination), type: 'food' },
+        { time: '09:00', label: morningItem.label, type: morningItem.type, url: morningItem.url },
+        { time: '12:30', label: lunchItem.label, type: lunchItem.type, url: lunchItem.url },
+        { time: '14:30', label: afternoonItem.label, type: afternoonItem.type, url: afternoonItem.url },
+        { time: '17:00', label: lateItem.label, type: lateItem.type, url: lateItem.url },
+        { time: '19:30', label: dinnerItem.label, type: dinnerItem.type, url: dinnerItem.url },
       ],
     })
   }

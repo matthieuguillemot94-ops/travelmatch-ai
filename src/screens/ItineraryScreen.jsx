@@ -72,16 +72,23 @@ export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, on
         <div className="relative pl-6">
           <div className="absolute left-[7px] top-1.5 bottom-1.5 w-px bg-ink/10" />
           <div className="space-y-5">
-            {day.items.map((item, i) => (
-              <div key={i} className="relative">
-                <div className="absolute -left-6 top-0.5 w-3.5 h-3.5 rounded-full bg-paper border-2 border-pine" />
-                <p className="text-[11.5px] font-mono tabular text-stone mb-0.5">{item.time}</p>
-                <div className="flex items-center gap-2">
-                  <Icon name={typeIcon[item.type]} className="w-4 h-4 text-pine shrink-0" />
-                  <p className="text-[13.5px] text-ink font-medium leading-snug">{item.label}</p>
-                </div>
-              </div>
-            ))}
+            {day.items.map((item, i) => {
+              const Wrapper = item.url ? 'a' : 'div'
+              const wrapperProps = item.url ? { href: item.url, target: '_blank', rel: 'noopener noreferrer' } : {}
+              return (
+                <Wrapper key={i} {...wrapperProps} className="relative block">
+                  <div className="absolute -left-6 top-0.5 w-3.5 h-3.5 rounded-full bg-paper border-2 border-pine" />
+                  <p className="text-[11.5px] font-mono tabular text-stone mb-0.5">{item.time}</p>
+                  <div className="flex items-center gap-2">
+                    <Icon name={typeIcon[item.type]} className="w-4 h-4 text-pine shrink-0" />
+                    <p className={`text-[13.5px] text-ink font-medium leading-snug ${item.url ? 'underline underline-offset-2 decoration-ink/20' : ''}`}>
+                      {item.label}
+                    </p>
+                    {item.url && <Icon name="externalLink" className="w-3 h-3 text-stone shrink-0" strokeWidth={1.8} />}
+                  </div>
+                </Wrapper>
+              )
+            })}
           </div>
         </div>
       </div>
