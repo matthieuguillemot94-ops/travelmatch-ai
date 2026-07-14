@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { googleMapsDirectionsUrl, appleMapsDirectionsUrl } from '../utils/mapsLinks.js'
 
 function pinIcon(color, label) {
   return L.divIcon({
@@ -71,6 +72,11 @@ export default function RouteMap({ origin, destination, className = '' }) {
     }
   }, [origin?.lat, origin?.lon, destination?.lat, destination?.lon])
 
+  const links =
+    origin && destination
+      ? { apple: appleMapsDirectionsUrl([origin, destination], 'd'), google: googleMapsDirectionsUrl([origin, destination], 'driving') }
+      : null
+
   return (
     <div className={`relative ${className}`}>
       <div ref={containerRef} className="w-full h-full" />
@@ -80,6 +86,16 @@ export default function RouteMap({ origin, destination, className = '' }) {
       {status === 'error' && (
         <div className="absolute inset-0 flex items-center justify-center bg-paper/90 text-[11.5px] text-stone px-4 text-center">
           Itinéraire indisponible pour le moment
+        </div>
+      )}
+      {links && (
+        <div className="absolute bottom-2 left-2 flex gap-1.5 z-[500]">
+          <a href={links.apple} target="_blank" rel="noopener noreferrer" className="text-[10.5px] font-medium bg-white/90 backdrop-blur text-ink px-2.5 py-1 rounded-full shadow-card">
+            Plans
+          </a>
+          <a href={links.google} target="_blank" rel="noopener noreferrer" className="text-[10.5px] font-medium bg-white/90 backdrop-blur text-ink px-2.5 py-1 rounded-full shadow-card">
+            Google Maps
+          </a>
         </div>
       )}
     </div>

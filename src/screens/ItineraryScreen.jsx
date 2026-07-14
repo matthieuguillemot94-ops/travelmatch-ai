@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { destinations, getItinerary, DESTINATION_COORDS } from '../data/mockData.js'
 import { PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
-import DayMap from '../components/DayMap.jsx'
+import DayMap, { typeColor } from '../components/DayMap.jsx'
 
 const typeIcon = { stay: 'suitcase', walk: 'peak', food: 'fork', activity: 'sparkle', rest: 'drop' }
 const colorMap = { pine: '#2F5D50', gold: '#D9A55C', berry: '#B5495B', mint: '#4FA98A' }
@@ -92,15 +92,21 @@ export default function ItineraryScreen({ destinationId, quiz, confirmedTrip, on
           <h2 className="font-serif text-[17px] text-ink">{day.title}</h2>
           {day.date && <span className="text-[12px] text-stone">{day.date}</span>}
         </div>
-        <div className="relative pl-6">
-          <div className="absolute left-[7px] top-1.5 bottom-1.5 w-px bg-ink/10" />
+        <div className="relative pl-8">
+          <div className="absolute left-[9px] top-1.5 bottom-1.5 w-px bg-ink/10" />
           <div className="space-y-5">
             {day.items.map((item, i) => {
               const Wrapper = item.url ? 'a' : 'div'
               const wrapperProps = item.url ? { href: item.url, target: '_blank', rel: 'noopener noreferrer' } : {}
+              const color = typeColor[item.type] || '#2F5D50'
               return (
                 <Wrapper key={i} {...wrapperProps} className="relative block">
-                  <div className="absolute -left-6 top-0.5 w-3.5 h-3.5 rounded-full bg-paper border-2 border-pine" />
+                  <div
+                    className="absolute -left-8 top-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white border-2 border-paper"
+                    style={{ background: color }}
+                  >
+                    {i + 1}
+                  </div>
                   <p className="text-[11.5px] font-mono tabular text-stone mb-0.5">{item.time}</p>
                   <div className="flex items-center gap-2">
                     <Icon name={typeIcon[item.type]} className="w-4 h-4 text-pine shrink-0" />
