@@ -275,7 +275,7 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
         </div>
       </div>
 
-      <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
+      <div className="absolute bottom-[74px] left-0 right-0 z-40 px-6 pb-3 pt-3.5 bg-paper shadow-[0_-8px_20px_-8px_rgba(18,33,29,0.12)]">
         {!canContinue && (
           <p className="text-[11.5px] text-stone text-center mb-2">
             Complétez vos envies et vos dates de voyage pour continuer
