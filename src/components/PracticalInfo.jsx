@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Icon from './Icon.jsx'
-import { getCountryInfo, OFFICIAL_ADVISORY_URL } from '../data/countryInfo.js'
+import { getCountryInfo, OFFICIAL_ADVISORY_URL, HEALTH_ADVISORY_URL } from '../data/countryInfo.js'
 
 const RISK_STYLES = {
   normal: { label: 'Vigilance normale', badge: 'bg-mint-100 text-mint', dot: 'bg-mint' },
@@ -85,6 +85,28 @@ export default function PracticalInfo({ country }) {
 
         <AccordionRow id="wildlife" icon="paw" title="Animaux & insectes" expanded={expanded} onToggle={setExpanded}>
           <p className="text-[12.5px] text-ink/75 leading-relaxed">{info.wildlife}</p>
+        </AccordionRow>
+
+        <AccordionRow
+          id="vaccines"
+          icon="syringe"
+          title="Vaccins conseillés"
+          subtitle={info.vaccines.recommended.length ? info.vaccines.recommended.join(', ') : 'Vaccins de routine'}
+          expanded={expanded}
+          onToggle={setExpanded}
+        >
+          {info.vaccines.recommended.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-2.5">
+              {info.vaccines.recommended.map((v) => (
+                <span key={v} className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-mint-100 text-mint">{v}</span>
+              ))}
+            </div>
+          )}
+          <p className="text-[12.5px] text-ink/75 leading-relaxed mb-2.5">{info.vaccines.note}</p>
+          <a href={HEALTH_ADVISORY_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[12px] font-medium text-pine">
+            Vaccinations et conseils santé (Institut Pasteur)
+            <Icon name="externalLink" className="w-3 h-3" strokeWidth={1.8} />
+          </a>
         </AccordionRow>
 
         <AccordionRow id="culture" icon="globe" title="Culture locale" subtitle={info.culture.food} expanded={expanded} onToggle={setExpanded}>

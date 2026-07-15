@@ -1,7 +1,7 @@
 import Icon from './Icon.jsx'
 
 const tabs = [
-  { id: 'newTrip', label: 'Voyager', icon: 'compass' },
+  { id: 'newTrip', label: 'Explorer', icon: 'compass' },
   { id: 'itinerary', label: 'Itinéraire', icon: 'route' },
   { id: 'assistant', label: 'Assistant', icon: 'sparkle' },
   { id: 'dashboard', label: 'Voyage', icon: 'suitcase' },
