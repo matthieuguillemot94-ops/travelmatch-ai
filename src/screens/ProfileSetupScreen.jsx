@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { travelerTypes, COUNTRIES } from '../data/mockData.js'
-import { PrimaryButton, ScreenHeader } from '../components/ui.jsx'
+import { travelerTypes, COUNTRIES, pacePreferences, activityLevels, climatePreferences, discoveryPreferences } from '../data/mockData.js'
+import { Chip, PrimaryButton, ScreenHeader } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 import WorldMap from '../components/WorldMap.jsx'
 
@@ -87,6 +87,48 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
         </div>
 
         <div className="mt-7">
+          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Quel rythme de voyage vous ressemble ?</label>
+          <div className="grid grid-cols-1 gap-2.5">
+            {pacePreferences.map((p) => {
+              const selected = profile.pace === p.id
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => update({ pace: p.id })}
+                  className={`flex items-center justify-between text-left rounded-2xl border px-4 py-3 transition-colors ${
+                    selected ? 'bg-ink border-ink' : 'bg-white border-ink/10'
+                  }`}
+                >
+                  <span>
+                    <span className={`block text-[13.5px] font-medium ${selected ? 'text-paper' : 'text-ink'}`}>{p.label}</span>
+                    <span className={`block text-[11.5px] leading-snug ${selected ? 'text-paper/60' : 'text-stone'}`}>{p.hint}</span>
+                  </span>
+                  {selected && <Icon name="check" className="w-4 h-4 text-gold-400 shrink-0" strokeWidth={2.2} />}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="mt-7">
+          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Niveau d’activité physique souhaité</label>
+          <div className="flex flex-wrap gap-2">
+            {activityLevels.map((a) => (
+              <Chip key={a.id} label={a.label} selected={profile.activityLevel === a.id} onClick={() => update({ activityLevel: a.id })} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-7">
+          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Climat préféré</label>
+          <div className="flex flex-wrap gap-2">
+            {climatePreferences.map((c) => (
+              <Chip key={c.id} label={c.label} icon={c.icon} selected={profile.climate === c.id} onClick={() => update({ climate: c.id })} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-7">
           <div className="flex items-baseline justify-between mb-2">
             <label className="text-[12px] font-medium text-ink/70 uppercase tracking-wide">Pays déjà visités</label>
             {profile.visitedCountries?.length > 0 && (
@@ -145,6 +187,15 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
             {filteredCountries.length === 0 && (
               <p className="px-4 py-4 text-[13px] text-stone text-center">Aucun pays trouvé</p>
             )}
+          </div>
+        </div>
+
+        <div className="mt-7">
+          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Pour votre prochain voyage, plutôt…</label>
+          <div className="flex flex-wrap gap-2">
+            {discoveryPreferences.map((d) => (
+              <Chip key={d.id} label={d.label} selected={profile.discovery === d.id} onClick={() => update({ discovery: d.id })} />
+            ))}
           </div>
         </div>
       </div>

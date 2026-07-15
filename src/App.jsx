@@ -22,7 +22,16 @@ const HOME_GRADIENT = 'linear-gradient(180deg, #FBF4E4 0%, #F3DDB0 45%, #ECC98C 
 
 export default function App() {
   const [screen, setScreen] = useState('home')
-  const [profile, setProfile] = useState({ name: '', avatar: 0, travelerType: null, visitedCountries: [] })
+  const [profile, setProfile] = useState({
+    name: '',
+    avatar: 0,
+    travelerType: null,
+    visitedCountries: [],
+    pace: null,
+    activityLevel: null,
+    climate: null,
+    discovery: null,
+  })
   const [quiz, setQuiz] = useState({
     interests: [],
     budget: 1185,

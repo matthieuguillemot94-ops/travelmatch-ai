@@ -24,7 +24,7 @@ export default function ResultsScreen({ profile, quiz, onOpenDestination, onBack
     return () => clearTimeout(t)
   }, [])
 
-  const matched = useMemo(() => matchDestinations(quiz).slice(0, 12), [quiz])
+  const matched = useMemo(() => matchDestinations(quiz, profile).slice(0, 12), [quiz, profile])
 
   return (
     <div className="h-full w-full bg-paper flex flex-col">

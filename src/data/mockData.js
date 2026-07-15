@@ -119,6 +119,34 @@ export const moods = [
   { label: 'Ne rien faire', icon: 'wave' },
 ]
 
+// Durable identity questions asked once at sign-up (ProfileSetupScreen),
+// as opposed to the per-trip criteria in QuizScreen/NewTripScreen. Each
+// answer feeds a bonus/penalty in matchDestinations so a fuller profile
+// genuinely sharpens every future recommendation, not just this one trip.
+export const pacePreferences = [
+  { id: 'contemplatif', label: 'Contemplatif', hint: 'Peu de trajets, on prend le temps' },
+  { id: 'equilibre', label: 'Équilibré', hint: 'Un bon mix visites et temps libre' },
+  { id: 'intense', label: 'Intense', hint: 'Programme dense, un max de découvertes' },
+]
+
+export const activityLevels = [
+  { id: 'farniente', label: 'Farniente', hint: 'Se reposer avant tout' },
+  { id: 'modere', label: 'Modéré', hint: 'Quelques activités, sans excès' },
+  { id: 'actif', label: 'Actif & sportif', hint: 'Randonnées, sport, sensations' },
+]
+
+export const climatePreferences = [
+  { id: 'chaud', label: 'Chaleur & soleil', icon: 'sun' },
+  { id: 'tempere', label: 'Tempéré', icon: 'cloud' },
+  { id: 'frais', label: 'Fraîcheur & montagne', icon: 'peak' },
+  { id: 'peu_importe', label: 'Peu importe', icon: 'compass' },
+]
+
+export const discoveryPreferences = [
+  { id: 'inconnu', label: 'Direction l’inconnu', hint: 'Un pays jamais visité' },
+  { id: 'peu_importe', label: 'Peu importe', hint: 'Un mix des deux' },
+  { id: 'coup_de_coeur', label: 'Un coup de cœur', hint: 'Retourner dans un pays aimé' },
+]
 
 export const destinations = [
   {
@@ -2648,10 +2676,87 @@ const INTEREST_TAGS = {
   photo: ['Art & Design', 'Architecture'],
 }
 
+// Same idea as MOOD_TAGS/INTEREST_TAGS but for the durable sign-up profile
+// questions, so a fuller profile biases every future trip's ranking too.
+const TRAVELER_TYPE_TAGS = {
+  aventurier: ['Aventure', 'Randonnée', 'Nature', 'Hors des sentiers battus'],
+  culturel: ['Culture', 'Histoire', 'Architecture'],
+  epicurien: ['Gastronomie', 'Vin', 'Saveurs'],
+  detente: ['Détente', 'Bien-être', 'Sérénité', 'Spiritualité'],
+  social: ['Vie locale', 'Vie nocturne', 'Vie urbaine'],
+  createur: ['Art & Design', 'Photographie', 'Architecture'],
+}
+
+const PACE_TAGS = {
+  contemplatif: ['Détente', 'Sérénité', 'Bien-être'],
+  intense: ['Vie urbaine', 'Aventure', 'Vie nocturne'],
+}
+
+const ACTIVITY_LEVEL_TAGS = {
+  farniente: ['Détente', 'Plage', 'Bien-être', 'Sérénité'],
+  actif: ['Randonnée', 'Aventure'],
+}
+
+const HOT_CLIMATE_TAGS = new Set(['Plage', 'Océan'])
+// No destination is tagged 'Montagne' directly, so highland/hiking-heavy
+// spots (Machu Picchu, Interlaken, Banff, Queenstown…) stand in for
+// "fraîcheur & montagne" — 'Randonnée' without a beach tag is a decent proxy.
+const COOL_CLIMATE_SIGNAL_TAGS = new Set(['Aurores boréales', 'Randonnée'])
+
+function climateScore(d, climate) {
+  if (!climate || climate === 'peu_importe') return 0
+  const isHot = d.tags.some((t) => HOT_CLIMATE_TAGS.has(t))
+  const isCool = !isHot && d.tags.some((t) => COOL_CLIMATE_SIGNAL_TAGS.has(t))
+  if (climate === 'chaud') return isHot ? 10 : isCool ? -6 : 0
+  if (climate === 'frais') return isCool ? 10 : isHot ? -6 : 0
+  if (climate === 'tempere') return !isHot && !isCool ? 8 : -3
+  return 0
+}
+
+// A handful of destination `country` labels don't exactly match the
+// Intl.DisplayNames-derived COUNTRIES list (different exonym or, for
+// \u00c9cosse, no ISO code of its own) \u2014 reconcile those known cases so the
+// "already visited" check still recognizes them.
+const COUNTRY_NAME_ALIASES = {
+  'republique tcheque': 'tchequie',
+  'ecosse': 'royaume-uni',
+  'vietnam': 'viet nam',
+}
+
+function normalizeCountryName(name) {
+  const base = name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  return COUNTRY_NAME_ALIASES[base] || base
+}
+
+function visitedCountryNames(visitedCountries = []) {
+  const set = new Set()
+  visitedCountries.forEach((code) => {
+    const c = COUNTRIES.find((x) => x.code === code)
+    if (c) set.add(normalizeCountryName(c.name))
+  })
+  return set
+}
+
+// A couple of destinations (e.g. "Zambie / Zimbabwe") represent more than
+// one country, so check whether any part of the label was visited.
+function isCountryVisited(countryField, visitedNames) {
+  return countryField.split(' / ').some((part) => visitedNames.has(normalizeCountryName(part.trim())))
+}
+
+function discoveryScore(d, discovery, visitedNames) {
+  if (!discovery || discovery === 'peu_importe') return 0
+  const alreadyVisited = isCountryVisited(d.country, visitedNames)
+  if (discovery === 'inconnu') return alreadyVisited ? -8 : 8
+  if (discovery === 'coup_de_coeur') return alreadyVisited ? 8 : -3
+  return 0
+}
+
 /**
  * Ranks the destination database against the traveler's current criteria
- * (mood chips, interest chips, budget). Returns the whole list sorted by
- * relevance so the results screen visibly reacts to what was just answered.
+ * (mood chips, interest chips, budget) and their durable sign-up profile
+ * (traveler type, pace, activity level, climate, discovery vs. familiar
+ * countries). Returns the whole list sorted by relevance so the results
+ * screen visibly reacts to what was just answered.
  */
 // Rough "worth the flight" floor: how many nights make sense given how far
 // the destination is, so a 5-night trip doesn't get recommended for a
@@ -2681,16 +2786,26 @@ export function recommendedDuration(destination, departureCityId) {
   return `${minNights}-${minNights + buffer} jours`
 }
 
-export function matchDestinations({ mood = [], interests = [], budget = 3000, nights = 7 } = {}) {
+export function matchDestinations({ mood = [], interests = [], budget = 3000, nights = 7 } = {}, profile = {}) {
   const wantedTags = new Set()
   mood.forEach((m) => (MOOD_TAGS[m] || []).forEach((t) => wantedTags.add(t)))
   interests.forEach((i) => (INTEREST_TAGS[i] || []).forEach((t) => wantedTags.add(t)))
+  ;(TRAVELER_TYPE_TAGS[profile.travelerType] || []).forEach((t) => wantedTags.add(t))
+  ;(PACE_TAGS[profile.pace] || []).forEach((t) => wantedTags.add(t))
+  ;(ACTIVITY_LEVEL_TAGS[profile.activityLevel] || []).forEach((t) => wantedTags.add(t))
+
+  const visitedNames = visitedCountryNames(profile.visitedCountries)
 
   const scoreFit = (d) => {
     const overlap = d.tags.filter((t) => wantedTags.has(t)).length
     const minNights = minNightsFor(d)
     const nightsFit = nights >= minNights ? 1 : nights >= minNights - 2 ? 0.5 : 0.15
-    const matchScore = overlap * 16 + d.score * 0.25 + nightsFit * 10
+    const matchScore =
+      overlap * 16 +
+      d.score * 0.25 +
+      nightsFit * 10 +
+      climateScore(d, profile.climate) +
+      discoveryScore(d, profile.discovery, visitedNames)
     return { ...d, matchScore, minNights }
   }
 
