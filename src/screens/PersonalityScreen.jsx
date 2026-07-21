@@ -111,7 +111,7 @@ export default function PersonalityScreen({ profile, setProfile, onBack, onFinis
                     <button
                       key={opt.emoji}
                       onClick={() => toggleEmoji(opt.emoji)}
-                      className={`flex flex-col items-center gap-1.5 rounded-2xl border p-3 transition-colors ${
+                      className={`h-24 flex flex-col items-center justify-center gap-1.5 rounded-2xl border p-2 text-center transition-colors ${
                         selected ? 'bg-ink border-ink' : 'bg-white border-ink/10'
                       }`}
                     >
