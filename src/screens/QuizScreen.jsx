@@ -23,7 +23,7 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
 
   return (
     <div className="h-full w-full bg-paper flex flex-col relative">
-      <ScreenHeader title="Ce voyage" onBack={goBack} />
+      <ScreenHeader title="Votre prochain voyage" onBack={goBack} />
 
       <div className="px-6 pt-1 pb-2 shrink-0">
         <div className="flex gap-1.5">
