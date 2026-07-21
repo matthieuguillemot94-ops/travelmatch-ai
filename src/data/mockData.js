@@ -2926,7 +2926,35 @@ export function recommendedDuration(destination, departureCityId) {
   return `${minNights}-${minNights + buffer} jours`
 }
 
-export function matchDestinations({ mood = [], interests = [], budget = 3000, nights = 7 } = {}, profile = {}) {
+// Advanced-filter checkboxes/selects in QuizScreen & NewTripScreen — each
+// key here doubles as the field name in the `quiz` object and a message
+// shown to the user if the filter had to be relaxed (see matchDestinations).
+export const FILTER_LABELS = {
+  strictInterests: 'la correspondance stricte à vos envies',
+  respectClimate: 'votre climat préféré',
+  excludeVisited: 'l’exclusion des pays déjà visités',
+  maxDistance: 'la distance de vol maximale',
+}
+
+export const maxDistanceOptions = [
+  { id: 'illimite', label: 'Peu importe', hint: 'Tous vols confondus' },
+  { id: 'proche', label: 'Court & moyen-courrier', hint: '8h de vol maximum' },
+  { id: 'europe', label: 'Europe uniquement', hint: 'Pas de long-courrier' },
+]
+
+export function matchDestinations(
+  {
+    mood = [],
+    interests = [],
+    budget = 3000,
+    nights = 7,
+    maxDistance = 'illimite',
+    excludeVisited = false,
+    strictInterests = false,
+    respectClimate = false,
+  } = {},
+  profile = {}
+) {
   const wantedTags = new Set()
   mood.forEach((m) => (MOOD_TAGS[m] || []).forEach((t) => wantedTags.add(t)))
   interests.forEach((i) => (INTEREST_TAGS[i] || []).forEach((t) => wantedTags.add(t)))
@@ -2959,20 +2987,60 @@ export function matchDestinations({ mood = [], interests = [], budget = 3000, ni
     return { ...d, matchScore, minNights }
   }
 
+  // Advanced filters genuinely exclude destinations instead of just nudging
+  // the ranking — but applied one at a time in priority order, and skipped
+  // (and reported back) if enforcing one would leave fewer than 6 candidates,
+  // so a narrow combination of filters never dead-ends into an empty page.
+  const filterSteps = [
+    {
+      key: 'strictInterests',
+      active: strictInterests && wantedTags.size > 0,
+      test: (d) => d.tags.some((t) => wantedTags.has(t)),
+    },
+    {
+      key: 'respectClimate',
+      active: respectClimate && profile.climate && profile.climate !== 'peu_importe',
+      test: (d) => climateScore(d, profile.climate) >= 0,
+    },
+    {
+      key: 'excludeVisited',
+      active: excludeVisited,
+      test: (d) => !isCountryVisited(d.country, visitedNames),
+    },
+    {
+      key: 'maxDistance',
+      active: maxDistance !== 'illimite',
+      test: (d) => {
+        const hours = CONTINENT_FLIGHT_HOURS[d.continent] || 8
+        return maxDistance === 'europe' ? d.continent === 'Europe' : hours <= 8
+      },
+    },
+  ]
+
+  let pool = destinations
+  const relaxedFilters = []
+  filterSteps.forEach((step) => {
+    if (!step.active) return
+    const filtered = pool.filter(step.test)
+    if (filtered.length >= 6) pool = filtered
+    else relaxedFilters.push(step.key)
+  })
+
   // Never surface a destination the user can't actually afford: only
   // destinations at or under the declared budget are eligible.
-  const affordable = destinations.filter((d) => d.budgetEstimate <= budget).map(scoreFit).sort((a, b) => b.matchScore - a.matchScore)
-  if (affordable.length >= 6) return affordable
+  const affordable = pool.filter((d) => d.budgetEstimate <= budget).map(scoreFit).sort((a, b) => b.matchScore - a.matchScore)
+  if (affordable.length >= 6) return { results: affordable, relaxedFilters }
 
   // Budget too tight for enough matches: backfill with the cheapest remaining
-  // options, clearly flagged as over budget rather than silently shown as a fit.
+  // options (within the same filtered pool), clearly flagged as over budget
+  // rather than silently shown as a fit.
   const affordableIds = new Set(affordable.map((d) => d.id))
-  const backfill = destinations
+  const backfill = pool
     .filter((d) => !affordableIds.has(d.id))
     .sort((a, b) => a.budgetEstimate - b.budgetEstimate)
     .slice(0, 6 - affordable.length)
     .map((d) => ({ ...scoreFit(d), overBudget: true }))
-  return [...affordable, ...backfill]
+  return { results: [...affordable, ...backfill], relaxedFilters }
 }
 
 // ---- Weather that actually follows the travel dates ----

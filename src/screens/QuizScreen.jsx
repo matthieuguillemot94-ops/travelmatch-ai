@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { interestCategories, groupOptions, comfortLevels, durations, moods } from '../data/mockData.js'
-import { Chip, PrimaryButton, ScreenHeader } from '../components/ui.jsx'
+import { interestCategories, groupOptions, comfortLevels, durations, moods, maxDistanceOptions } from '../data/mockData.js'
+import { Chip, PrimaryButton, ScreenHeader, Toggle } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
@@ -16,10 +16,11 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
     update({ mood: quiz.mood.includes(m) ? quiz.mood.filter((i) => i !== m) : [...quiz.mood, m] })
   }
 
-  const canNext = [quiz.interests.length >= 2, true, quiz.mood.length >= 1][step]
+  const canNext = [quiz.interests.length >= 2, true, quiz.mood.length >= 1, true][step]
 
   const goBack = () => (step === 0 ? onBack() : setStep(step - 1))
-  const goNext = () => (step === 2 ? onFinish() : setStep(step + 1))
+  const goNext = () => (step === 3 ? onFinish() : setStep(step + 1))
+  const stepLabels = ['Centres d’intérêt', 'Budget & format', 'Envie du moment', 'Filtres avancés']
 
   return (
     <div className="h-full w-full bg-paper flex flex-col relative">
@@ -27,12 +28,12 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
 
       <div className="px-6 pt-1 pb-2 shrink-0">
         <div className="flex gap-1.5">
-          {[0, 1, 2].map((i) => (
+          {[0, 1, 2, 3].map((i) => (
             <div key={i} className={`h-1 flex-1 rounded-full ${i <= step ? 'bg-ink' : 'bg-ink/10'}`} />
           ))}
         </div>
         <p className="text-[11px] text-stone mt-2 uppercase tracking-wide">
-          Pour ce voyage · {step === 0 ? 'Centres d’intérêt' : step === 1 ? 'Budget & format' : 'Envie du moment'}
+          Pour ce voyage · {stepLabels[step]}
         </p>
       </div>
 
@@ -118,11 +119,60 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
             </div>
           </div>
         )}
+
+        {step === 3 && (
+          <div className="animate-fade-up">
+            <h2 className="font-serif text-[21px] text-ink mb-1.5">Filtres avancés</h2>
+            <p className="text-[13.5px] text-stone mb-6">
+              Optionnel : on n’affiche alors que les destinations qui collent vraiment à ces critères.
+            </p>
+
+            <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Distance de vol</label>
+            <div className="flex flex-col gap-2 mb-6">
+              {maxDistanceOptions.map((o) => (
+                <button
+                  key={o.id}
+                  onClick={() => update({ maxDistance: o.id })}
+                  className={`flex items-center justify-between text-left rounded-2xl border px-4 py-3 transition-colors ${
+                    quiz.maxDistance === o.id ? 'bg-ink border-ink' : 'bg-white border-ink/10'
+                  }`}
+                >
+                  <span>
+                    <span className={`block text-[13.5px] font-medium ${quiz.maxDistance === o.id ? 'text-paper' : 'text-ink'}`}>{o.label}</span>
+                    <span className={`block text-[11.5px] leading-snug ${quiz.maxDistance === o.id ? 'text-paper/60' : 'text-stone'}`}>{o.hint}</span>
+                  </span>
+                  {quiz.maxDistance === o.id && <Icon name="check" className="w-4 h-4 text-gold-400 shrink-0" strokeWidth={2.2} />}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-2.5">
+              <Toggle
+                label="Ne montrer que ce qui correspond vraiment"
+                hint="Exclut les destinations sans lien avec vos envies sélectionnées"
+                checked={quiz.strictInterests}
+                onChange={(v) => update({ strictInterests: v })}
+              />
+              <Toggle
+                label="Respecter mon climat préféré"
+                hint="Défini dans votre portrait voyageur"
+                checked={quiz.respectClimate}
+                onChange={(v) => update({ respectClimate: v })}
+              />
+              <Toggle
+                label="Exclure les pays déjà visités"
+                hint="Basé sur la carte de votre profil"
+                checked={quiz.excludeVisited}
+                onChange={(v) => update({ excludeVisited: v })}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
-        <PrimaryButton onClick={goNext} disabled={!canNext} icon={step === 2 ? 'sparkle' : 'arrow-right'}>
-          {step === 2 ? 'Voir mes recommandations' : 'Continuer'}
+        <PrimaryButton onClick={goNext} disabled={!canNext} icon={step === 3 ? 'sparkle' : 'arrow-right'}>
+          {step === 3 ? 'Voir mes recommandations' : 'Continuer'}
         </PrimaryButton>
       </div>
     </div>

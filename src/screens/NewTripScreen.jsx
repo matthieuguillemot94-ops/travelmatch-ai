@@ -1,5 +1,5 @@
-import { moods, groupOptions, comfortLevels, departureCities, userProfile } from '../data/mockData.js'
-import { Chip, PrimaryButton } from '../components/ui.jsx'
+import { moods, groupOptions, comfortLevels, departureCities, userProfile, maxDistanceOptions } from '../data/mockData.js'
+import { Chip, PrimaryButton, Toggle } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 import Calendar from '../components/Calendar.jsx'
 
@@ -271,6 +271,38 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
                 {(quiz.budget * quiz.travelers).toLocaleString('fr-FR')} €
               </span>
             </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[12px] font-medium text-ink/70 mb-1 uppercase tracking-wide">Filtres avancés</label>
+          <p className="text-[12px] text-stone leading-relaxed mb-3">
+            Optionnel : on n’affiche alors que les destinations qui collent vraiment à ces critères.
+          </p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {maxDistanceOptions.map((o) => (
+              <Chip key={o.id} label={o.label} selected={quiz.maxDistance === o.id} onClick={() => update({ maxDistance: o.id })} />
+            ))}
+          </div>
+          <div className="flex flex-col gap-2.5">
+            <Toggle
+              label="Ne montrer que ce qui correspond vraiment"
+              hint="Exclut les destinations sans lien avec vos envies"
+              checked={quiz.strictInterests}
+              onChange={(v) => update({ strictInterests: v })}
+            />
+            <Toggle
+              label="Respecter mon climat préféré"
+              hint="Défini dans votre portrait voyageur"
+              checked={quiz.respectClimate}
+              onChange={(v) => update({ respectClimate: v })}
+            />
+            <Toggle
+              label="Exclure les pays déjà visités"
+              hint="Basé sur la carte de votre profil"
+              checked={quiz.excludeVisited}
+              onChange={(v) => update({ excludeVisited: v })}
+            />
           </div>
         </div>
       </div>

@@ -56,6 +56,10 @@ export default function App() {
     nights: 7,
     startDate: null,
     endDate: null,
+    maxDistance: 'illimite',
+    excludeVisited: false,
+    strictInterests: false,
+    respectClimate: false,
   })
   const [destinationId, setDestinationId] = useState('kyoto')
   const [activityId, setActivityId] = useState('fushimi-dawn')

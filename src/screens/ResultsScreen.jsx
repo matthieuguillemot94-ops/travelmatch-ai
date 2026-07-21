@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { matchDestinations, recommendedDuration, destinations } from '../data/mockData.js'
+import { matchDestinations, recommendedDuration, destinations, FILTER_LABELS } from '../data/mockData.js'
 import ScoreRing from '../components/ScoreRing.jsx'
 import { Tag } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
@@ -24,7 +24,8 @@ export default function ResultsScreen({ profile, quiz, onOpenDestination, onBack
     return () => clearTimeout(t)
   }, [])
 
-  const matched = useMemo(() => matchDestinations(quiz, profile).slice(0, 12), [quiz, profile])
+  const { results, relaxedFilters } = useMemo(() => matchDestinations(quiz, profile), [quiz, profile])
+  const matched = results.slice(0, 12)
 
   return (
     <div className="h-full w-full bg-paper flex flex-col">
@@ -36,6 +37,16 @@ export default function ResultsScreen({ profile, quiz, onOpenDestination, onBack
         <h1 className="font-serif text-[23px] text-ink leading-tight">Vos destinations les plus compatibles</h1>
         <p className="text-[12px] text-stone mt-1">{matched.length} destinations sur {destinations.length}, triées selon vos envies</p>
       </div>
+
+      {!loading && relaxedFilters.length > 0 && (
+        <div className="mx-6 mb-3 shrink-0 flex gap-2.5 rounded-2xl bg-gold-400/15 border border-gold-400/30 p-3">
+          <Icon name="alertTriangle" className="w-4 h-4 text-gold-600 shrink-0 mt-0.5" strokeWidth={1.8} />
+          <p className="text-[12px] text-ink/75 leading-relaxed">
+            Aucune destination ne correspondait à tous vos filtres avancés : {relaxedFilters.map((k) => FILTER_LABELS[k]).join(', ')} n’
+            {relaxedFilters.length > 1 ? 'ont' : 'a'} pas pu être respecté{relaxedFilters.length > 1 ? 's' : ''} pour vous montrer assez de résultats.
+          </p>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-28">
         {loading ? (
