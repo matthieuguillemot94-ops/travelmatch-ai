@@ -6,6 +6,7 @@ import HomeScreen from './screens/HomeScreen.jsx'
 import SignUpScreen from './screens/SignUpScreen.jsx'
 import NewTripScreen from './screens/NewTripScreen.jsx'
 import ProfileSetupScreen from './screens/ProfileSetupScreen.jsx'
+import PersonalityScreen from './screens/PersonalityScreen.jsx'
 import QuizScreen from './screens/QuizScreen.jsx'
 import ResultsScreen from './screens/ResultsScreen.jsx'
 import DestinationScreen from './screens/DestinationScreen.jsx'
@@ -31,6 +32,14 @@ export default function App() {
     activityLevel: null,
     climate: null,
     discovery: null,
+    sleepStyle: null,
+    contentStyle: null,
+    vibe: null,
+    foodAdventure: null,
+    stayStyle: null,
+    successDefinition: null,
+    vibeEmojis: [],
+    dreamCountry: '',
   })
   const [quiz, setQuiz] = useState({
     interests: [],
@@ -114,7 +123,16 @@ export default function App() {
             profile={profile}
             setProfile={setProfile}
             onBack={() => setScreen('signup')}
-            onContinue={() => setScreen('quiz')}
+            onContinue={() => setScreen('personality')}
+          />
+        )}
+
+        {screen === 'personality' && (
+          <PersonalityScreen
+            profile={profile}
+            setProfile={setProfile}
+            onBack={() => setScreen('profileSetup')}
+            onFinish={() => setScreen('quiz')}
           />
         )}
 
@@ -122,7 +140,7 @@ export default function App() {
           <QuizScreen
             quiz={quiz}
             setQuiz={setQuiz}
-            onBack={() => setScreen('profileSetup')}
+            onBack={() => setScreen('personality')}
             onFinish={() => setScreen('results')}
           />
         )}

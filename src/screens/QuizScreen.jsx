@@ -23,7 +23,7 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
 
   return (
     <div className="h-full w-full bg-paper flex flex-col relative">
-      <ScreenHeader title="Vos envies" onBack={goBack} />
+      <ScreenHeader title="Ce voyage" onBack={goBack} />
 
       <div className="px-6 pt-1 pb-2 shrink-0">
         <div className="flex gap-1.5">
@@ -32,7 +32,7 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
           ))}
         </div>
         <p className="text-[11px] text-stone mt-2 uppercase tracking-wide">
-          Étape 2 sur 2 · {step === 0 ? 'Centres d’intérêt' : step === 1 ? 'Budget & format' : 'Envie du moment'}
+          Pour ce voyage · {step === 0 ? 'Centres d’intérêt' : step === 1 ? 'Budget & format' : 'Envie du moment'}
         </p>
       </div>
 

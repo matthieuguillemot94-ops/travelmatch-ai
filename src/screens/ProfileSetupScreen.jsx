@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { travelerTypes, COUNTRIES, pacePreferences, activityLevels, climatePreferences, discoveryPreferences } from '../data/mockData.js'
-import { Chip, PrimaryButton, ScreenHeader } from '../components/ui.jsx'
+import { COUNTRIES } from '../data/mockData.js'
+import { PrimaryButton, ScreenHeader } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 import WorldMap from '../components/WorldMap.jsx'
 
@@ -35,12 +35,12 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
           <div className="h-1 flex-1 rounded-full bg-ink" />
           <div className="h-1 flex-1 rounded-full bg-ink/10" />
         </div>
-        <p className="text-[11px] text-stone mt-2 uppercase tracking-wide">Étape 1 sur 2 · Profil</p>
+        <p className="text-[11px] text-stone mt-2 uppercase tracking-wide">Étape 1 sur 2 · Vos informations</p>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pt-3 pb-32">
         <p className="text-[13.5px] text-stone leading-relaxed mb-6">
-          Ces informations affinent chaque recommandation. Rien n’est partagé publiquement.
+          Les bases, pour commencer. Juste après, un portrait voyageur en quelques questions rapides affinera vos recommandations.
         </p>
 
         <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Prénom</label>
@@ -67,141 +67,69 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
           ))}
         </div>
 
-        <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Vous voyagez plutôt en...</label>
-        <div className="grid grid-cols-2 gap-2.5">
-          {travelerTypes.map((t) => {
-            const selected = profile.travelerType === t.id
+        <div className="flex items-baseline justify-between mb-2">
+          <label className="text-[12px] font-medium text-ink/70 uppercase tracking-wide">Pays déjà visités</label>
+          {profile.visitedCountries?.length > 0 && (
+            <span className="text-[12px] text-stone">{profile.visitedCountries.length} sélectionné{profile.visitedCountries.length > 1 ? 's' : ''}</span>
+          )}
+        </div>
+        <p className="text-[12.5px] text-stone leading-relaxed mb-3">
+          Composez votre carte : chaque pays coché s’allume en vert ci-dessous.
+        </p>
+        <div className="rounded-2xl bg-white border border-ink/10 p-3 mb-3">
+          <WorldMap visitedCountries={profile.visitedCountries || []} className="w-full [&_svg]:w-full [&_svg]:h-auto" />
+        </div>
+        <div className="relative mb-3">
+          <Icon name="pin" className="w-4 h-4 text-stone absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            value={countryQuery}
+            onChange={(e) => setCountryQuery(e.target.value)}
+            placeholder="Rechercher un pays…"
+            className="w-full rounded-2xl border border-ink/10 bg-white pl-10 pr-4 py-3 text-[14px] text-ink placeholder:text-stone/60 focus:outline-none focus:border-ink/30"
+          />
+        </div>
+        {profile.visitedCountries?.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {profile.visitedCountries.map((code) => {
+              const c = COUNTRIES.find((x) => x.code === code)
+              if (!c) return null
+              return (
+                <button
+                  key={code}
+                  onClick={() => toggleCountry(code)}
+                  className="flex items-center gap-1.5 rounded-full bg-ink text-paper text-[12.5px] font-medium px-3 py-1.5"
+                >
+                  <span>{c.flag}</span>
+                  {c.name}
+                  <Icon name="minus" className="w-2.5 h-2.5" strokeWidth={2.4} />
+                </button>
+              )
+            })}
+          </div>
+        )}
+        <div className="rounded-2xl border border-ink/10 bg-white max-h-52 overflow-y-auto no-scrollbar divide-y divide-ink/[0.05]">
+          {filteredCountries.map((c) => {
+            const selected = profile.visitedCountries?.includes(c.code)
             return (
               <button
-                key={t.id}
-                onClick={() => update({ travelerType: t.id })}
-                className={`text-left rounded-2xl border p-3.5 transition-colors ${
-                  selected ? 'bg-ink border-ink' : 'bg-white border-ink/10'
-                }`}
+                key={c.code}
+                onClick={() => toggleCountry(c.code)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-left"
               >
-                <p className={`text-[13.5px] font-medium mb-0.5 ${selected ? 'text-paper' : 'text-ink'}`}>{t.label}</p>
-                <p className={`text-[11.5px] leading-snug ${selected ? 'text-paper/60' : 'text-stone'}`}>{t.hint}</p>
+                <span className="text-[17px] leading-none">{c.flag}</span>
+                <span className="flex-1 text-[13.5px] text-ink">{c.name}</span>
+                {selected && <Icon name="check" className="w-4 h-4 text-pine" strokeWidth={2.2} />}
               </button>
             )
           })}
-        </div>
-
-        <div className="mt-7">
-          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Quel rythme de voyage vous ressemble ?</label>
-          <div className="grid grid-cols-1 gap-2.5">
-            {pacePreferences.map((p) => {
-              const selected = profile.pace === p.id
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => update({ pace: p.id })}
-                  className={`flex items-center justify-between text-left rounded-2xl border px-4 py-3 transition-colors ${
-                    selected ? 'bg-ink border-ink' : 'bg-white border-ink/10'
-                  }`}
-                >
-                  <span>
-                    <span className={`block text-[13.5px] font-medium ${selected ? 'text-paper' : 'text-ink'}`}>{p.label}</span>
-                    <span className={`block text-[11.5px] leading-snug ${selected ? 'text-paper/60' : 'text-stone'}`}>{p.hint}</span>
-                  </span>
-                  {selected && <Icon name="check" className="w-4 h-4 text-gold-400 shrink-0" strokeWidth={2.2} />}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
-        <div className="mt-7">
-          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Niveau d’activité physique souhaité</label>
-          <div className="flex flex-wrap gap-2">
-            {activityLevels.map((a) => (
-              <Chip key={a.id} label={a.label} selected={profile.activityLevel === a.id} onClick={() => update({ activityLevel: a.id })} />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-7">
-          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Climat préféré</label>
-          <div className="flex flex-wrap gap-2">
-            {climatePreferences.map((c) => (
-              <Chip key={c.id} label={c.label} icon={c.icon} selected={profile.climate === c.id} onClick={() => update({ climate: c.id })} />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-7">
-          <div className="flex items-baseline justify-between mb-2">
-            <label className="text-[12px] font-medium text-ink/70 uppercase tracking-wide">Pays déjà visités</label>
-            {profile.visitedCountries?.length > 0 && (
-              <span className="text-[12px] text-stone">{profile.visitedCountries.length} sélectionné{profile.visitedCountries.length > 1 ? 's' : ''}</span>
-            )}
-          </div>
-          <p className="text-[12.5px] text-stone leading-relaxed mb-3">
-            Composez votre carte : chaque pays coché s’allume en vert ci-dessous.
-          </p>
-          <div className="rounded-2xl bg-white border border-ink/10 p-3 mb-3">
-            <WorldMap visitedCountries={profile.visitedCountries || []} className="w-full [&_svg]:w-full [&_svg]:h-auto" />
-          </div>
-          <div className="relative mb-3">
-            <Icon name="pin" className="w-4 h-4 text-stone absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              value={countryQuery}
-              onChange={(e) => setCountryQuery(e.target.value)}
-              placeholder="Rechercher un pays…"
-              className="w-full rounded-2xl border border-ink/10 bg-white pl-10 pr-4 py-3 text-[14px] text-ink placeholder:text-stone/60 focus:outline-none focus:border-ink/30"
-            />
-          </div>
-          {profile.visitedCountries?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-3">
-              {profile.visitedCountries.map((code) => {
-                const c = COUNTRIES.find((x) => x.code === code)
-                if (!c) return null
-                return (
-                  <button
-                    key={code}
-                    onClick={() => toggleCountry(code)}
-                    className="flex items-center gap-1.5 rounded-full bg-ink text-paper text-[12.5px] font-medium px-3 py-1.5"
-                  >
-                    <span>{c.flag}</span>
-                    {c.name}
-                    <Icon name="minus" className="w-2.5 h-2.5" strokeWidth={2.4} />
-                  </button>
-                )
-              })}
-            </div>
+          {filteredCountries.length === 0 && (
+            <p className="px-4 py-4 text-[13px] text-stone text-center">Aucun pays trouvé</p>
           )}
-          <div className="rounded-2xl border border-ink/10 bg-white max-h-52 overflow-y-auto no-scrollbar divide-y divide-ink/[0.05]">
-            {filteredCountries.map((c) => {
-              const selected = profile.visitedCountries?.includes(c.code)
-              return (
-                <button
-                  key={c.code}
-                  onClick={() => toggleCountry(c.code)}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left"
-                >
-                  <span className="text-[17px] leading-none">{c.flag}</span>
-                  <span className="flex-1 text-[13.5px] text-ink">{c.name}</span>
-                  {selected && <Icon name="check" className="w-4 h-4 text-pine" strokeWidth={2.2} />}
-                </button>
-              )
-            })}
-            {filteredCountries.length === 0 && (
-              <p className="px-4 py-4 text-[13px] text-stone text-center">Aucun pays trouvé</p>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-7">
-          <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Pour votre prochain voyage, plutôt…</label>
-          <div className="flex flex-wrap gap-2">
-            {discoveryPreferences.map((d) => (
-              <Chip key={d.id} label={d.label} selected={profile.discovery === d.id} onClick={() => update({ discovery: d.id })} />
-            ))}
-          </div>
         </div>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-paper via-paper to-transparent">
-        <PrimaryButton onClick={onContinue} icon="arrow-right" disabled={!profile.name || !profile.travelerType}>
+        <PrimaryButton onClick={onContinue} icon="arrow-right" disabled={!profile.name}>
           Continuer
         </PrimaryButton>
       </div>

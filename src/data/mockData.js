@@ -4,12 +4,12 @@
 // CSS layer so cards never show a broken-image gap if a photo fails to load.
 
 export const travelerTypes = [
-  { id: 'aventurier', label: 'Aventurier', hint: 'Sensations et grands espaces' },
-  { id: 'culturel', label: 'Explorateur culturel', hint: 'Histoire, art, patrimoine' },
-  { id: 'epicurien', label: 'Épicurien', hint: 'Table, vin, marchés locaux' },
-  { id: 'detente', label: 'En quête de calme', hint: 'Ralentir, respirer, souffler' },
-  { id: 'social', label: 'Créateur de liens', hint: 'Rencontres et vie locale' },
-  { id: 'createur', label: 'Chasseur d’images', hint: 'Lumières, lieux, cadrages' },
+  { id: 'aventurier', label: 'Aventurier', hint: 'Sensations et grands espaces', emoji: '🏔️' },
+  { id: 'culturel', label: 'Explorateur culturel', hint: 'Histoire, art, patrimoine', emoji: '🏛️' },
+  { id: 'epicurien', label: 'Épicurien', hint: 'Table, vin, marchés locaux', emoji: '🍷' },
+  { id: 'detente', label: 'En quête de calme', hint: 'Ralentir, respirer, souffler', emoji: '🌿' },
+  { id: 'social', label: 'Créateur de liens', hint: 'Rencontres et vie locale', emoji: '🤝' },
+  { id: 'createur', label: 'Chasseur d’images', hint: 'Lumières, lieux, cadrages', emoji: '📸' },
 ]
 
 export const interestCategories = [
@@ -119,34 +119,139 @@ export const moods = [
   { label: 'Ne rien faire', icon: 'wave' },
 ]
 
-// Durable identity questions asked once at sign-up (ProfileSetupScreen),
-// as opposed to the per-trip criteria in QuizScreen/NewTripScreen. Each
-// answer feeds a bonus/penalty in matchDestinations so a fuller profile
-// genuinely sharpens every future recommendation, not just this one trip.
+// Durable identity questions asked once at sign-up — not the per-trip
+// criteria in QuizScreen/NewTripScreen. Each answer feeds a bonus/penalty
+// in matchDestinations so a fuller profile genuinely sharpens every future
+// recommendation, not just this one trip. Presented one at a time in
+// PersonalityScreen, Hinge-style, after the basic identity fields in
+// ProfileSetupScreen (name, avatar, visited countries).
 export const pacePreferences = [
-  { id: 'contemplatif', label: 'Contemplatif', hint: 'Peu de trajets, on prend le temps' },
-  { id: 'equilibre', label: 'Équilibré', hint: 'Un bon mix visites et temps libre' },
-  { id: 'intense', label: 'Intense', hint: 'Programme dense, un max de découvertes' },
+  { id: 'contemplatif', label: 'Je prends mon temps', hint: 'Peu de trajets, on savoure', emoji: '🌅' },
+  { id: 'equilibre', label: 'Un bon mix', hint: 'Visites et temps libre', emoji: '⚖️' },
+  { id: 'intense', label: 'Programme dense', hint: 'Un max de découvertes', emoji: '🚀' },
 ]
 
 export const activityLevels = [
-  { id: 'farniente', label: 'Farniente', hint: 'Se reposer avant tout' },
-  { id: 'modere', label: 'Modéré', hint: 'Quelques activités, sans excès' },
-  { id: 'actif', label: 'Actif & sportif', hint: 'Randonnées, sport, sensations' },
+  { id: 'farniente', label: 'Farniente total', hint: 'Se reposer avant tout', emoji: '🌴' },
+  { id: 'modere', label: 'Un peu des deux', hint: 'Quelques activités, sans excès', emoji: '🚶' },
+  { id: 'actif', label: 'Sport et sensations', hint: 'Randonnées, activités physiques', emoji: '🧗' },
 ]
 
 export const climatePreferences = [
-  { id: 'chaud', label: 'Chaleur & soleil', icon: 'sun' },
-  { id: 'tempere', label: 'Tempéré', icon: 'cloud' },
-  { id: 'frais', label: 'Fraîcheur & montagne', icon: 'peak' },
-  { id: 'peu_importe', label: 'Peu importe', icon: 'compass' },
+  { id: 'chaud', label: 'Chaleur & soleil', icon: 'sun', emoji: '☀️' },
+  { id: 'tempere', label: 'Tempéré', icon: 'cloud', emoji: '🌤️' },
+  { id: 'frais', label: 'Fraîcheur & montagne', icon: 'peak', emoji: '🏔️' },
+  { id: 'peu_importe', label: 'Peu importe', icon: 'compass', emoji: '🤷' },
 ]
 
 export const discoveryPreferences = [
-  { id: 'inconnu', label: 'Direction l’inconnu', hint: 'Un pays jamais visité' },
-  { id: 'peu_importe', label: 'Peu importe', hint: 'Un mix des deux' },
-  { id: 'coup_de_coeur', label: 'Un coup de cœur', hint: 'Retourner dans un pays aimé' },
+  { id: 'inconnu', label: 'Direction l’inconnu', hint: 'Un pays jamais visité', emoji: '🧭' },
+  { id: 'peu_importe', label: 'Peu importe', hint: 'Un mix des deux', emoji: '🤷' },
+  { id: 'coup_de_coeur', label: 'Un coup de cœur', hint: 'Retourner dans un pays aimé', emoji: '💛' },
 ]
+
+export const sleepStyles = [
+  { id: 'nocturne', label: 'Couche-tard', hint: 'La nuit est jeune', emoji: '🦉' },
+  { id: 'matinal', label: 'Lève-tôt', hint: 'Le monde est calme à l’aube', emoji: '🐓' },
+  { id: 'variable', label: 'Ça dépend des jours', hint: '', emoji: '🤷' },
+]
+
+export const contentStyles = [
+  { id: 'culture', label: 'Musées & culture', hint: '', emoji: '🏛️' },
+  { id: 'plage', label: 'Farniente & plage', hint: '', emoji: '🏖️' },
+  { id: 'mix', label: 'Un peu des deux', hint: '', emoji: '🌗' },
+]
+
+export const vibes = [
+  { id: 'fete', label: 'Fête & vie nocturne', hint: '', emoji: '🎉' },
+  { id: 'nature', label: 'Calme & nature', hint: '', emoji: '🌿' },
+  { id: 'ville', label: 'Effervescence urbaine', hint: '', emoji: '🏙️' },
+  { id: 'peu_importe', label: 'Peu importe', hint: '', emoji: '🤷' },
+]
+
+export const foodAdventures = [
+  { id: 'aventureux', label: 'Je goûte tout', hint: 'Même les insectes', emoji: '🦗' },
+  { id: 'curieux', label: 'Street food avec plaisir', hint: '', emoji: '🍜' },
+  { id: 'classique', label: 'Je reste sur des valeurs sûres', hint: '', emoji: '🍝' },
+]
+
+export const stayStyles = [
+  { id: 'boutique', label: 'Boutique hôtel design', hint: '', emoji: '🛎️' },
+  { id: 'nature', label: 'Cabane perdue dans la nature', hint: '', emoji: '🏕️' },
+  { id: 'auberge', label: 'Auberge conviviale', hint: '', emoji: '🎒' },
+  { id: 'villa', label: 'Villa tout confort', hint: '', emoji: '🏊' },
+]
+
+export const successDefinitions = [
+  { id: 'photo', label: 'Un feed Instagram au top', hint: '', emoji: '📸' },
+  { id: 'histoires', label: 'Un carnet plein d’histoires', hint: '', emoji: '✍️' },
+  { id: 'zenitude', label: 'Zéro stress du début à la fin', hint: '', emoji: '🧘' },
+  { id: 'checklist', label: 'Avoir tout vu, rien loupé', hint: '', emoji: '✅' },
+]
+
+export const vibeEmojiOptions = [
+  { emoji: '✈️', label: 'Envol', tag: 'Aventure' },
+  { emoji: '🏖️', label: 'Plage', tag: 'Plage' },
+  { emoji: '⛰️', label: 'Montagne', tag: 'Randonnée' },
+  { emoji: '🍜', label: 'Gourmandise', tag: 'Gastronomie' },
+  { emoji: '🎉', label: 'Fête', tag: 'Vie nocturne' },
+  { emoji: '🏛️', label: 'Patrimoine', tag: 'Histoire' },
+  { emoji: '📸', label: 'Souvenirs', tag: 'Photographie' },
+  { emoji: '🧘', label: 'Sérénité', tag: 'Bien-être' },
+  { emoji: '🥾', label: 'Grand air', tag: 'Nature' },
+  { emoji: '🛍️', label: 'Artisanat', tag: 'Artisanat' },
+  { emoji: '🌅', label: 'Calme', tag: 'Sérénité' },
+  { emoji: '🐠', label: 'Océan', tag: 'Océan' },
+]
+
+// The Hinge-style "Portrait voyageur" flow: one prompt per screen, tapping
+// an option advances automatically. Data-driven so PersonalityScreen stays
+// a single generic renderer instead of one hand-written block per question.
+export const PERSONALITY_QUESTIONS = [
+  { id: 'travelerType', title: 'Quel voyageur êtes-vous ?', type: 'choice', options: travelerTypes },
+  { id: 'sleepStyle', title: 'Couche-tard ou lève-tôt, version vacances ?', type: 'choice', options: sleepStyles },
+  { id: 'contentStyle', title: 'Musées ou farniente plage ?', type: 'choice', options: contentStyles },
+  { id: 'vibe', title: 'Vos vacances, plutôt...', type: 'choice', options: vibes },
+  { id: 'foodAdventure', title: 'Cuisine locale : jusqu’où êtes-vous prêt·e à aller ?', type: 'choice', options: foodAdventures },
+  { id: 'pace', title: 'Votre organisation de voyage ?', type: 'choice', options: pacePreferences },
+  { id: 'activityLevel', title: 'Votre niveau d’énergie en vacances ?', type: 'choice', options: activityLevels },
+  { id: 'stayStyle', title: 'Votre hébergement de rêve ?', type: 'choice', options: stayStyles },
+  { id: 'successDefinition', title: 'Un voyage réussi, pour vous, c’est...', type: 'choice', options: successDefinitions },
+  { id: 'climate', title: 'Votre climat de prédilection ?', type: 'choice', options: climatePreferences },
+  { id: 'discovery', title: 'Pour ce nouveau chapitre, plutôt...', type: 'choice', options: discoveryPreferences },
+  {
+    id: 'vibeEmojis',
+    title: 'Choisissez 3 emojis qui résument vos vacances idéales',
+    type: 'emojiGrid',
+    options: vibeEmojiOptions,
+    pickCount: 3,
+  },
+  {
+    id: 'dreamCountry',
+    title: 'Le pays qui vous fait rêver depuis toujours ?',
+    subtitle: 'Juste pour le fun, ça ne change rien à vos recommandations.',
+    type: 'text',
+    placeholder: 'Ex. Japon, Islande, Pérou…',
+  },
+]
+
+const TRAVELER_ARCHETYPES = {
+  aventurier: { title: 'L’Aventurier', emoji: '🏔️' },
+  culturel: { title: 'L’Explorateur Culturel', emoji: '🏛️' },
+  epicurien: { title: 'L’Épicurien', emoji: '🍷' },
+  detente: { title: 'L’Âme Zen', emoji: '🌿' },
+  social: { title: 'Le Créateur de Liens', emoji: '🤝' },
+  createur: { title: 'Le Chasseur d’Images', emoji: '📸' },
+}
+const ARCHETYPE_SLEEP_MODIFIER = { nocturne: 'Nocturne', matinal: 'Matinal', variable: '' }
+
+// A light, cosmetic "personality result" shown at the end of the portrait
+// flow — the fun payoff dating apps give after a string of prompts.
+export function computeArchetype(profile) {
+  const base = TRAVELER_ARCHETYPES[profile.travelerType] || { title: 'Le Voyageur', emoji: '✈️' }
+  const modifier = ARCHETYPE_SLEEP_MODIFIER[profile.sleepStyle]
+  return { title: modifier ? `${base.title} ${modifier}` : base.title, emoji: base.emoji }
+}
 
 export const destinations = [
   {
@@ -2697,6 +2802,41 @@ const ACTIVITY_LEVEL_TAGS = {
   actif: ['Randonnée', 'Aventure'],
 }
 
+const SLEEP_STYLE_TAGS = {
+  nocturne: ['Vie nocturne'],
+  matinal: ['Nature', 'Sérénité'],
+}
+
+const CONTENT_STYLE_TAGS = {
+  culture: ['Culture', 'Histoire', 'Architecture'],
+  plage: ['Plage', 'Océan'],
+}
+
+const VIBE_TAGS = {
+  fete: ['Vie nocturne'],
+  nature: ['Nature', 'Sérénité', 'Détente'],
+  ville: ['Vie urbaine', 'Architecture'],
+}
+
+const FOOD_ADVENTURE_TAGS = {
+  aventureux: ['Gastronomie', 'Hors des sentiers battus'],
+  curieux: ['Gastronomie', 'Vie locale'],
+}
+
+const STAY_STYLE_TAGS = {
+  boutique: ['Luxe'],
+  nature: ['Nature', 'Hors des sentiers battus'],
+  auberge: ['Vie locale'],
+  villa: ['Luxe', 'Détente'],
+}
+
+const SUCCESS_DEFINITION_TAGS = {
+  photo: ['Photographie', 'Art & Design'],
+  histoires: ['Vie locale', 'Culture'],
+  zenitude: ['Détente', 'Sérénité'],
+  checklist: ['Histoire', 'Architecture'],
+}
+
 const HOT_CLIMATE_TAGS = new Set(['Plage', 'Océan'])
 // No destination is tagged 'Montagne' directly, so highland/hiking-heavy
 // spots (Machu Picchu, Interlaken, Banff, Queenstown…) stand in for
@@ -2793,6 +2933,16 @@ export function matchDestinations({ mood = [], interests = [], budget = 3000, ni
   ;(TRAVELER_TYPE_TAGS[profile.travelerType] || []).forEach((t) => wantedTags.add(t))
   ;(PACE_TAGS[profile.pace] || []).forEach((t) => wantedTags.add(t))
   ;(ACTIVITY_LEVEL_TAGS[profile.activityLevel] || []).forEach((t) => wantedTags.add(t))
+  ;(SLEEP_STYLE_TAGS[profile.sleepStyle] || []).forEach((t) => wantedTags.add(t))
+  ;(CONTENT_STYLE_TAGS[profile.contentStyle] || []).forEach((t) => wantedTags.add(t))
+  ;(VIBE_TAGS[profile.vibe] || []).forEach((t) => wantedTags.add(t))
+  ;(FOOD_ADVENTURE_TAGS[profile.foodAdventure] || []).forEach((t) => wantedTags.add(t))
+  ;(STAY_STYLE_TAGS[profile.stayStyle] || []).forEach((t) => wantedTags.add(t))
+  ;(SUCCESS_DEFINITION_TAGS[profile.successDefinition] || []).forEach((t) => wantedTags.add(t))
+  ;(profile.vibeEmojis || []).forEach((emoji) => {
+    const match = vibeEmojiOptions.find((o) => o.emoji === emoji)
+    if (match) wantedTags.add(match.tag)
+  })
 
   const visitedNames = visitedCountryNames(profile.visitedCountries)
 
