@@ -1,6 +1,16 @@
 import { useState } from 'react'
-import { interestCategories, groupOptions, comfortLevels, durations, moods, maxDistanceOptions } from '../data/mockData.js'
-import { Chip, PrimaryButton, ScreenHeader, Toggle } from '../components/ui.jsx'
+import {
+  interestCategories,
+  groupOptions,
+  comfortLevels,
+  durations,
+  moods,
+  maxDistanceOptions,
+  riskToleranceOptions,
+  vaccineToleranceOptions,
+  experienceTypeOptions,
+} from '../data/mockData.js'
+import { Chip, PrimaryButton, ScreenHeader } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
@@ -124,7 +134,8 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
           <div className="animate-fade-up">
             <h2 className="font-serif text-[21px] text-ink mb-1.5">Filtres avancés</h2>
             <p className="text-[13.5px] text-stone mb-6">
-              Optionnel : on n’affiche alors que les destinations qui collent vraiment à ces critères.
+              Nous n’affichons que les destinations qui correspondent vraiment à vos envies et à votre profil. Affinez
+              encore avec ces critères.
             </p>
 
             <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Distance de vol</label>
@@ -146,25 +157,25 @@ export default function QuizScreen({ quiz, setQuiz, onBack, onFinish }) {
               ))}
             </div>
 
-            <div className="flex flex-col gap-2.5">
-              <Toggle
-                label="Ne montrer que ce qui correspond vraiment"
-                hint="Exclut les destinations sans lien avec vos envies sélectionnées"
-                checked={quiz.strictInterests}
-                onChange={(v) => update({ strictInterests: v })}
-              />
-              <Toggle
-                label="Respecter mon climat préféré"
-                hint="Défini dans votre portrait voyageur"
-                checked={quiz.respectClimate}
-                onChange={(v) => update({ respectClimate: v })}
-              />
-              <Toggle
-                label="Exclure les pays déjà visités"
-                hint="Basé sur la carte de votre profil"
-                checked={quiz.excludeVisited}
-                onChange={(v) => update({ excludeVisited: v })}
-              />
+            <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Niveau de risque accepté</label>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {riskToleranceOptions.map((o) => (
+                <Chip key={o.id} label={o.label} selected={quiz.riskTolerance === o.id} onClick={() => update({ riskTolerance: o.id })} />
+              ))}
+            </div>
+
+            <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Contraintes de vaccination</label>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {vaccineToleranceOptions.map((o) => (
+                <Chip key={o.id} label={o.label} selected={quiz.vaccineTolerance === o.id} onClick={() => update({ vaccineTolerance: o.id })} />
+              ))}
+            </div>
+
+            <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Type d’expérience</label>
+            <div className="flex flex-wrap gap-2">
+              {experienceTypeOptions.map((o) => (
+                <Chip key={o.id} label={o.label} selected={quiz.experienceType === o.id} onClick={() => update({ experienceType: o.id })} />
+              ))}
             </div>
           </div>
         )}

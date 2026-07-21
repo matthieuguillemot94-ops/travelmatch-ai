@@ -57,9 +57,9 @@ export default function App() {
     startDate: null,
     endDate: null,
     maxDistance: 'illimite',
-    excludeVisited: false,
-    strictInterests: false,
-    respectClimate: false,
+    riskTolerance: 'tous',
+    vaccineTolerance: 'peu_importe',
+    experienceType: 'peu_importe',
   })
   const [destinationId, setDestinationId] = useState('kyoto')
   const [activityId, setActivityId] = useState('fushimi-dawn')

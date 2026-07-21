@@ -55,25 +55,6 @@ export function ScreenHeader({ title, onBack, tone = 'light', action }) {
   )
 }
 
-export function Toggle({ label, hint, checked, onChange }) {
-  return (
-    <button
-      onClick={() => onChange(!checked)}
-      className="w-full flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white px-4 py-3.5 text-left"
-    >
-      <span className="min-w-0">
-        <span className="block text-[13.5px] font-medium text-ink">{label}</span>
-        {hint && <span className="block text-[11.5px] text-stone mt-0.5">{hint}</span>}
-      </span>
-      <span className={`relative w-10 h-6 rounded-full shrink-0 transition-colors ${checked ? 'bg-ink' : 'bg-ink/15'}`}>
-        <span
-          className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-[18px]' : 'translate-x-0.5'}`}
-        />
-      </span>
-    </button>
-  )
-}
-
 export function Tag({ children, tone = 'pine' }) {
   const tones = {
     pine: 'bg-pine-100 text-pine-700',

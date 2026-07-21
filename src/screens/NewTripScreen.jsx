@@ -1,5 +1,15 @@
-import { moods, groupOptions, comfortLevels, departureCities, userProfile, maxDistanceOptions } from '../data/mockData.js'
-import { Chip, PrimaryButton, Toggle } from '../components/ui.jsx'
+import {
+  moods,
+  groupOptions,
+  comfortLevels,
+  departureCities,
+  userProfile,
+  maxDistanceOptions,
+  riskToleranceOptions,
+  vaccineToleranceOptions,
+  experienceTypeOptions,
+} from '../data/mockData.js'
+import { Chip, PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 import Calendar from '../components/Calendar.jsx'
 
@@ -277,32 +287,32 @@ export default function NewTripScreen({ quiz, setQuiz, confirmedTrip, onOpenProf
         <div>
           <label className="block text-[12px] font-medium text-ink/70 mb-1 uppercase tracking-wide">Filtres avancés</label>
           <p className="text-[12px] text-stone leading-relaxed mb-3">
-            Optionnel : on n’affiche alors que les destinations qui collent vraiment à ces critères.
+            Nous n’affichons que les destinations qui correspondent vraiment à vos envies et à votre profil. Affinez
+            encore avec ces critères.
           </p>
+          <label className="block text-[11px] font-medium text-ink/60 mb-1.5 uppercase tracking-wide">Distance de vol</label>
           <div className="flex flex-wrap gap-2 mb-3">
             {maxDistanceOptions.map((o) => (
               <Chip key={o.id} label={o.label} selected={quiz.maxDistance === o.id} onClick={() => update({ maxDistance: o.id })} />
             ))}
           </div>
-          <div className="flex flex-col gap-2.5">
-            <Toggle
-              label="Ne montrer que ce qui correspond vraiment"
-              hint="Exclut les destinations sans lien avec vos envies"
-              checked={quiz.strictInterests}
-              onChange={(v) => update({ strictInterests: v })}
-            />
-            <Toggle
-              label="Respecter mon climat préféré"
-              hint="Défini dans votre portrait voyageur"
-              checked={quiz.respectClimate}
-              onChange={(v) => update({ respectClimate: v })}
-            />
-            <Toggle
-              label="Exclure les pays déjà visités"
-              hint="Basé sur la carte de votre profil"
-              checked={quiz.excludeVisited}
-              onChange={(v) => update({ excludeVisited: v })}
-            />
+          <label className="block text-[11px] font-medium text-ink/60 mb-1.5 uppercase tracking-wide">Niveau de risque accepté</label>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {riskToleranceOptions.map((o) => (
+              <Chip key={o.id} label={o.label} selected={quiz.riskTolerance === o.id} onClick={() => update({ riskTolerance: o.id })} />
+            ))}
+          </div>
+          <label className="block text-[11px] font-medium text-ink/60 mb-1.5 uppercase tracking-wide">Contraintes de vaccination</label>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {vaccineToleranceOptions.map((o) => (
+              <Chip key={o.id} label={o.label} selected={quiz.vaccineTolerance === o.id} onClick={() => update({ vaccineTolerance: o.id })} />
+            ))}
+          </div>
+          <label className="block text-[11px] font-medium text-ink/60 mb-1.5 uppercase tracking-wide">Type d’expérience</label>
+          <div className="flex flex-wrap gap-2">
+            {experienceTypeOptions.map((o) => (
+              <Chip key={o.id} label={o.label} selected={quiz.experienceType === o.id} onClick={() => update({ experienceType: o.id })} />
+            ))}
           </div>
         </div>
       </div>

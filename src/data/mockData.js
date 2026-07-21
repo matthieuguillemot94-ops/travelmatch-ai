@@ -3,6 +3,8 @@
 // Commons (stable CDN, no API key required). `gradient` is kept as a paint-first
 // CSS layer so cards never show a broken-image gap if a photo fails to load.
 
+import { getCountryInfo } from './countryInfo.js'
+
 export const travelerTypes = [
   { id: 'aventurier', label: 'Aventurier', hint: 'Sensations et grands espaces', emoji: '🏔️' },
   { id: 'culturel', label: 'Explorateur culturel', hint: 'Histoire, art, patrimoine', emoji: '🏛️' },
@@ -2934,6 +2936,9 @@ export const FILTER_LABELS = {
   respectClimate: 'votre climat préféré',
   excludeVisited: 'l’exclusion des pays déjà visités',
   maxDistance: 'la distance de vol maximale',
+  riskTolerance: 'le niveau de vigilance sélectionné',
+  vaccineTolerance: 'l’absence de vaccin spécifique requis',
+  experienceType: 'le type d’expérience recherché',
 }
 
 export const maxDistanceOptions = [
@@ -2942,6 +2947,27 @@ export const maxDistanceOptions = [
   { id: 'europe', label: 'Europe uniquement', hint: 'Pas de long-courrier' },
 ]
 
+export const riskToleranceOptions = [
+  { id: 'tous', label: 'Tous niveaux', hint: 'Y compris vigilance renforcée' },
+  { id: 'normal', label: 'Vigilance normale uniquement', hint: 'Exclut les destinations à risque accru' },
+]
+
+export const vaccineToleranceOptions = [
+  { id: 'peu_importe', label: 'Peu importe', hint: 'Vaccins recommandés selon la destination' },
+  { id: 'sans_vaccin', label: 'Sans vaccin spécifique', hint: 'Vaccins de routine uniquement' },
+]
+
+export const experienceTypeOptions = [
+  { id: 'peu_importe', label: 'Peu importe', hint: '' },
+  { id: 'horssentiers', label: 'Hors des sentiers battus', hint: 'Éviter les sites trop touristiques' },
+  { id: 'embleme', label: 'Sites emblématiques', hint: 'Les incontournables plutôt que l’inconnu' },
+]
+
+// Every destination is required to genuinely fit the traveler's stated
+// interests/mood and profile — these are never optional toggles the user
+// can switch off, they're the basic promise of a matching engine. Only the
+// criteria below (distance, risk, vaccines, experience type) are explicit
+// choices left to the user.
 export function matchDestinations(
   {
     mood = [],
@@ -2949,9 +2975,9 @@ export function matchDestinations(
     budget = 3000,
     nights = 7,
     maxDistance = 'illimite',
-    excludeVisited = false,
-    strictInterests = false,
-    respectClimate = false,
+    riskTolerance = 'tous',
+    vaccineTolerance = 'peu_importe',
+    experienceType = 'peu_importe',
   } = {},
   profile = {}
 ) {
@@ -2994,17 +3020,17 @@ export function matchDestinations(
   const filterSteps = [
     {
       key: 'strictInterests',
-      active: strictInterests && wantedTags.size > 0,
+      active: wantedTags.size > 0,
       test: (d) => d.tags.some((t) => wantedTags.has(t)),
     },
     {
       key: 'respectClimate',
-      active: respectClimate && profile.climate && profile.climate !== 'peu_importe',
+      active: !!profile.climate && profile.climate !== 'peu_importe',
       test: (d) => climateScore(d, profile.climate) >= 0,
     },
     {
       key: 'excludeVisited',
-      active: excludeVisited,
+      active: profile.discovery === 'inconnu',
       test: (d) => !isCountryVisited(d.country, visitedNames),
     },
     {
@@ -3014,6 +3040,30 @@ export function matchDestinations(
         const hours = CONTINENT_FLIGHT_HOURS[d.continent] || 8
         return maxDistance === 'europe' ? d.continent === 'Europe' : hours <= 8
       },
+    },
+    {
+      key: 'riskTolerance',
+      active: riskTolerance === 'normal',
+      test: (d) => {
+        const info = getCountryInfo(d.country)
+        return !info || info.risk.level === 'normal'
+      },
+    },
+    {
+      key: 'vaccineTolerance',
+      active: vaccineTolerance === 'sans_vaccin',
+      test: (d) => {
+        const info = getCountryInfo(d.country)
+        return !info || info.vaccines.recommended.length === 0
+      },
+    },
+    {
+      key: 'experienceType',
+      active: experienceType !== 'peu_importe',
+      test: (d) =>
+        experienceType === 'horssentiers'
+          ? d.tags.includes('Hors des sentiers battus')
+          : !d.tags.includes('Hors des sentiers battus'),
     },
   ]
 
