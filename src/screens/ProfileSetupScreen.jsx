@@ -71,7 +71,11 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
           Composez votre carte : chaque pays coché s’allume en vert ci-dessous.
         </p>
         <div className="rounded-2xl bg-white border border-ink/10 p-3 mb-3">
-          <WorldMap visitedCountries={profile.visitedCountries || []} className="w-full [&_svg]:w-full [&_svg]:h-auto" />
+          <WorldMap
+            visitedCountries={profile.visitedCountries || []}
+            onToggleCountry={toggleCountry}
+            className="w-full h-52 [&_svg]:w-full [&_svg]:h-full"
+          />
         </div>
         <div className="relative mb-3">
           <Icon name="pin" className="w-4 h-4 text-stone absolute left-3.5 top-1/2 -translate-y-1/2" />

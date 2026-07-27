@@ -89,7 +89,7 @@ export default function UserProfileScreen({ onLogout }) {
             <span className="text-[12px] text-stone">{visitedCountries.length} pays visités</span>
           </div>
           <div className="rounded-2xl bg-white border border-ink/[0.06] p-3 mb-3">
-            <WorldMap visitedCountries={visitedCountries} className="w-full [&_svg]:w-full [&_svg]:h-auto" />
+            <WorldMap visitedCountries={visitedCountries} onToggleCountry={toggleCountry} className="w-full h-52 [&_svg]:w-full [&_svg]:h-full" />
           </div>
           <p className="text-[11.5px] text-stone mb-2.5">Touchez un pays pour l’ajouter ou le retirer de vos voyages.</p>
           <div className="flex flex-wrap gap-1.5">
