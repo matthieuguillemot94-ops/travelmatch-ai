@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { userProfile as defaultProfile, COUNTRIES, travelerTypes } from '../data/mockData.js'
+import { userProfile as defaultProfile, COUNTRIES, computeArchetype } from '../data/mockData.js'
 import { Tag, PrimaryButton } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 import WorldMap from '../components/WorldMap.jsx'
@@ -8,7 +8,7 @@ const settingsItems = [
   { key: 'notifications', icon: 'bell', label: 'Notifications' },
   { key: 'privacy', icon: 'shield', label: 'Confidentialité & données' },
   { key: 'budget', icon: 'coin', label: 'Préférences de budget' },
-  { key: 'editProfile', icon: 'edit', label: 'Modifier le profil de voyage' },
+  { key: 'interests', icon: 'sparkle', label: 'Centres d’intérêt favoris' },
 ]
 
 const BUDGET_LEVELS = ['Simple · €', 'Confort · €€', 'Premium · €€€']
@@ -28,9 +28,9 @@ function Toggle({ checked, onChange }) {
   )
 }
 
-export default function UserProfileScreen({ onLogout }) {
-  const [visitedCountries, setVisitedCountries] = useState(defaultProfile.visitedCountries)
-  const [travelerType, setTravelerType] = useState(defaultProfile.travelerType)
+export default function UserProfileScreen({ profile, setProfile, onLogout, onEditProfile }) {
+  const visitedCountries = profile.visitedCountries || []
+  const archetype = computeArchetype(profile)
   const [interests, setInterests] = useState(defaultProfile.interests)
   const [budgetLevel, setBudgetLevel] = useState(defaultProfile.preferences[0].value)
   const [notifPrefs, setNotifPrefs] = useState({ alerts: true, reminders: true, news: false })
@@ -38,7 +38,12 @@ export default function UserProfileScreen({ onLogout }) {
   const [activeSheet, setActiveSheet] = useState(null)
 
   const toggleCountry = (code) => {
-    setVisitedCountries((v) => (v.includes(code) ? v.filter((c) => c !== code) : [...v, code]))
+    setProfile((p) => ({
+      ...p,
+      visitedCountries: (p.visitedCountries || []).includes(code)
+        ? p.visitedCountries.filter((c) => c !== code)
+        : [...(p.visitedCountries || []), code],
+    }))
   }
   const toggleInterest = (label) => {
     setInterests((v) => (v.includes(label) ? v.filter((i) => i !== label) : [...v, label]))
@@ -72,15 +77,16 @@ export default function UserProfileScreen({ onLogout }) {
         </div>
 
         <div className="px-6 mb-6">
-          <div className="rounded-2xl bg-ink text-paper p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-              <Icon name="compass" className="w-5 h-5 text-gold-400" />
+          <button onClick={onEditProfile} className="w-full rounded-2xl bg-ink text-paper p-4 flex items-center gap-3 text-left active:scale-[0.99] transition-transform">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-[20px]">
+              {archetype.emoji}
             </div>
-            <div>
-              <p className="text-[13px] text-paper/60">Profil voyageur</p>
-              <p className="text-[14.5px] font-medium">{travelerType}</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-[13px] text-paper/60">Portrait voyageur</p>
+              <p className="text-[14.5px] font-medium truncate">{archetype.title}</p>
             </div>
-          </div>
+            <Icon name="chevronRight" className="w-4 h-4 text-paper/60 shrink-0" />
+          </button>
         </div>
 
         <div className="px-6 mb-6">
@@ -132,6 +138,11 @@ export default function UserProfileScreen({ onLogout }) {
         <div className="px-6">
           <h2 className="font-serif text-[16px] text-ink mb-3">Paramètres</h2>
           <div className="rounded-2xl bg-white border border-ink/[0.06] divide-y divide-ink/[0.06]">
+            <button onClick={onEditProfile} className="w-full flex items-center gap-3 px-4 py-3.5 text-left">
+              <Icon name="edit" className="w-[18px] h-[18px] text-pine shrink-0" />
+              <span className="text-[13.5px] text-ink flex-1">Modifier mon profil voyageur</span>
+              <Icon name="chevronRight" className="w-4 h-4 text-stone" />
+            </button>
             {settingsItems.map((item) => (
               <button key={item.key} onClick={() => setActiveSheet(item.key)} className="w-full flex items-center gap-3 px-4 py-3.5 text-left">
                 <Icon name={item.icon} className="w-[18px] h-[18px] text-pine shrink-0" />
@@ -224,26 +235,9 @@ export default function UserProfileScreen({ onLogout }) {
               </>
             )}
 
-            {activeSheet === 'editProfile' && (
+            {activeSheet === 'interests' && (
               <>
-                <h2 className="font-serif text-[18px] text-ink mb-4">Profil de voyage</h2>
-                <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Vous voyagez plutôt en...</label>
-                <div className="grid grid-cols-2 gap-2 mb-6">
-                  {travelerTypes.map((t) => {
-                    const selected = travelerType === t.label
-                    return (
-                      <button
-                        key={t.id}
-                        onClick={() => setTravelerType(t.label)}
-                        className={`text-left rounded-2xl border p-3 transition-colors ${selected ? 'bg-ink border-ink' : 'bg-white border-ink/10'}`}
-                      >
-                        <p className={`text-[12.5px] font-medium mb-0.5 ${selected ? 'text-paper' : 'text-ink'}`}>{t.label}</p>
-                        <p className={`text-[10.5px] leading-snug ${selected ? 'text-paper/60' : 'text-stone'}`}>{t.hint}</p>
-                      </button>
-                    )
-                  })}
-                </div>
-                <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Centres d’intérêt</label>
+                <h2 className="font-serif text-[18px] text-ink mb-4">Centres d’intérêt favoris</h2>
                 <div className="flex flex-wrap gap-1.5 mb-6">
                   {INTEREST_OPTIONS.map((i) => (
                     <button

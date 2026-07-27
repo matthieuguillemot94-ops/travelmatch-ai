@@ -2,22 +2,24 @@ import { useState } from 'react'
 import { PERSONALITY_QUESTIONS, computeArchetype } from '../data/mockData.js'
 import { PrimaryButton, ScreenHeader } from '../components/ui.jsx'
 
-function ChoiceOption({ opt, onSelect }) {
+function ChoiceOption({ opt, selected, onSelect }) {
   return (
     <button
       onClick={() => onSelect(opt.id)}
-      className="w-full flex items-center gap-3 rounded-2xl border border-ink/10 bg-white p-4 text-left active:scale-[0.98] transition-transform"
+      className={`w-full flex items-center gap-3 rounded-2xl border p-4 text-left active:scale-[0.98] transition-transform ${
+        selected ? 'bg-ink border-ink' : 'bg-white border-ink/10'
+      }`}
     >
       <span className="text-[26px] leading-none shrink-0">{opt.emoji}</span>
       <span className="flex-1 min-w-0">
-        <span className="block text-[14.5px] font-medium text-ink">{opt.label}</span>
-        {opt.hint && <span className="block text-[12px] text-stone mt-0.5">{opt.hint}</span>}
+        <span className={`block text-[14.5px] font-medium ${selected ? 'text-paper' : 'text-ink'}`}>{opt.label}</span>
+        {opt.hint && <span className={`block text-[12px] mt-0.5 ${selected ? 'text-paper/60' : 'text-stone'}`}>{opt.hint}</span>}
       </span>
     </button>
   )
 }
 
-export default function PersonalityScreen({ profile, setProfile, onBack, onFinish }) {
+export default function PersonalityScreen({ profile, setProfile, onBack, onFinish, finishLabel = 'C’est parti' }) {
   const [step, setStep] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const question = PERSONALITY_QUESTIONS[step]
@@ -61,7 +63,7 @@ export default function PersonalityScreen({ profile, setProfile, onBack, onFinis
           </p>
         </div>
         <div className="px-6 pb-6 pt-4">
-          <PrimaryButton onClick={onFinish} icon="sparkle">C’est parti</PrimaryButton>
+          <PrimaryButton onClick={onFinish} icon="sparkle">{finishLabel}</PrimaryButton>
         </div>
       </div>
     )
@@ -75,14 +77,9 @@ export default function PersonalityScreen({ profile, setProfile, onBack, onFinis
         <div className="h-1 rounded-full bg-ink/10 overflow-hidden">
           <div className="h-full bg-ink rounded-full transition-all" style={{ width: `${((step + 1) / total) * 100}%` }} />
         </div>
-        <div className="flex items-center justify-between mt-2">
-          <p className="text-[11px] text-stone uppercase tracking-wide">
-            Question {step + 1} / {total}
-          </p>
-          <button onClick={advance} className="text-[11px] text-stone underline underline-offset-2">
-            Passer
-          </button>
-        </div>
+        <p className="text-[11px] text-stone uppercase tracking-wide mt-2">
+          Question {step + 1} / {total}
+        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-6 pt-3 pb-8" key={question.id}>
@@ -94,7 +91,7 @@ export default function PersonalityScreen({ profile, setProfile, onBack, onFinis
           {question.type === 'choice' && (
             <div className="flex flex-col gap-2.5">
               {question.options.map((opt) => (
-                <ChoiceOption key={opt.id} opt={opt} onSelect={selectChoice} />
+                <ChoiceOption key={opt.id} opt={opt} selected={profile[question.id] === opt.id} onSelect={selectChoice} />
               ))}
             </div>
           )}
@@ -135,7 +132,7 @@ export default function PersonalityScreen({ profile, setProfile, onBack, onFinis
                 placeholder={question.placeholder}
                 className="w-full rounded-2xl border border-ink/10 bg-white px-4 py-3.5 text-[15px] text-ink placeholder:text-stone/60 mb-6 focus:outline-none focus:border-ink/30"
               />
-              <PrimaryButton onClick={advance} icon="arrow-right">
+              <PrimaryButton onClick={advance} disabled={!profile.dreamCountry?.trim()} icon="arrow-right">
                 Continuer
               </PrimaryButton>
             </>

@@ -61,6 +61,7 @@ export default function App() {
     vaccineTolerance: 'peu_importe',
     experienceType: 'peu_importe',
   })
+  const [editingFromProfile, setEditingFromProfile] = useState(false)
   const [destinationId, setDestinationId] = useState('kyoto')
   const [activityId, setActivityId] = useState('fushimi-dawn')
   const [itineraryDestinationId, setItineraryDestinationId] = useState(null)
@@ -106,7 +107,10 @@ export default function App() {
         {screen === 'signup' && (
           <SignUpScreen
             onBack={() => setScreen('home')}
-            onContinue={() => setScreen('profileSetup')}
+            onContinue={() => {
+              setEditingFromProfile(false)
+              setScreen('profileSetup')
+            }}
             onSignIn={() => setScreen('newTrip')}
           />
         )}
@@ -126,7 +130,7 @@ export default function App() {
           <ProfileSetupScreen
             profile={profile}
             setProfile={setProfile}
-            onBack={() => setScreen('signup')}
+            onBack={() => setScreen(editingFromProfile ? 'profile' : 'signup')}
             onContinue={() => setScreen('personality')}
           />
         )}
@@ -136,7 +140,8 @@ export default function App() {
             profile={profile}
             setProfile={setProfile}
             onBack={() => setScreen('profileSetup')}
-            onFinish={() => setScreen('quiz')}
+            onFinish={() => setScreen(editingFromProfile ? 'profile' : 'quiz')}
+            finishLabel={editingFromProfile ? 'Enregistrer' : undefined}
           />
         )}
 
@@ -214,7 +219,17 @@ export default function App() {
           />
         )}
 
-        {screen === 'profile' && <UserProfileScreen onLogout={() => setScreen('home')} />}
+        {screen === 'profile' && (
+          <UserProfileScreen
+            profile={profile}
+            setProfile={setProfile}
+            onLogout={() => setScreen('home')}
+            onEditProfile={() => {
+              setEditingFromProfile(true)
+              setScreen('profileSetup')
+            }}
+          />
+        )}
 
         {showNav && <BottomNav active={activeTab} onNavigate={setScreen} />}
       </PhoneShell>
