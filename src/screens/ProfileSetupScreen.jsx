@@ -4,14 +4,7 @@ import { PrimaryButton, ScreenHeader } from '../components/ui.jsx'
 import Icon from '../components/Icon.jsx'
 import WorldMap from '../components/WorldMap.jsx'
 
-const avatarTones = [
-  'linear-gradient(135deg,#2F5D50,#4FA98A)',
-  'linear-gradient(135deg,#B5495B,#D9A55C)',
-  'linear-gradient(135deg,#234238,#8C8574)',
-  'linear-gradient(135deg,#C08A3E,#E8B876)',
-  'linear-gradient(135deg,#1B332C,#2F5D50)',
-  'linear-gradient(135deg,#6E2E3B,#B5495B)',
-]
+const avatarEmojis = ['👩', '👨', '👩🏽', '👨🏾', '👩🏿', '👨🏻', '👵', '👴']
 
 export default function ProfileSetupScreen({ profile, setProfile, onBack, onContinue }) {
   const update = (patch) => setProfile((p) => ({ ...p, ...patch }))
@@ -52,18 +45,19 @@ export default function ProfileSetupScreen({ profile, setProfile, onBack, onCont
         />
 
         <label className="block text-[12px] font-medium text-ink/70 mb-2 uppercase tracking-wide">Avatar</label>
-        <div className="flex gap-3 mb-7">
-          {avatarTones.map((tone, i) => (
+        <div className="flex flex-wrap gap-3 mb-7">
+          {avatarEmojis.map((emoji, i) => (
             <button
               key={i}
               onClick={() => update({ avatar: i })}
-              className="w-11 h-11 rounded-full transition-all"
+              className="w-11 h-11 rounded-full flex items-center justify-center text-[22px] bg-paper transition-all"
               style={{
-                background: tone,
                 outline: profile.avatar === i ? '2.5px solid #12211D' : '2.5px solid transparent',
                 outlineOffset: 2,
               }}
-            />
+            >
+              {emoji}
+            </button>
           ))}
         </div>
 
